@@ -1,6 +1,6 @@
 import typescript from '@rollup/plugin-typescript';
 import terser from './terser-plugin.ts';
-import watchConfig, { outDir, input, terserOption } from 'rollup.config.watch.ts';
+import watchConfig, { outDir, input, terserOption } from './rollup.config.watch.ts';
 import type { RollupOptions } from 'rollup';
 
 
