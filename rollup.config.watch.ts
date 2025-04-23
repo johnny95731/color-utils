@@ -1,0 +1,56 @@
+import typescript from '@rollup/plugin-typescript';
+import { dts } from 'rollup-plugin-dts';
+import terser from './terser-plugin.ts';
+import type { RollupOptions } from 'rollup';
+
+export const outDir = 'dist/';
+export const input = {
+  helpers: './src/helpers.ts',
+  colors: './index.ts',
+};
+
+export const terserOption = {
+  compress: {
+    toplevel: false,
+    unused: true,
+  },
+  mangle: {
+    keep_fnames: false,
+    properties: false
+  },
+  nameCache: undefined,
+};
+
+
+const config = [
+  {
+    input: { ...input },
+    plugins: [
+      terser([outDir], terserOption),
+      typescript(),
+    ],
+    treeshake: false,
+    output: {
+      dir: outDir,
+      entryFileNames: '[name].mjs',
+      format: 'es',
+      generatedCode: {
+        constBindings: true
+      },
+    },
+  },
+  {
+    input: { ...input },
+    plugins: [
+      dts({
+        tsconfig: 'tsconfig.dts.json',
+      }),
+    ],
+    treeshake: false,
+    output: {
+      dir: outDir,
+      format: 'es',
+    },
+  },
+] satisfies RollupOptions[];
+export default config;

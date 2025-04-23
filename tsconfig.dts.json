@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.json",
+  "include": ["src/**/*.ts", "index.ts"],
+  "compilerOptions": {
+    "moduleResolution": "bundler",
+    "outDir": "dist",
+    "declaration": true,
+
+    "emitDeclarationOnly": true
+  }
+}

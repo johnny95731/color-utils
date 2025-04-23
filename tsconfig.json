@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "typeRoots": ["./dist", ],
+    "baseUrl": "./",
+    "lib": ["DOM", "esnext"],
+    "target": "esnext",
+    "useDefineForClassFields": true,
+    "strict": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "allowJs": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+  }
+}
