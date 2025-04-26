@@ -1,6 +1,6 @@
 
 export * from 'src/helpers.ts';
-export * from 'src/colors.ts';
+export * from 'src/numeric';
 export * from 'src/colors';
 
 export * from 'src/manipulation/mixing';
