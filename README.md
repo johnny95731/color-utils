@@ -949,7 +949,7 @@ Generate a random (positive) integer in [0, `max`].
 Rounding a number to specific `place` value. Positive `place` means decimal places and negative means whole number places.
 
 ```ts
-Math.round(pow(10, place) * num) / pow(10, place);
+Math.round(10**place * num) / 10**place;
 ```
 
 </details>

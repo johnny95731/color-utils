@@ -24,7 +24,7 @@ export const randInt = (max: number) => {
  * @return Percentage number.
  */
 export const round = (num: number, place: number = 0): number =>
-  Math.round(pow(10, place) * num) / pow(10, place);
+  Math.round(10**place * num) / 10**place;
 
 
 /**
