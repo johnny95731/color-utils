@@ -4,10 +4,7 @@ import terser from './terser-plugin.ts';
 import type { RollupOptions } from 'rollup';
 
 export const outDir = 'dist/';
-export const input = {
-  helpers: './src/helpers.ts',
-  colors: './index.ts',
-};
+export const input = './index.ts';
 
 export const terserOption = {
   compress: {
@@ -24,7 +21,7 @@ export const terserOption = {
 
 const config = [
   {
-    input: { ...input },
+    input,
     plugins: [
       terser([outDir], terserOption),
       typescript(),
@@ -32,7 +29,6 @@ const config = [
     treeshake: false,
     output: {
       dir: outDir,
-      entryFileNames: '[name].mjs',
       format: 'es',
       generatedCode: {
         constBindings: true
@@ -40,7 +36,7 @@ const config = [
     },
   },
   {
-    input: { ...input },
+    input,
     plugins: [
       dts({
         tsconfig: 'tsconfig.dts.json',

@@ -4,7 +4,7 @@ import convert from 'color-convert';
 
 import { performanceTest } from '../utilsForTest/perf.js';
 import { SampleGenerator } from '../utilsForTest/sample.js';
-import { rgb2xyz, xyz2rgb } from '../../dist/colors.mjs';
+import { rgb2xyz, xyz2rgb } from '../../dist/index.js';
 
 extend([xyzPlugin]);
 

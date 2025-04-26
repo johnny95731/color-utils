@@ -5,7 +5,7 @@ import convert from 'color-convert';
 
 import { equivalenceTest, stabilityTest } from '../utilsForTest/color-test.js';
 import { SampleGenerator } from '../utilsForTest/sample.js';
-import { rgb2hex, hex2rgb } from '../../dist/colors.mjs';
+import { rgb2hex, hex2rgb } from '../../dist/index.js';
 
 extend([cmykPlugin]);
 

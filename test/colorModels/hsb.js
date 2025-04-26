@@ -3,7 +3,7 @@ import convert from 'color-convert';
 
 import { performanceTest } from '../utilsForTest/perf.js';
 import { SampleGenerator } from '../utilsForTest/sample.js';
-import { rgb2hsb, hsb2rgb } from '../../dist/colors.mjs';
+import { rgb2hsb, hsb2rgb } from '../../dist/index.js';
 
 
 const { rgbs, colors, colords, length } = SampleGenerator.defaults;

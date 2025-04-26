@@ -1,6 +1,6 @@
 import { performanceTest } from '../utilsForTest/perf.js';
 import { SampleGenerator } from '../utilsForTest/sample.js';
-import { rgb2lchuv, lchuv2rgb, rgb2luv, luv2rgb } from '../../dist/colors.mjs';
+import { rgb2lchuv, lchuv2rgb, rgb2luv, luv2rgb } from '../../dist/index.js';
 
 
 const { rgbs, length } = SampleGenerator.defaults;

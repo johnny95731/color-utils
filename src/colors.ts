@@ -17,14 +17,9 @@ export type ColorSpace = {
    */
   readonly name_: string,
   /**
-   * Name of CSS color function (if exists). Note that this may be repeated, for example,
-   * LCH(ab) and LCH(uv) are `lch`.
-   */
-  readonly css_: string,
-  /**
    * Browser support this color value or not.
    */
-  isSupport_: boolean,
+  isSupported_: boolean,
   /**
    * Label of channels
    */
@@ -63,7 +58,7 @@ export type ColorSpace = {
  */
 export const COLOR_SPACES: ColorSpace[] = (() => {
   const HCL_MAX = [360, 100, 100] as const; // For Hue-Chroma-Luminance models.
-  const LCH_MAX = [100, 100, 360] as const; // Reverse of HCL: Luminance-Chroma-Hue
+  const LCH_MAX = [100, 150, 360] as const; // Reverse of HCL: Luminance-Chroma-Hue
   const identityMap = (x: readonly number[]) => [...x];
 
   const spaces = [
@@ -73,7 +68,7 @@ export const COLOR_SPACES: ColorSpace[] = (() => {
       toRgb_: identityMap,
       labels_: ['Red', 'Green', 'Blue'],
       max_: map(3, () => 255),
-      isSupport_: true,
+      isSupported_: true,
     },
     {
       name_: 'HSL',
@@ -81,7 +76,7 @@ export const COLOR_SPACES: ColorSpace[] = (() => {
       toRgb_: hsl2rgb,
       labels_: ['Hue', 'Saturation', 'Luminance'],
       max_: HCL_MAX,
-      isSupport_: true,
+      isSupported_: true,
     },
     {
       name_: 'HSB',
@@ -89,7 +84,7 @@ export const COLOR_SPACES: ColorSpace[] = (() => {
       toRgb_: hsb2rgb,
       labels_: ['Hue', 'Saturation', 'Brightness'],
       max_: HCL_MAX,
-      isSupport_: false,
+      isSupported_: false,
     },
     {
       name_: 'HWB',
@@ -97,7 +92,7 @@ export const COLOR_SPACES: ColorSpace[] = (() => {
       toRgb_: hwb2rgb,
       labels_: ['Hue', 'Whiteness', 'Blackness'],
       max_: HCL_MAX,
-      isSupport_: true,
+      isSupported_: true,
     },
     {
       name_: 'CMYK',
@@ -105,64 +100,60 @@ export const COLOR_SPACES: ColorSpace[] = (() => {
       toRgb_: cmyk2rgb,
       labels_: ['Cyan', 'Magenta', 'Yellow', 'Black'],
       max_: map(4, () => 100),
-      isSupport_: false,
+      isSupported_: false,
     },
     {
-      name_: 'CIEXYZ',
+      name_: 'XYZ',
       fromRgb_: rgb2xyz,
       toRgb_: xyz2rgb,
       labels_: ['X', 'Y', 'Z'],
       max_: xyzMax,
-      css_: 'xyz',
-      isSupport_: false,
+      isSupported_: false,
     },
     {
-      name_: 'CIELAB',
+      name_: 'LAB',
       fromRgb_: rgb2lab,
       toRgb_: lab2rgb,
       labels_: ['L*', 'a*', 'b*'],
       max_: [[0, 100], [-125, 125], [-125, 125]] as const,
-      css_: 'lab',
-      isSupport_: true,
+      isSupported_: true,
     },
     {
-      name_: 'CIELUV',
+      name_: 'LUV',
       fromRgb_: rgb2luv,
       toRgb_: luv2rgb,
       labels_: ['L*', 'u*', 'v*'],
       max_: [[0, 100], [-134, 220], [-140, 122]] as const,
-      css_: 'luv',
-      isSupport_: false,
+      isSupported_: false,
     },
     {
-      name_: 'CIELCH(ab)',
+      name_: 'LCHab',
       fromRgb_: rgb2lchab,
       toRgb_: lchab2rgb,
       labels_: ['L*', 'C*', 'h'],
       max_: LCH_MAX,
-      css_: 'lch',
-      isSupport_: true,
+      isSupported_: true,
     },
     {
-      name_: 'CIELCH(uv)',
+      name_: 'LCHuv',
       fromRgb_: rgb2lchuv,
       toRgb_: lchuv2rgb,
       labels_: ['L*', 'C*', 'h'],
       max_: LCH_MAX,
-      css_: 'lch',
-      isSupport_: false,
+      isSupported_: false,
     },
   ] satisfies (
-      Omit<ColorSpace, 'css_' | 'max_'> &
-      Partial<Pick<ColorSpace, 'css_'>> &
+      Omit<ColorSpace, 'max_'> &
       { 'max_'?: ColorSpace['max_'] | number}
     )[];
 
   const isInBrowser = typeof CSS !== 'undefined';
   for (const obj of spaces) {
-    obj.css_ ??= obj.name_.toLowerCase();
-    if (isInBrowser)
-      obj.isSupport_ = CSS.supports('color', `${obj.css_}(0 0 0)`);
+    if (isInBrowser) {
+      const css = obj.name_.replace(/[a-z]/g, '');
+      const vals = map(obj.labels_, () => 0).join(' ');
+      obj.isSupported_ = CSS.supports('color', `${css}(${vals})`);
+    }
   }
 
   return spaces as ColorSpace[];
@@ -171,7 +162,7 @@ export const COLOR_SPACES: ColorSpace[] = (() => {
 
 
 /**
- * Return a `COLOR_SPACES` item
+ * Return an item in `COLOR_SPACES`.
  * @param space Item in `COLOR_SPACES` or `COLOR_SPACES[number].name_`
  */
 export const getColorSpace = (
@@ -179,7 +170,7 @@ export const getColorSpace = (
 ): ColorSpace => {
   if (typeof space === 'string') {
     space = space.toUpperCase();
-    return COLOR_SPACES.find(item => item.name_ === space) ?? COLOR_SPACES[0];
+    return COLOR_SPACES.find(item => item.name_.toUpperCase() === space) ?? COLOR_SPACES[0];
   }
   return space;
 };
@@ -220,7 +211,7 @@ export const toSpace = (
 
 
 /**
- * Return CSS <color> value format: `space(val val val)`.
+ * Return CSS `<color>` value format: `space(val val val)`.
  * If `checkSupport === true` and the brwoser does not support, then return
  * RGB format.
  * In node enviroment, the `ColorSpace.isSupport_` based on <color-function>
@@ -238,12 +229,21 @@ export const getCssColor = (
   checkSupport: boolean = false,
   sep: string = ' '
 ): string => {
-  color = [...color];
   space = getColorSpace(space);
-  if (checkSupport && !space.isSupport_) {
-    return getCssColor(space.toRgb_(color), COLOR_SPACES[0]);
+  if (checkSupport) sep = ' ';
+
+  if (checkSupport && !space.isSupported_) {
+    return getCssColor(space.toRgb_(color), COLOR_SPACES[0], false, sep);
   }
-  return `${space.css_}(${color.join(sep)})`;
+  const strs = map(color, (val, i) => {
+    if (space.max_[i] === 100) {
+      return val + '%';
+    }
+    return val;
+  });
+  const css = space.name_.replace(/[a-z]/g, '');
+
+  return `${css}(${strs.join(sep)})`;
 };
 
 /**
@@ -254,7 +254,6 @@ export const rgbArraylize = (
   rgb: readonly number[] | string
 ): readonly number[] => {
   return typeof rgb === 'string' ? hex2rgb(rgb) : rgb;
-  // return Array.isArray(rgb) ? rgb : hex2rgb(rgb as string);
 };
 
 
@@ -263,8 +262,8 @@ export const rgbArraylize = (
  * maximum of rgb.
  * @param rgb RGB array.
  */
-export const rgb2hue = (rgb: readonly number[]): number => {
-  return hsbHelper(rgb)[0];
+export const rgb2hue = (rgb: readonly number[] | string): number => {
+  return hsbHelper(rgbArraylize(rgb))[0];
 };
 
 
@@ -293,24 +292,27 @@ export const linearRgb2srgb = (val: number) => {
  * @param rgb Array of RGB color.
  * @return Grayscale [0, 255]
  */
-export const rgb2gray = (rgb: readonly number[]): number => (
-  0.299 * rgb[0] + 0.587 * rgb[1] + 0.114 * rgb[2]
+export const rgb2gray = (rgb: string | readonly number[]): number => (
+  dot3(
+    rgbArraylize(rgb),
+    [0.299, 0.587, 0.114]
+  )
 );
 
 /**
  * The rgb is light if the grayscale >= 127.5.
  */
 export const isLight = (rgb: readonly number[] | string): boolean => {
-  return rgb2gray(rgbArraylize(rgb)) > 127.5;
+  return rgb2gray(rgb) > 127.5;
 };
 
 /**
  * Evaluate relative luminance from RGB.
  * @returns Relative luminance, between [0, 1].
  */
-export const relativeLuminance = (srgb: string | readonly number[]): number => {
+export const getRelativeLuminance = (rgb: string | readonly number[]): number => {
   return dot3(
-    map(rgbArraylize(srgb), val => srgb2linearRgb(val)),
+    map(rgbArraylize(rgb), val => srgb2linearRgb(val)),
     [0.2126, 0.7152, 0.0722]
   );
 };
@@ -322,8 +324,8 @@ export const getContrastRatio = (
   rgb1: string | readonly number[],
   rgb2: string | readonly number[],
 ) => {
-  const lum1 = relativeLuminance(rgb1);
-  const lum2 = relativeLuminance(rgb2);
+  const lum1 = getRelativeLuminance(rgb1);
+  const lum2 = getRelativeLuminance(rgb2);
   const ratio = (lum1 + 0.05) / (lum2 + 0.05);
   return round(ratio < 1 ? 1 / ratio : ratio, 2);
 };
@@ -334,7 +336,7 @@ export const getContrastRatio = (
  */
 type ReadbleOptions = {
   /**
-   * Text size is large scale or normal scale.
+   * Text size is large scale (`true`) or normal scale (`false`).
    *
    * Large scale: text with at least 18 point or 14 point bold or font size
    * that would yield equivalent size for Chinese, Japanese and Korean (CJK) fonts.
@@ -342,7 +344,7 @@ type ReadbleOptions = {
    */
   isLarge?: boolean
   /**
-   * Required to satisfy WCAG level AAA or not.
+   * Required to satisfy WCAG level AAA (`true`) or level AA (`false`).
    *
    * WCAG has three levels of conformance:
    * - Level A is the minimum level.

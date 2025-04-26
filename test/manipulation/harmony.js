@@ -4,7 +4,7 @@ import mixPlugin from 'colord/plugins/mix';
 
 import { performanceTest } from '../utilsForTest/perf.js';
 import { SampleGenerator } from '../utilsForTest/sample.js';
-import { harmolize, rgb2hsb } from '../../dist/colors.mjs';
+import { harmonize, rgb2hsb } from '../../dist/index.js';
 
 extend([harmoniesPlugin]);
 extend([mixPlugin]);
@@ -20,7 +20,7 @@ function analogous_() {
   };
   const custom = () => {
     for (let i = 0; i < length; i++) {
-      harmolize(rgbs[i], 'analogous');
+      harmonize(rgbs[i], 'analogous');
     }
   };
 
@@ -38,7 +38,7 @@ function complementary_() {
   };
   const custom = () => {
     for (let i = 0; i < length; i++) {
-      harmolize(rgbs[i], 'complementary');
+      harmonize(rgbs[i], 'complementary');
     }
   };
 
@@ -56,12 +56,12 @@ function tetradic_() {
   };
   const tetradic1 = () => {
     for (let i = 0; i < length; i++) {
-      harmolize(rgbs[i], 'tetradic1');
+      harmonize(rgbs[i], 'tetradic1');
     }
   };
   const tetradic3 = () => {
     for (let i = 0; i < length; i++) {
-      harmolize(rgbs[i], 'tetradic3');
+      harmonize(rgbs[i], 'tetradic3');
     }
   };
 
@@ -79,7 +79,7 @@ function split_() {
   };
   const custom = () => {
     for (let i = 0; i < length; i++) {
-      harmolize(rgbs[i], 'split complementary');
+      harmonize(rgbs[i], 'split complementary');
     }
   };
 
@@ -97,7 +97,7 @@ function triadic_() {
   };
   const custom = () => {
     for (let i = 0; i < length; i++) {
-      harmolize(rgbs[i], 'triadic');
+      harmonize(rgbs[i], 'triadic');
     }
   };
 
@@ -115,7 +115,7 @@ function rectangle_() {
   };
   const custom = () => {
     for (let i = 0; i < length; i++) {
-      harmolize(rgbs[i], 'tetradic2');
+      harmonize(rgbs[i], 'tetradic2');
     }
   };
 
@@ -133,7 +133,7 @@ function shades_() {
   };
   const custom = () => {
     for (let i = 0; i < length; i++) {
-      harmolize(rgb2hsb(rgbs[i]), 'shades', 6);
+      harmonize(rgb2hsb(rgbs[i]), 'shades', 6);
     }
   };
 
@@ -151,7 +151,7 @@ function tints_() {
   };
   const custom = () => {
     for (let i = 0; i < length; i++) {
-      harmolize(rgb2hsb(rgbs[i]), 'tints', 6);
+      harmonize(rgb2hsb(rgbs[i]), 'tints', 6);
     }
   };
 
@@ -169,7 +169,7 @@ function tones_() {
   };
   const custom = () => {
     for (let i = 0; i < length; i++) {
-      harmolize(rgb2hsb(rgbs[i]), 'tones', 6);
+      harmonize(rgb2hsb(rgbs[i]), 'tones', 6);
     }
   };
 

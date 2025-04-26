@@ -1,4 +1,4 @@
-import { l2Dist } from '../numeric';
+import { l2Dist3 } from '../numeric';
 import { hex2rgb } from './hex';
 
 export const namedColor = new Map(Object.entries({
@@ -135,7 +135,7 @@ export const namedColor = new Map(Object.entries({
   'White': 'FFFFFF',
   'WhiteSmoke': 'F5F5F5',
   'Gainsboro': 'DCDCDC',
-  'LightGrey': 'D3D3D3',
+  'LightGray ': 'D3D3D3',
   'Silver': 'C0C0C0',
   'DarkGray': 'A9A9A9',
   'Gray': '808080',
@@ -163,14 +163,14 @@ namedColor.forEach((hex, name) => {
 /**
  * Find the closet named-color.
  */
-export const getClosestNamed = (
+export const rgb2named = (
   rgb: number[]
 ): string => {
   let minDist = Infinity;
   let dist: number;
   let closest;
   for (let i = 0; i < cacheNameRgb.length; i++) {
-    dist = l2Dist(rgb, cacheNameRgb[i][1]);
+    dist = l2Dist3(rgb, cacheNameRgb[i][1]);
     if (dist < minDist) {
       closest = cacheNameRgb[i][0];
       minDist = dist;
@@ -180,6 +180,6 @@ export const getClosestNamed = (
   return closest;
 };
 
-export const getNamedRgb = (name: string) => {
+export const named2rgb = (name: string) => {
   return hex2rgb(namedColor.get(name) ?? 'black');
 };

@@ -1,6 +1,6 @@
 {
   "name": "@johnny95731/color-utils",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "author": "johnny95731 <johnny95731@gmail.com>",
   "license": "MIT",
   "description": "High-performance color utilities that including conversions, harmonies, mix, and sort.",
@@ -52,18 +52,13 @@
     "typescript": "^5.8.2",
     "typescript-eslint": "^8.26.1"
   },
-  "main": "dist/colors.js",
-  "module": "dist/colors.mjs",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
   "exports": {
     ".": {
-      "types": "./dist/colors.d.ts",
-      "import": "./dist/colors.mjs",
-      "require": "./dist/colors.js"
-    },
-    "./helpers": {
-      "types": "./dist/helpers.d.ts",
-      "import": "./dist/helpers.mjs",
-      "require": "./dist/helpers.js"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     },
     "./package.json": "./package.json"
   },

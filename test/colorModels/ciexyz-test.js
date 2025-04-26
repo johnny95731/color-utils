@@ -6,7 +6,7 @@ import convert from 'color-convert';
 import { equivalenceTest, stabilityTest } from '../utilsForTest/color-test.js';
 import { SampleGenerator } from '../utilsForTest/sample.js';
 import { isSameColor } from '../utilsForTest/helpers.js';
-import { rgb2xyz, xyz2rgb, rgb2hex, setReferenceWhite } from '../../dist/colors.mjs';
+import { rgb2xyz, xyz2rgb, rgb2hex, setReferenceWhite } from '../../dist/index.js';
 
 extend([xyzPlugin]);
 

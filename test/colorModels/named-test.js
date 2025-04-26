@@ -5,7 +5,7 @@ import convert from 'color-convert';
 
 import { equivalenceTest } from '../utilsForTest/color-test.js';
 import { SampleGenerator } from '../utilsForTest/sample.js';
-import { rgb2hex, getClosestNamed } from '../../dist/colors.mjs';
+import { rgb2hex, rgb2named } from '../../dist/index.js';
 
 extend([namesPlugin]);
 
@@ -29,7 +29,7 @@ function namedEquiv() {
     return name;
   };
   const custom_ = (rgb) => {
-    return getClosestNamed(rgb).toLowerCase();
+    return rgb2named(rgb).toLowerCase();
   };
 
   equivalenceTest(custom_, colord_, rgbs, compFn);

@@ -4,7 +4,7 @@ import convert from 'color-convert';
 
 import { equivalenceTest, stabilityTest } from '../utilsForTest/color-test.js';
 import { SampleGenerator } from '../utilsForTest/sample.js';
-import { rgb2hsb, hsb2rgb, rgb2hex } from '../../dist/colors.mjs';
+import { rgb2hsb, hsb2rgb, rgb2hex } from '../../dist/index.js';
 
 const { rgbs } = SampleGenerator.defaults;
 

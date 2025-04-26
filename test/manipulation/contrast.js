@@ -1,6 +1,6 @@
 import { performanceTest } from '../utilsForTest/perf.js';
 import { SampleGenerator } from '../utilsForTest/sample.js';
-import { adjContrast, CONTRAST_METHODS } from '../../dist/colors.mjs';
+import { adjContrast, CONTRAST_METHODS, rgb2lab } from '../../dist/index.js';
 
 
 const { rgbs, length } = SampleGenerator.defaults;
@@ -8,12 +8,13 @@ const { rgbs, length } = SampleGenerator.defaults;
 
 function overall() {
   const fns = [];
+  const labs = rgbs.map(rgb => rgb2lab(rgb));
   CONTRAST_METHODS.forEach(name => {
     fns.push([
       name,
       function(){
         for (let i = 5; i < length; i++) {
-          adjContrast(rgbs.slice(i-5, i), name, 'RGB');
+          adjContrast(labs.slice(i-5, i), name, 'LAB');
         }
       }
     ]);

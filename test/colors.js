@@ -3,11 +3,10 @@ import a11yPlugin from 'colord/plugins/a11y';
 
 import { performanceTest } from './utilsForTest/perf.js';
 import { SampleGenerator } from './utilsForTest/sample.js';
-import { dot3, randInt } from '../dist/helpers.mjs';
 import {
-  getContrastRatio, isReadable, linearRgb2srgb, randRgbGen, rgb2hex, rgb2hue,
-  relativeLuminance, srgb2linearRgb
-} from '../dist/colors.mjs';
+  dot3, randInt, getContrastRatio, isReadable, linearRgb2srgb, randRgbGen,
+  rgb2hex, rgb2hue, getRelativeLuminance, srgb2linearRgb
+} from '../dist/index.js';
 
 extend([a11yPlugin]);
 
@@ -135,7 +134,7 @@ function relativeLuminance_() {
   };
   const custom_ = () => {
     for (let i = 0; i < length; i++) {
-      relativeLuminance(rgbs[i]);
+      getRelativeLuminance(rgbs[i]);
     }
   };
 

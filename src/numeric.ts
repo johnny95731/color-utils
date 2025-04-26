@@ -1,34 +1,23 @@
 import { map } from './helpers';
 
 /**
- * The modulo function. Equivalent to
- *   `let a = n % m;
- *    if (a < 0) a += m;`
- * @param {Number} n Dividend.
- * @param {Number} m Divisor.
- * @return {Number} Signed remainder.
- */
-export const mod = (n: number, m: number): number => {
-  return ((n % m) + m) % m;
-};
-
-/**
- * An alias of x**y. About 25%~30% faster than x**y = Nath.pow(x,y).
+ * An alias of x**y. About 25%~30% faster than x**y = Math.pow(x,y) for non-integer `y`.
  */
 export const pow = (x: number, y: number) => {
-  if (!x && !y) return 1;
+  if (!y) return 1;
+  if (!x) return 0;
   return Math.exp(y * Math.log(x));
 };
 
 /**
- * Generate a random (positive) integer between [0,max].
+ * Generate a random (positive) integer between [0, max].
  */
 export const randInt = (max: number) => {
   return Math.random() * (max + 1) | 0;
 };
 
 /**
- * Rounding a number to specifit place value.
+ * Rounding a number to specific place value.
  * @param num A number.
  * @param place Default: `0`. Rounding to specific place value. Positive means decimal places
  * and negative means whole number places.
@@ -37,38 +26,19 @@ export const randInt = (max: number) => {
 export const round = (num: number, place: number = 0): number =>
   Math.round(pow(10, place) * num) / pow(10, place);
 
-/**
- * Convert a number `num` to percentage form, that is, `num * 100%`.
- * @param num A number.
- * @param place Rounding to specific place value. Positive means decimal places
- * and negative means whole number places.
- * @return Percentage number.
- */
-export const toPercentage = (num: number, place: number = 0): number => {
-  return round(100 * num, place);
-};
 
 /**
- * Fraction to percentage.
- * Return round(100 * idx / num, 2)%
- * @param num Numerator.
- * @param denom Denominator.
- * @returns
- */
-export const frac2percentage = (num: number, denom: number): string => {
-  return round(100 * num / denom, 2) + '%';
-};
-
-
-/**
- * Clip the number in the range [`min`, `max`].
+ * Limit the number in the interval [`min`, `max`].
  * @param num Number to clip.
  * @param min Minimum value.
  * @param max Maximum value.
  * @returns Clipped number.
  */
-export const clip = (num: number, min: number, max: number): number => {
-  return Math.min(Math.max(num, +min!), +max!);
+export const clip = (num: number, min?: number, max?: number): number => {
+  // +undifined = NaN. The comparison always get false
+  if (num < min!) num = min!; // max < min return min
+  else if (num > max!) num = max!;
+  return num;
 };
 
 /**
@@ -117,10 +87,10 @@ export const dot3 = (arr1: readonly number[], arr2: readonly number[]): number =
 /**
  * Return the summation of square of numbers.
  */
-export const squareSum = (a: number, b: number, c: number = 0, d: number = 0): number => {
+export const squareSum4 = (a: number, b: number, c: number = 0, d: number = 0): number => {
   return a * a + b * b + c * c + d * d;
 };
-export const l2Norm = (a: number, b: number) => Math.sqrt(squareSum(a, b));
+export const l2Norm3 = (a: number, b: number, c: number = 0) => Math.sqrt(squareSum4(a, b, c));
 
 /**
  * Square of L2-distance (not take square root yet) of two array.
@@ -129,12 +99,12 @@ export const l2Norm = (a: number, b: number) => Math.sqrt(squareSum(a, b));
  * @param color2 Array with length = 3.
  * @returns The mean value of arr1 and arr2.
  */
-export const l2Dist = (color1: readonly number[], color2: readonly number[]): number => {
-  return Math.sqrt(squareSum(
+export const l2Dist3 = (color1: readonly number[], color2: readonly number[]): number => {
+  return l2Norm3(
     color1[0] - color2[0],
     color1[1] - color2[1],
     color1[2] - color2[2]
-  ));
+  );
 };
 
 /**
@@ -147,6 +117,6 @@ export const l2Dist = (color1: readonly number[], color2: readonly number[]): nu
 export const elementwiseMean = (arr1: readonly number[], arr2: readonly number[]): number[] => {
   return map(
     Math.min(arr1.length, arr2.length),
-    (_, i) => (arr1[i] + arr2[i]) / 2,
+    i => (arr1[i] + arr2[i]) / 2,
   );
 };

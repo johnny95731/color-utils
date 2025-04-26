@@ -4,7 +4,7 @@ import convert from 'color-convert';
 
 import { performanceTest } from '../utilsForTest/perf.js';
 import { SampleGenerator } from '../utilsForTest/sample.js';
-import { getClosestNamed } from '../../dist/colors.mjs';
+import { rgb2named } from '../../dist/index.js';
 
 extend([namesPlugin]);
 
@@ -30,7 +30,7 @@ function name() {
   };
   const custom_ = () => {
     for (let i = 0; i < length; i++) {
-      getClosestNamed(rgbs[i]);
+      rgb2named(rgbs[i]);
     }
   };
   return performanceTest(

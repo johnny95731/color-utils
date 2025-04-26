@@ -1,4 +1,4 @@
-import { isSameColor } from './helpers.mjs';
+import { isSameColor } from './helpers.js';
 
 /**
  * Test whether colors `rgb` and `toRgb(fromRgb(rgb))` are same for every `rgb`

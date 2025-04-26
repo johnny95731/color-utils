@@ -5,7 +5,7 @@ import convert from 'color-convert';
 
 import { performanceTest } from '../utilsForTest/perf.js';
 import { SampleGenerator } from '../utilsForTest/sample.js';
-import { rgb2lab, lab2rgb, rgb2lchab, lchab2rgb } from '../../dist/colors.mjs';
+import { rgb2lab, lab2rgb, rgb2lchab, lchab2rgb } from '../../dist/index.js';
 
 extend([labPlugin, lchPlugin]);
 

@@ -15,6 +15,7 @@ const config = [
     treeshake: false,
     output: {
       dir: outDir,
+      entryFileNames: '[name].cjs',
       format: 'cjs',
       generatedCode: {
         constBindings: true

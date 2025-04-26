@@ -1,5 +1,5 @@
 import { performanceTest } from './utilsForTest/perf.js';
-import { reduce, map } from '../dist/helpers.mjs';
+import { map } from '../dist/index.js';
 
 
 function randPositiveInt() {
@@ -116,96 +116,6 @@ function atan2() {
   );
 }
 
-function polar2cartesian() {
-  const rGen = () => Math.random() * 100;
-  const degGen = () => Math.random() * 360;
-  const c = 180 / Math.PI;
-
-  const triangle_ = (r, deg) => {
-    return {
-      x: r * Math.cos(deg / c),
-      y: r * Math.sin(deg / c)
-    };
-  };
-  const triangle = () => {
-    triangle_(rGen(), degGen());
-  };
-
-  const sqrt_ = (r, deg) => {
-    const x = Math.cos(deg / c);
-    return {
-      x: r * x,
-      y: r * Math.sqrt(1 - x * x)
-    };
-  };
-  const sqrt = () => {
-    sqrt_(rGen(), degGen());
-  };
-
-  const sqrt_2 = (r, deg) => {
-    const x = r * Math.cos(deg / c);
-    return {
-      x: x,
-      y: Math.sqrt((r + x) * (r - x))
-    };
-  };
-  const sqrt2 = () => {
-    sqrt_2(rGen(), degGen());
-  };
-
-  return performanceTest(
-    'polar2cartesian',
-    [triangle, sqrt, sqrt2],
-  );
-}
-
-function l2DistSq() {
-  const num = 5;
-  const arr1 = [...Array(num)].map(Math.random);
-  const arr2 = [...Array(num)].map(Math.random);
-
-  const builtinFor = () => {
-    let s = 0, i = 0, temp, len = Math.min(arr1.length, arr2.length);
-    for (;i < len; i++) {
-      temp = arr1[i] - arr2[i];
-      s += temp * temp;
-    }
-    return s;
-  };
-
-  const customPow = () => {
-    return reduce(
-      arr1,
-      (acc, val, i) => acc + (val - arr2[i])**2,
-      0,
-      Math.min(arr1.length, arr2.length)
-    );
-  };
-
-  const customMult = () => {
-    return reduce(
-      arr1,
-      (acc, val, i) => acc + (val - arr2[i]) * (val - arr2[i]),
-      0,
-      Math.min(arr1.length, arr2.length)
-    );
-  };
-  const customMult2 = () => {
-    return reduce(
-      arr1,
-      (prev, val, i) => (val -= arr2[i], prev + val * val),
-      0,
-      Math.min(arr1.length, arr2.length)
-    );
-  };
-
-  return performanceTest(
-    'l2DistSq',
-    [builtinFor, customPow, customMult, customMult2],
-    { time: 500 }
-  );
-}
-
 function elementwiseMean() {
   const num = 5;
   const arr1 = [...Array(num)].map(Math.random);
@@ -242,23 +152,9 @@ function elementwiseMean() {
   );
 }
 
-function squrare() {
-  const pow = () => {
-    return 0.25 ** 2;
-  };
-  const mul = () => {
-    return 0.25 * 0.25;
-  };
-
-  return performanceTest(
-    'squrare',
-    [pow, mul]
-  );
-}
-
 function power_() {
   const gen = () => [
-    Math.random(),
+    Math.random() * 10,
     Math.random() * 10,
   ];
 
@@ -272,7 +168,11 @@ function power_() {
     return Math.pow(k[0], k[1]);
   };
 
-  const m = (x, y) => Math.exp(y * Math.log(x));
+  const m = (x, y) => {
+    if (!y) return 1;
+    if (!x) return 0;
+    return !y ? 1 : !x ? 0 :Math.exp(y * Math.log(x));
+  };
   const explog = () => {
     const k = gen();
     return m(k[0], k[1]);
@@ -291,10 +191,7 @@ const fns = [
   clip,
   rad2deg,
   atan2,
-  polar2cartesian,
-  l2DistSq,
   elementwiseMean,
-  squrare,
   power_
 ];
 for (const fn of fns) {

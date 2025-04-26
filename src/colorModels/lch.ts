@@ -1,4 +1,4 @@
-import { deg2rad, rad2deg, l2Norm } from '../numeric';
+import { deg2rad, rad2deg, l2Norm3 } from '../numeric';
 
 /**
  * Convert Luminance-Chroma-Chroma model to LCh Luminance-Chroma-Hue model.
@@ -20,7 +20,7 @@ export const lcc2lch: lcc2lch = (lcc: readonly number[]): number[] => {
   const deg = rad2deg(Math.atan2(c2, c1));
   return [
     l,
-    l2Norm(c1, c2),
+    l2Norm3(c1, c2),
     deg < 0 ? deg + 360 : deg,
   ];
 };

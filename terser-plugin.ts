@@ -32,7 +32,7 @@ export default (
       async handler() {
         for (const path of outDir) {
           const files = (fs.readdirSync(path) as string[])
-            .filter((filename) => /\.(js|mjs|cjs )$/.test(filename));
+            .filter((filename) => /\.(js|mjs|cjs)$/.test(filename));
           for (const filename of files) {
             const filePath = `${path}/${filename}`;
             const code = fs.readFileSync(filePath, 'utf-8');

@@ -1,5 +1,5 @@
 import { performanceTest } from './utilsForTest/perf.js';
-import { reduce, map, cloneDeep } from '../dist/helpers.mjs';
+import { map, cloneDeep } from '../dist/index.js';
 
 const num = 5;
 
@@ -72,49 +72,6 @@ function clone2Layers() {
 }
 
 
-function forEachNumber() {
-  const f = (val, i) => i;
-  const builtinFor = () => {
-    for (let i = 0; i < num; i++) {
-      f(null, i);
-    }
-  };
-  const prototype = () => {
-    [...Array(num)].forEach(f);
-  };
-  const customFunction = () => {
-    reduce(num, f);
-  };
-
-  return performanceTest(
-    'forEach - number',
-    [builtinFor, prototype, customFunction],
-    { time: 200 }
-  );
-}
-
-function forEachArray() {
-  const f = (val, i) => i;
-  const arr = [...Array(num)];
-  const builtinFor = () => {
-    for (let i = 0; i < arr.length; i++) {
-      f(arr[i], i);
-    }
-  };
-  const prototype = () => {
-    arr.forEach(f);
-  };
-  const customFunction = () => {
-    reduce(arr, f);
-  };
-
-  return performanceTest(
-    'forEach - array',
-    [builtinFor, prototype, customFunction],
-    { time: 200 }
-  );
-}
-
 function mapNumber() {
   const arr = Array(num);
   const builtinFor = () => {
@@ -174,7 +131,7 @@ function typeChecking_() {
   return performanceTest(
     'Type checking',
     [isArray_, typeof_],
-    { time: 200 }
+    { time: 500 }
   );
 }
 
@@ -182,8 +139,6 @@ function typeChecking_() {
 const fns = [
   clone4Layers,
   clone2Layers,
-  forEachNumber,
-  forEachArray,
   mapNumber,
   mapArray,
   typeChecking_,

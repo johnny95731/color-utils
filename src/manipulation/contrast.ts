@@ -1,4 +1,4 @@
-import { reduce, map } from '../helpers';
+import { map } from '../helpers';
 import { clip, pow, rangeMapping } from '../numeric';
 import { lab2rgb, rgb2lab } from '../colorModels/cielab';
 import { getColorSpace, type ColorSpace } from '../colors';
@@ -19,7 +19,7 @@ export const CONTRAST_METHODS = [
  */
 export type ContrastMethod = typeof CONTRAST_METHODS[number];
 
-export type ContrastFunction = (rgbs: number[][], ...arg: number[]) => number[][]
+export type ContrastFunction = (rgbs: readonly number[][], ...arg: number[]) => number[][]
 
 
 
@@ -30,7 +30,7 @@ export type ContrastFunction = (rgbs: number[][], ...arg: number[]) => number[][
  * @param c Scaling coefficient.
  * @returns RGB arrays.
  */
-export const scaling = (rgbs: number[][], c: number = 1): number[][] => {
+export const scaling = (rgbs: readonly number[][], c: number = 1): number[][] => {
   return map(
     rgbs,
     (rgb) => {
@@ -49,7 +49,7 @@ export const scaling = (rgbs: number[][], c: number = 1): number[][] => {
  * @returns RGB arrays.
  */
 export const gammaCorrection = (
-  rgbs: number[][],
+  rgbs: readonly number[][],
   gamma: number = 1
 ): number[][] => {
   return map(
@@ -64,8 +64,10 @@ export const gammaCorrection = (
  * @param rgbs
  * @returns RGB arrays.
  */
-const autoEnhancement: ContrastFunction = (rgbs: number[][]): number[][] => {
-  let minL: number = Infinity, maxL: number = 0;
+const autoEnhancement: ContrastFunction = (rgbs: readonly number[][]): number[][] => {
+  let minL: number = Infinity, maxL: number = 0,
+    i = 0, temp: number[];
+
   const labs = map(rgbs, rgb => {
     const lab = rgb2lab(rgb);
     const l = lab[0];
@@ -74,14 +76,12 @@ const autoEnhancement: ContrastFunction = (rgbs: number[][]): number[][] => {
     return lab;
   });
 
-  return reduce(
-    labs,
-    (_, lab, i) => {
-      lab[0] = rangeMapping(lab[0], minL, maxL, 0, 100);
-      labs[i] = lab2rgb(lab);
-      return labs;
-    }
-  );
+  for (; i < labs.length;) {
+    temp = labs[i];
+    temp[0] = rangeMapping(temp[0], minL, maxL, 0, 100);
+    labs[i++] = lab2rgb(temp);
+  }
+  return labs;
 };
 
 
@@ -95,7 +95,7 @@ const autoEnhancement: ContrastFunction = (rgbs: number[][]): number[][] => {
  * @returns RGB arrays.
  */
 export const autoBrightness: ContrastFunction = (
-  rgbs: number[][],
+  rgbs: readonly number[][],
   coeff: number = 0.7
 ): number[][] => {
   let op: (val: number[], i: number) => number[];

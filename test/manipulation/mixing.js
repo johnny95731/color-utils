@@ -3,7 +3,7 @@ import mixPlugin from 'colord/plugins/mix';
 
 import { performanceTest } from '../utilsForTest/perf.js';
 import { SampleGenerator } from '../utilsForTest/sample.js';
-import { mixColors, meanMix, MIXING_MODES } from '../../dist/colors.mjs';
+import { mixColors, meanMix, MIXING_MODES } from '../../dist/index.js';
 
 extend([mixPlugin]);
 

@@ -41,13 +41,16 @@ export type HarmonyOp = (
  * @param primary Primary color. Should be HSB, HSL, HWB color, or color
  * space that first channel represents hue.
  * @param degs Shift degrees.
- * @returns
+ * @returns HSL/HSB/HWB color (same as input).
  */
-export const harmonize = (
+export const shiftHue = (
   primary: readonly number[],
   degs: number[]
 ): number[][] => {
-  const [h, s, b] = primary;
+  // const [h, s, b] = primary;
+  const h = primary[0];
+  const s = primary[1];
+  const b = primary[2];
   // start from 1 'cause first color is primary color.
   return degs.map((deg) => [h + deg, s, b]);
 };
@@ -60,7 +63,7 @@ export const shades = (hsb: readonly number[], num: number = 6) => {
   const [h, s, b] = hsb;
   return map(
     num,
-    (_, i) => [h, s, b * (1 - i / num)],
+    i => [h, s, b * (1 - i / num)],
   );
 };
 
@@ -71,7 +74,7 @@ export const tints = (hsb: readonly number[], num: number = 6) => {
   const [h, s, b] = hsb;
   return map(
     num,
-    (_, i) => [h, s * (1 - i / num), b],
+    i => [h, s * (1 - i / num), b],
   );
 };
 
@@ -82,11 +85,11 @@ export const tones = (hsb: readonly number[], num: number = 6) => {
   const [h, s, b] = hsb;
   return map(
     num,
-    (_, i) => (i = (1 - i / num), [h, s * i, b * i]),
+    i => (i = (1 - i / num), [h, s * i, b * i]),
   );
 };
 
-const hueShifts = {
+const hueDegs = {
   [HARMONY_METHODS[0]]: shades,
   [HARMONY_METHODS[1]]: tints,
   [HARMONY_METHODS[2]]: tones,
@@ -105,20 +108,20 @@ const hueShifts = {
  * Generate harmony colors. Returns RGB colors.
  * @param hsb Primary color in HSB space. Calculate other colors base on this color.
  * @param method Harmony method.
- * @param args
- * @returns RGB color.
+ * @param args Argument `num` for `shades`, `tints`, and `tones`.
+ * @returns RGB colors.
  */
-export const harmolize = (
+export const harmonize = (
   hsb: readonly number[],
   method: Harmony | number,
-  args: number
+  args?: number
 ): number[][] => {
   if (typeof method === 'number') method = HARMONY_METHODS[method];
   if (!method) method = 'analogous';
 
-  const op = hueShifts[method];
+  const op = hueDegs[method];
   const result = Array.isArray(op) ?
-    harmonize(hsb, op) :
+    shiftHue(hsb, op) :
     op(hsb, args);
   return map(result, hsb => hsb2rgb(hsb));
 };

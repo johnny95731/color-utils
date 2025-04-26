@@ -1,6 +1,6 @@
 import { performanceTest } from '../utilsForTest/perf.js';
 import { SampleGenerator } from '../utilsForTest/sample.js';
-import { distE00, distE76, distE94, rgb2lab, sortColors, SORTING_ACTIONS } from '../../dist/colors.mjs';
+import { distE00, distE76, distE94, rgb2lab, sortColors, SORTING_ACTIONS } from '../../dist/index.js';
 
 const { rgbs, length } = SampleGenerator.defaults;
 
@@ -30,7 +30,7 @@ function distFn() {
 
 function overall() {
   const fns = [];
-  SORTING_ACTIONS.slice(5).forEach(name => {
+  SORTING_ACTIONS.forEach(name => {
     fns.push([
       name,
       function(){

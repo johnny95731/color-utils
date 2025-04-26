@@ -1,5 +1,5 @@
 import { cloneDeep, map, type DeepWriteable } from '../helpers';
-import { deg2rad, squareSum, randInt, pow, rad2deg, mod, l2Dist, l2Norm } from '../numeric';
+import { deg2rad, squareSum4, randInt, pow, rad2deg, l2Dist3, l2Norm3 } from '../numeric';
 import { rgb2gray } from '../colors';
 import { rgb2lab } from '../colorModels/cielab';
 
@@ -31,10 +31,10 @@ export const diffLuminance: SortOp = (
 };
 
 /**
- * Color difference of two RGB colors with CIE 1976 formula.
+ * Color difference of two LAB colors with CIE 1976 formula.
  */
 export const distE76: CIEDifferenceFn = (lab1: readonly number[], lab2: readonly number[]) => {
-  return l2Dist(lab1, lab2);
+  return l2Dist3(lab1, lab2);
 };
 
 /**
@@ -53,8 +53,8 @@ export const distE94: CIEDifferenceFn = (lab1: readonly number[], lab2: readonly
   const a2 = lab2[1];
   const b2 = lab2[2];
 
-  const c1Star = l2Norm(a1, b1);
-  const c2Star = l2Norm(a2, b2);
+  const c1Star = l2Norm3(a1, b1);
+  const c2Star = l2Norm3(a2, b2);
   const deltaA = a1 - a2;
   const deltaB = b1 - b2;
 
@@ -63,7 +63,7 @@ export const distE94: CIEDifferenceFn = (lab1: readonly number[], lab2: readonly
   // May be NaN. Due to floating problem.
   const deltaH = Math.sqrt(deltaA*deltaA + deltaB*deltaB - deltaC*deltaC) || 0;
 
-  return squareSum(
+  return squareSum4(
     deltaL,
     deltaC / (1 + 0.045 * c1Star),
     deltaH / (1 + 0.015 * c1Star)
@@ -98,16 +98,16 @@ export const distE00: CIEDifferenceFn = (() => {
     const a2 = lab2[1];
     const b2 = lab2[2];
 
-    const cMean = (l2Norm(a1, b1) + l2Norm(a2, b2)) / 2;
+    const cMean = (l2Norm3(a1, b1) + l2Norm3(a2, b2)) / 2;
     const aconst = 1 - f7(cMean);
     // 'P' for prime.
     const a1P = a1 + a1 / 2 * aconst;
     const a2P = a2 + a2 / 2 * aconst;
 
-    const c1P = l2Norm(a1P, b1);
-    const c2P = l2Norm(a2P, b2);
-    const h1P = mod(rad2deg(Math.atan2(b1, a1P)), 360);
-    const h2P = mod(rad2deg(Math.atan2(b2, a2P)), 360);
+    const c1P = l2Norm3(a1P, b1);
+    const c2P = l2Norm3(a2P, b2);
+    const h1P = (rad2deg(Math.atan2(b1, a1P)) + 360) % 360;
+    const h2P = (rad2deg(Math.atan2(b2, a2P)) + 360) % 360;
 
     const hDist = Math.abs(h1P - h2P);
 
@@ -157,7 +157,7 @@ export const distE00: CIEDifferenceFn = (() => {
     // # Delta H
     const deltaHTerm = 2 * Math.sqrt(c1P * c2P) * sin(hP / 2) / SH;
     return (
-      squareSum(deltaLTerm, deltaCTerm, deltaHTerm)
+      squareSum4(deltaLTerm, deltaCTerm, deltaHTerm)
       - RT * deltaCTerm * deltaHTerm
     );
   };

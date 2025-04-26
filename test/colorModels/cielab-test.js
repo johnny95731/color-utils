@@ -6,7 +6,7 @@ import convert from 'color-convert';
 
 import { equivalenceTest, stabilityTest } from '../utilsForTest/color-test.js';
 import { SampleGenerator } from '../utilsForTest/sample.js';
-import { rgb2lab, lab2rgb, rgb2lchab, lchab2rgb, rgb2hex, setReferenceWhite } from '../../dist/colors.mjs';
+import { rgb2lab, lab2rgb, rgb2lchab, lchab2rgb, rgb2hex, setReferenceWhite } from '../../dist/index.js';
 import { isSameColor } from '../utilsForTest/helpers.js';
 
 

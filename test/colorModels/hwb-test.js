@@ -5,7 +5,7 @@ import convert from 'color-convert';
 
 import { equivalenceTest, stabilityTest } from '../utilsForTest/color-test.js';
 import { SampleGenerator } from '../utilsForTest/sample.js';
-import { rgb2hwb, hwb2rgb, rgb2hex } from '../../dist/colors.mjs';
+import { rgb2hwb, hwb2rgb, rgb2hex } from '../../dist/index.js';
 
 extend([hwbPlugin]);
 

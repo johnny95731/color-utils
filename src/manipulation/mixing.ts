@@ -1,8 +1,8 @@
 import { map } from '../helpers';
 import { clip, elementwiseMean, pow } from '../numeric';
 import { getColorSpace } from '../colors';
-import type { ColorSpace } from '../colors';
 import { hsl2rgb, rgb2hsl } from '../colorModels/hsl';
+import type { ColorSpace } from '../colors';
 
 
 /**
@@ -23,16 +23,11 @@ export type MixOp =
 
 
 /**
- * Mixing two colors by evaluate their average.
+ * Mixing two colors by evaluate their elementwise average.
  * @param color1 Color array.
  * @param color2 Color array.
  */
-export const meanMix: MixOp = (
-  color1: readonly number[],
-  color2: readonly number[]
-): number[] => {
-  return elementwiseMean(color1, color2);
-};
+export const meanMix: MixOp = elementwiseMean;
 
 
 // Simply mix and adjust it.
@@ -45,12 +40,12 @@ export const meanMix: MixOp = (
  * @param gamma Gamma-corection coefficient. The color is deeper if gamma > 1.
  *   The color is brighter if gamma < 1.
  */
-export const gammaMixing = (
+export const gammaMix = (
   color1: readonly number[],
   color2: readonly number[],
   space: ColorSpace | string = 'RGB',
   gamma: number = 0.3,
-) => {
+): number[] => {
   const { toRgb_, fromRgb_ } = getColorSpace(space);
 
   const mean = elementwiseMean(toRgb_(color1), toRgb_(color2));
@@ -66,14 +61,14 @@ export const brighterMix: MixOp = (
   color2: readonly number[],
   space?: ColorSpace | string,
 ) =>
-  gammaMixing(color1, color2, space, 0.3);
+  gammaMix(color1, color2, space, 0.3);
 
-const deeperMix: MixOp = (
+export const deeperMix: MixOp = (
   color1: readonly number[],
   color2: readonly number[],
   space?: ColorSpace
 ) =>
-  gammaMixing(color1, color2, space, 1.5);
+  gammaMix(color1, color2, space, 1.5);
 
 
 // Blend-mode methods.
@@ -122,7 +117,7 @@ export const softLightBlend: MixOp = (
     fn = (a, i) => {
       b = color2[i];
       w3c = a <= 0.25 ? ((16 * a - 12) * a + 4) * a: Math.sqrt(a);
-      return (
+      return 255 * (
         b <= 0.5 ?
           a - (1 - 2 * b) * a * (1 - a):
           a + (2 * b - 1) * (w3c - a)
