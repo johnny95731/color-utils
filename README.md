@@ -5,7 +5,7 @@
 <h2>Features</h2>
 
 - 12.6KB size after minified (12.1KB with [mangle.properties.regex](#mangle))
-- High performance
+- High performance. [Benchmark](#benchmark)
 - Detect browser [`<color>`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/color_value) support when getting string.
 - Tree-shackable. Write functions instead of class method.
 - Immutable.
@@ -1045,7 +1045,7 @@ return l2Norm3(color1[0] - color2[0], color1[1] - color2[1], color1[2] - color2[
 
 </details>
 
-<h2 id="benchmarks">Benchmarks</h2>
+<h2 id="benchmark">Benchmark</h2>
 
 Run command `npm run benchmark`.
 
