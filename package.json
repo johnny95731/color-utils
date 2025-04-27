@@ -66,6 +66,8 @@
     "build": "rollup -c rollup.config.ts --configPlugin @rollup/plugin-typescript",
     "min": "rollup -c rollup.config.min.ts --configPlugin @rollup/plugin-typescript",
     "pkg": "rollup -c rollup.config.pkg.ts --configPlugin @rollup/plugin-typescript",
-    "watch": "rollup -c rollup.config.watch.ts --configPlugin @rollup/plugin-typescript -w"
+    "watch": "rollup -c rollup.config.watch.ts --configPlugin @rollup/plugin-typescript -w",
+    "benchmark": "node ./test/trans-perf.js",
+    "equiv=test": "node ./test/trans-equiv-tests.js"
   }
 }

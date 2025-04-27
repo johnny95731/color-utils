@@ -9,11 +9,10 @@ export const rgb2cmyk = (rgb: readonly number[]): number[] => {
   const g = rgb[1] / 255;
   const b = rgb[2] / 255;
   const max = Math.max(r, g, b);
-  if (!max) return [0, 0, 0, 100];
   return [
-    (1 - r / max) * 100,
-    (1 - g / max) * 100,
-    (1 - b / max) * 100,
+    (1 - r / max) * 100 || 0,
+    (1 - g / max) * 100 || 0,
+    (1 - b / max) * 100 || 0,
     (1 - max) * 100
   ];
 };

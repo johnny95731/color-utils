@@ -21,42 +21,47 @@ type rgb2luv = (xyz: readonly number[]) => number[]
 type luv2rgb = (luv: readonly number[]) => number[]
 
 const [rgb2luv, luv2rgb] = (() => {
-  const uTransform = (xyz: readonly number[]) => (
-    4 * xyz[0] / (xyz[0] + 15 * xyz[1] + 3 * xyz[2])
-  );
-  const vTransform = (xyz: readonly number[]) => (
-    9 * xyz[1] / (xyz[0] + 15 * xyz[1] + 3 * xyz[2])
-  );
+  const weightedSum = (xyz: readonly number[]) => {
+    return xyz[0] + 15 * xyz[1] + 3 * xyz[2];
+  };
 
   const rgb2luv: rgb2luv = (rgb: readonly number[]): number[] => {
     const xyz = rgb2xyz(rgb);
-    const u0 = uTransform(xyzMax);
-    const v0 = vTransform(xyzMax);
+    const wSumMax = weightedSum(xyzMax);
+    const u0 = 4 * xyzMax[0] / wSumMax;
+    const v0 = 9 * xyzMax[1] / wSumMax;
 
     const L = 116 * cieTrans(xyz[1] / xyzMax[1]) - 16;
-    const u_ = uTransform(xyz);
-    const v_ = vTransform(xyz);
+    const wSum = 1 / weightedSum(xyz);
+    const u_ = 4 * xyz[0] * wSum;
+    const v_ = 9 * xyz[1] * wSum;
     return [
       L,
-      isNaN(u_) ? 0 : 13 * L * (u_ - u0),
-      isNaN(v_) ? 0 : 13 * L * (v_ - v0),
+      13 * L * (u_ - u0) || 0,
+      13 * L * (v_ - v0) || 0,
     ];
   };
 
   const luv2rgb: luv2rgb = (luv: readonly number[]): number[] => {
     if (!luv[0]) return [0, 0, 0];
-    const [lum, u, v] = luv;
-    const u0 = uTransform(xyzMax);
-    const v0 = vTransform(xyzMax);
+    const lum = luv[0];
+    const u = luv[1];
+    const v = luv[2];
 
-    const u_ = u / (13 * lum) + u0;
-    const v_ = v / (13 * lum) + v0;
+    const wSumMax = 1 / weightedSum(xyzMax);
+    const u0 = 4 * xyzMax[0] * wSumMax;
+    const v0 = 9 * xyzMax[1] * wSumMax;
 
-    const Y = cieTransInv((lum + 16) / 116);
+    const Y = cieTransInv((lum + 16) / 116) * xyzMax[1];
+
+    const a = 52 / (u + 13 * lum * u0);
+    const d = Y * 39 / (v + 13 * lum * v0);
+
+    const X = d / a;
     const xyz = [
-      2.25 * u_ / v_ * Y * 100,
-      Y * xyzMax[1], // X and Z does not be divided by maximums
-      (3 - 0.75 * u_ - 5 * v_) / v_ * Y * 100,
+      3 * d / a,
+      Y, // X and Z does not be divided by maximums
+      lum * d - X - 5 * Y
     ];
     return xyz2rgb(xyz);
   };
