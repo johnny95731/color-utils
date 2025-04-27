@@ -20,9 +20,10 @@ function toHsl() {
       colors[i].hsl();
     }
   };
+  const fn = convert.rgb.hsl.raw;
   const convert_ = () => {
     for (let i = 0; i < length; i++) {
-      convert.rgb.hsl.raw(rgbs[i]);
+      fn(rgbs[i]);
     }
   };
   const custom_ = () => {
@@ -32,7 +33,12 @@ function toHsl() {
   };
   return performanceTest(
     'RGB to HSL',
-    [colord_, color_, convert_, custom_]
+    [
+      ['color-utils',  custom_],
+      ['colord', colord_],
+      ['color', color_],
+      ['color-convert', convert_],
+    ]
   );
 }
 
@@ -56,9 +62,10 @@ function fromHsl() {
       tempColor[i].rgb();
     }
   };
+  const fn = convert.hsl.rgb.raw;
   const convert_ = () => {
     for (let i = 0; i < length; i++) {
-      convert.hsl.rgb.raw(tempArr[i]);
+      fn(tempArr[i]);
     }
   };
   const custom_ = () => {
@@ -69,7 +76,12 @@ function fromHsl() {
 
   return performanceTest(
     'HSL to RGB',
-    [colord_, color_, convert_, custom_]
+    [
+      ['color-utils',  custom_],
+      ['colord', colord_],
+      ['color', color_],
+      ['color-convert', convert_],
+    ]
   );
 }
 

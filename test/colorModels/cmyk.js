@@ -8,7 +8,6 @@ import { rgb2cmyk, cmyk2rgb } from '../../dist/index.js';
 
 extend([cmykPlugin]);
 
-
 const { rgbs, colors, colords, length } = SampleGenerator.defaults;
 
 function toCmyk() {
@@ -22,9 +21,10 @@ function toCmyk() {
       colors[i].cmyk();
     }
   };
+  const fn = convert.rgb.cmyk.raw;
   const convert_ = () => {
     for (let i = 0; i < length; i++) {
-      convert.rgb.cmyk.raw(rgbs[i]);
+      fn(rgbs[i]);
     }
   };
   const custom_ = () => {
@@ -34,7 +34,12 @@ function toCmyk() {
   };
   return performanceTest(
     'RGB to CMYK',
-    [colord_, color_, convert_, custom_]
+    [
+      ['color-utils',  custom_],
+      ['colord', colord_],
+      ['color', color_],
+      ['color-convert', convert_],
+    ]
   );
 }
 function fromCmyk() {
@@ -57,9 +62,10 @@ function fromCmyk() {
       tempColor[i].rgb();
     }
   };
+  const fn = convert.cmyk.rgb.raw;
   const convert_ = () => {
     for (let i = 0; i < length; i++) {
-      convert.cmyk.rgb.raw(tempArr[i]);
+      fn(tempArr[i]);
     }
   };
   const custom_ = () => {
@@ -69,7 +75,12 @@ function fromCmyk() {
   };
   return performanceTest(
     'CMYK to RGB',
-    [colord_, color_, convert_, custom_]
+    [
+      ['color-utils',  custom_],
+      ['colord', colord_],
+      ['color', color_],
+      ['color-convert', convert_],
+    ]
   );
 }
 

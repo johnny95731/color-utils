@@ -19,9 +19,10 @@ function toHex() {
       colors[i].hex();
     }
   };
+  const fn = convert.rgb.hex.raw;
   const convert_ = () => {
     for (let i = 0; i < length; i++) {
-      convert.rgb.hex(rgbs[i]);
+      fn(rgbs[i]);
     }
   };
   const custom_ = () => {
@@ -32,7 +33,12 @@ function toHex() {
 
   return performanceTest(
     'RGB to HEX',
-    [colord_, color_, convert_, custom_]
+    [
+      ['color-utils',  custom_],
+      ['colord', colord_],
+      ['color', color_],
+      ['color-convert', convert_],
+    ]
   );
 }
 
@@ -47,9 +53,10 @@ function fromHex() {
       Color(hex[i]);
     }
   };
+  const fn = convert.hex.rgb.raw;
   const convert_ = () => {
     for (let i = 0; i < length; i++) {
-      convert.hex.rgb.raw(hex[i]);
+      fn(hex[i]);
     }
   };
   const custom_ = () => {
@@ -60,7 +67,12 @@ function fromHex() {
 
   return performanceTest(
     'HEX to RGB',
-    [colord_, color_, convert_, custom_]
+    [
+      ['color-utils',  custom_],
+      ['colord', colord_],
+      ['color', color_],
+      ['color-convert', convert_],
+    ]
   );
 };
 

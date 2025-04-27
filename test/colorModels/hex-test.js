@@ -18,19 +18,29 @@ const { rgbs } = SampleGenerator.defaults;
 const isSameHex = (hex1, hex2) => hex1.toLowerCase() === hex2.toLowerCase();
 
 function hexEquiv() {
-  const colord_ = (rgb) => {
-    return colord(rgb2hex(rgb)).toHex();
-  };
-  const color_ = (rgb) => {
-    return Color(rgb2hex(rgb)).hex();
-  };
-  const convert_ = (rgb) => {
-    return '#' + convert.rgb.hex(rgb);
-  };
+  const colord_ = [
+    'colord',
+    (rgb) => {
+      return colord(rgb2hex(rgb)).toHex();
+    }
+  ];
+  const color_ = [
+    'color',
+    (rgb) => {
+      return Color(rgb2hex(rgb)).hex();
+    }
+  ];
+  const convert_ = [
+    'color-convert',
+    (rgb) => {
+      return '#' + convert.rgb.hex(rgb);
+    }
+  ];
+  const custom = ['color-utils', rgb2hex];
 
-  equivalenceTest(rgb2hex, colord_, rgbs, isSameHex);
-  equivalenceTest(rgb2hex, color_, rgbs, isSameHex);
-  equivalenceTest(rgb2hex, convert_, rgbs, isSameHex);
+  equivalenceTest(custom, colord_, rgbs, isSameHex);
+  equivalenceTest(custom, color_, rgbs, isSameHex);
+  equivalenceTest(custom, convert_, rgbs, isSameHex);
 }
 
 console.log('HEX equivalence and stability.');

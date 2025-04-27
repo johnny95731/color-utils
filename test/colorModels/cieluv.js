@@ -13,7 +13,7 @@ function toLuv() {
   };
   return performanceTest(
     'RGB to Luv',
-    [custom_]
+    [['color-utils',  custom_]]
   );
 }
 
@@ -30,7 +30,7 @@ function fromLuv() {
   };
   return performanceTest(
     'Luv to RGB',
-    [custom_]
+    [['color-utils',  custom_]]
   );
 }
 
@@ -42,7 +42,7 @@ function toLchuv() {
   };
   return performanceTest(
     'RGB to LCH(uv)',
-    [custom_]
+    [['color-utils',  custom_]]
   );
 }
 
@@ -59,7 +59,7 @@ function fromLchuv() {
   };
   return performanceTest(
     'LCH(uv) to RGB',
-    [custom_]
+    [['color-utils',  custom_]]
   );
 }
 

@@ -21,9 +21,10 @@ function toXyz() {
       colors[i].xyz();
     }
   };
+  const fn = convert.rgb.xyz.raw;
   const convert_ = () => {
     for (let i = 0; i < length; i++) {
-      convert.rgb.xyz.raw(rgbs[i]);
+      fn(rgbs[i]);
     }
   };
   const custom_ = () => {
@@ -33,7 +34,12 @@ function toXyz() {
   };
   return performanceTest(
     'RGB to XYZ',
-    [colord_, color_, convert_, custom_]
+    [
+      ['color-utils',  custom_],
+      ['colord', colord_],
+      ['color', color_],
+      ['color-convert', convert_],
+    ]
   );
 }
 
@@ -57,9 +63,10 @@ function fromXyz() {
       tempColor[i].rgb();
     }
   };
+  const fn = convert.xyz.rgb.raw;
   const convert_ = () => {
     for (let i = 0; i < length; i++) {
-      convert.xyz.rgb.raw(tempArr[i]);
+      fn(tempArr[i]);
     }
   };
   const custom_ = () => {
@@ -69,7 +76,12 @@ function fromXyz() {
   };
   return performanceTest(
     'XYZ to RGB',
-    [colord_, color_, convert_, custom_]
+    [
+      ['color-utils',  custom_],
+      ['colord', colord_],
+      ['color', color_],
+      ['color-convert', convert_],
+    ]
   );
 }
 

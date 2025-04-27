@@ -94,20 +94,22 @@ function rad2deg() {
 
 function atan2() {
   const gen = () => [Math.random()-0.5, Math.random()-0.5];
+  const cache = 180 / Math.PI;
   const mod = () => {
-    return (Math.atan2(...gen())/ Math.PI * 180 + 360) % 360;
+    const rad = Math.atan2(...gen());
+    return (rad * cache + 360) % 360;
   };
   const ifelse = () => {
     const rad = Math.atan2(...gen());
-    return (rad > 0 ? rad : (Math.PI + rad)) * 180 / Math.PI;
+    return (rad > 0 ? rad : (Math.PI + rad)) * cache;
   };
   const ifelse2 = () => {
     const rad = Math.atan2(...gen()) / Math.PI;
     return 180 * (rad < 0 ? rad + 2 : rad);
   };
   const ifelse3 = () => {
-    const rad = 180 * (Math.atan2(...gen()) / Math.PI);
-    return rad < 0 ? rad + 360 : rad;
+    const deg = Math.atan2(...gen()) * cache;
+    return deg < 0 ? deg + 360 : deg;
   };
 
   return performanceTest(
@@ -192,7 +194,7 @@ const fns = [
   rad2deg,
   atan2,
   elementwiseMean,
-  power_
+  power_,
 ];
 for (const fn of fns) {
   await fn();

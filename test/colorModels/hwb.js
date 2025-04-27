@@ -22,9 +22,10 @@ function toHwb() {
       colors[i].hwb();
     }
   };
+  const fn = convert.rgb.hwb.raw;
   const convert_ = () => {
     for (let i = 0; i < length; i++) {
-      convert.rgb.hwb.raw(rgbs[i]);
+      fn(rgbs[i]);
     }
   };
   const custom_ = () => {
@@ -34,7 +35,12 @@ function toHwb() {
   };
   return performanceTest(
     'RGB to HWB',
-    [colord_, color_, convert_, custom_]
+    [
+      ['color-utils',  custom_],
+      ['colord', colord_],
+      ['color', color_],
+      ['color-convert', convert_],
+    ]
   );
 }
 
@@ -58,9 +64,10 @@ function fromHwb() {
       tempColor[i].rgb();
     }
   };
+  const fn = convert.hwb.rgb.raw;
   const convert_ = () => {
     for (let i = 0; i < length; i++) {
-      convert.hwb.rgb.raw(tempArr[i]);
+      fn(tempArr[i]);
     }
   };
   const custom_ = () => {
@@ -71,7 +78,12 @@ function fromHwb() {
 
   return performanceTest(
     'HWB to RGB',
-    [colord_, color_, convert_, custom_]
+    [
+      ['color-utils',  custom_],
+      ['colord', colord_],
+      ['color', color_],
+      ['color-convert', convert_],
+    ]
   );
 }
 

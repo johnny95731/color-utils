@@ -93,12 +93,12 @@ export const SampleGenerator = {
   },
 
   /**
-   * Return RGBs with a given number that contain Black, white and random RGB.
+   * Return RGBs with a given number of random RGB.
    * @returns {Sample}
    */
-  b(num = 50) {
+  b(num = 10) {
     const rgbs = (() => {
-      const rgbs = [[0,0,0], [255,255,255]];
+      const rgbs = [];
       while (rgbs.length < num) {
         rgbs.push(randRgbGen());
       }

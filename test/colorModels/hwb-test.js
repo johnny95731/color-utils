@@ -12,23 +12,36 @@ extend([hwbPlugin]);
 const { rgbs } = SampleGenerator.defaults;
 
 function hwbEquiv() {
-  const colord_ = (rgb) => {
-    const { h, w, b } = colord(rgb2hex(rgb)).toHwb();
-    return [h, w, b];
-  };
-  const color_ = (rgb) => {
-    return Color(rgb2hex(rgb)).hwb().color;
-  };
-  const convert_ = (rgb) => {
-    return convert.rgb.hwb.raw(rgb);
-  };
-  const custom_ = (rgb) => {
-    return rgb2hwb(rgb).map(val => Math.round(val));
-  };
+  const colord_ = [
+    'colord',
+    (rgb) => {
+      const { h, w, b } = colord(rgb2hex(rgb)).toHwb();
+      return [h, w, b];
+    }
+  ];
+  const color_ = [
+    'color',
+    (rgb) => {
+      return Color(rgb2hex(rgb)).hwb().color;
+    }
+  ];
+  const convert_ = [
+    'color-convert',
+    (rgb) => {
+      return convert.rgb.hwb.raw(rgb);
+    }
+  ];
+  const customRounding = [
+    'color-utils',
+    (rgb) => {
+      return rgb2hwb(rgb).map(val => Math.round(val));
+    }
+  ];
+  const custom = ['color-utils', rgb2hwb];
 
-  equivalenceTest(custom_, colord_, rgbs);
-  equivalenceTest(rgb2hwb, color_, rgbs);
-  equivalenceTest(rgb2hwb, convert_, rgbs);
+  equivalenceTest(customRounding, colord_, rgbs);
+  equivalenceTest(custom, color_, rgbs);
+  equivalenceTest(custom, convert_, rgbs);
 }
 
 console.log('HWB equivalence and stability.');

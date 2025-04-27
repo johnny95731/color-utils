@@ -12,23 +12,36 @@ extend([cmykPlugin]);
 const { rgbs } = SampleGenerator.defaults;
 
 function cmykEquiv() {
-  const colord_ = (rgb) => {
-    const { c, m, y, k } = colord(rgb2hex(rgb)).toCmyk();
-    return [c, m, y, k];
-  };
-  const color_ = (rgb) => {
-    return Color(rgb2hex(rgb)).cmyk().color;
-  };
-  const convert_ = (rgb) => {
-    return convert.rgb.cmyk.raw(rgb);
-  };
-  const custom_ = (rgb) => {
-    return rgb2cmyk(rgb).map(val => Math.round(val));
-  };
+  const colord_ = [
+    'colord',
+    (rgb) => {
+      const { c, m, y, k } = colord(rgb2hex(rgb)).toCmyk();
+      return [c, m, y, k];
+    }
+  ];;
+  const color_ = [
+    'color',
+    (rgb) => {
+      return Color(rgb2hex(rgb)).cmyk().color;
+    }
+  ];
+  const convert_ = [
+    'color-convert',
+    (rgb) => {
+      return convert.rgb.cmyk.raw(rgb);
+    }
+  ];
+  const customRounding = [
+    'color-utils',
+    (rgb) => {
+      return rgb2cmyk(rgb).map(val => Math.round(val));
+    }
+  ];
+  const custom = ['color-utils', rgb2cmyk];
 
-  equivalenceTest(custom_, colord_, rgbs); // colord will round the values
-  equivalenceTest(rgb2cmyk, color_, rgbs);
-  equivalenceTest(rgb2cmyk, convert_, rgbs);
+  equivalenceTest(customRounding, colord_, rgbs); // colord will round the values
+  equivalenceTest(custom, color_, rgbs);
+  equivalenceTest(custom, convert_, rgbs);
 }
 
 

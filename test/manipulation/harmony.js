@@ -26,7 +26,7 @@ function analogous_() {
 
   return performanceTest(
     'Analogous',
-    [colord, custom]
+    [colord, ['color-utils',  custom]]
   );
 }
 
@@ -44,11 +44,119 @@ function complementary_() {
 
   return performanceTest(
     'Complementary',
-    [colord, custom]
+    [colord, ['color-utils',  custom]]
   );
 }
 
-function tetradic_() {
+function split_() {
+  const colord = () => {
+    for (let i = 0; i < length; i++) {
+      colords[i].harmonies('split-complementary');
+    }
+  };
+  const custom = () => {
+    for (let i = 0; i < length; i++) {
+      harmonize(rgbs[i], 'split complementary');
+    }
+  };
+
+  return performanceTest(
+    'split complementary',
+    [colord, ['color-utils',  custom]]
+  );
+}
+
+function triadic_() {
+  const colord = () => {
+    for (let i = 0; i < length; i++) {
+      colords[i].harmonies('triadic');
+    }
+  };
+  const custom = () => {
+    for (let i = 0; i < length; i++) {
+      harmonize(rgbs[i], 'triadic');
+    }
+  };
+
+  return performanceTest(
+    'triadic',
+    [colord, ['color-utils',  custom]]
+  );
+}
+
+function rectangle_() {
+  const colord = () => {
+    for (let i = 0; i < length; i++) {
+      colords[i].harmonies('rectangle');
+    }
+  };
+  const custom = () => {
+    for (let i = 0; i < length; i++) {
+      harmonize(rgbs[i], 'tetradic2');
+    }
+  };
+
+  return performanceTest(
+    'rectangle',
+    [colord, ['color-utils',  custom]]
+  );
+}
+
+function shades_() {
+  const colord = () => {
+    for (let i = 0; i < length; i++) {
+      colords[i].shades(6);
+    }
+  };
+  const custom = () => {
+    for (let i = 0; i < length; i++) {
+      harmonize(rgb2hsb(rgbs[i]), 'shades', 6);
+    }
+  };
+
+  return performanceTest(
+    'shades',
+    [colord, ['color-utils',  custom]]
+  );
+}
+
+function tints_() {
+  const colord = () => {
+    for (let i = 0; i < length; i++) {
+      colords[i].tints(6);
+    }
+  };
+  const custom = () => {
+    for (let i = 0; i < length; i++) {
+      harmonize(rgb2hsb(rgbs[i]), 'tints', 6);
+    }
+  };
+
+  return performanceTest(
+    'tints',
+    [colord, ['color-utils',  custom]]
+  );
+}
+
+function tones_() {
+  const colord = () => {
+    for (let i = 0; i < length; i++) {
+      colords[i].tones(6);
+    }
+  };
+  const custom = () => {
+    for (let i = 0; i < length; i++) {
+      harmonize(rgb2hsb(rgbs[i]), 'tones', 6);
+    }
+  };
+
+  return performanceTest(
+    'tones',
+    [colord, ['color-utils',  custom]]
+  );
+}
+
+function others() {
   const colord = () => {
     for (let i = 0; i < length; i++) {
       colords[i].harmonies('tetradic');
@@ -71,125 +179,17 @@ function tetradic_() {
   );
 }
 
-function split_() {
-  const colord = () => {
-    for (let i = 0; i < length; i++) {
-      colords[i].harmonies('split-complementary');
-    }
-  };
-  const custom = () => {
-    for (let i = 0; i < length; i++) {
-      harmonize(rgbs[i], 'split complementary');
-    }
-  };
-
-  return performanceTest(
-    'split complementary',
-    [colord, custom]
-  );
-}
-
-function triadic_() {
-  const colord = () => {
-    for (let i = 0; i < length; i++) {
-      colords[i].harmonies('triadic');
-    }
-  };
-  const custom = () => {
-    for (let i = 0; i < length; i++) {
-      harmonize(rgbs[i], 'triadic');
-    }
-  };
-
-  return performanceTest(
-    'triadic',
-    [colord, custom]
-  );
-}
-
-function rectangle_() {
-  const colord = () => {
-    for (let i = 0; i < length; i++) {
-      colords[i].harmonies('rectangle');
-    }
-  };
-  const custom = () => {
-    for (let i = 0; i < length; i++) {
-      harmonize(rgbs[i], 'tetradic2');
-    }
-  };
-
-  return performanceTest(
-    'rectangle',
-    [colord, custom]
-  );
-}
-
-function shades_() {
-  const colord = () => {
-    for (let i = 0; i < length; i++) {
-      colords[i].shades(6);
-    }
-  };
-  const custom = () => {
-    for (let i = 0; i < length; i++) {
-      harmonize(rgb2hsb(rgbs[i]), 'shades', 6);
-    }
-  };
-
-  return performanceTest(
-    'shades',
-    [colord, custom]
-  );
-}
-
-function tints_() {
-  const colord = () => {
-    for (let i = 0; i < length; i++) {
-      colords[i].tints(6);
-    }
-  };
-  const custom = () => {
-    for (let i = 0; i < length; i++) {
-      harmonize(rgb2hsb(rgbs[i]), 'tints', 6);
-    }
-  };
-
-  return performanceTest(
-    'tints',
-    [colord, custom]
-  );
-}
-
-function tones_() {
-  const colord = () => {
-    for (let i = 0; i < length; i++) {
-      colords[i].tones(6);
-    }
-  };
-  const custom = () => {
-    for (let i = 0; i < length; i++) {
-      harmonize(rgb2hsb(rgbs[i]), 'tones', 6);
-    }
-  };
-
-  return performanceTest(
-    'tones',
-    [colord, custom]
-  );
-}
-
 
 const fns = [
   analogous_,
   complementary_,
-  tetradic_,
   split_,
   triadic_,
   rectangle_,
   shades_,
   tints_,
   tones_,
+  others,
 ];
 for (const fn of fns) {
   await fn();

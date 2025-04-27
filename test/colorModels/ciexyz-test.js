@@ -14,22 +14,33 @@ const { rgbs } = SampleGenerator.defaults;
 
 function xyzEquiv() {
   const compFn = (arr1, arr2) => isSameColor(arr1, arr2, 0.1);
-  const colord_ = (rgb) => {
-    const { x, y, z } = colord(rgb2hex(rgb)).toXyz();
-    return [x, y, z];
-  };
-  const color_ = (rgb) => {
-    return Color(rgb2hex(rgb)).xyz().color;
-  };
-  const convert_ = (rgb) => {
-    return convert.rgb.xyz.raw(rgb);
-  };
+
+  const colord_ = [
+    'colord',
+    (rgb) => {
+      const { x, y, z } = colord(rgb2hex(rgb)).toXyz();
+      return [x, y, z];
+    }
+  ];
+  const color_ = [
+    'color',
+    (rgb) => {
+      return Color(rgb2hex(rgb)).xyz().color;
+    }
+  ];
+  const convert_ = [
+    'color-convert',
+    (rgb) => {
+      return convert.rgb.xyz.raw(rgb);
+    }
+  ];
+  const custom = ['color-utils', rgb2xyz];
 
   setReferenceWhite('D50'); // colord use different reference white
-  equivalenceTest(rgb2xyz, colord_, rgbs, compFn);
+  equivalenceTest(custom, colord_, rgbs, compFn);
   setReferenceWhite('D65');
-  equivalenceTest(rgb2xyz, color_, rgbs, compFn);
-  equivalenceTest(rgb2xyz, convert_, rgbs, compFn);
+  equivalenceTest(custom, color_, rgbs, compFn);
+  equivalenceTest(custom, convert_, rgbs, compFn);
 }
 
 

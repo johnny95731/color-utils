@@ -22,9 +22,10 @@ function toLab() {
       colors[i].lab();
     }
   };
+  const fn = convert.rgb.lab.raw;
   const convert_ = () => {
     for (let i = 0; i < length; i++) {
-      convert.rgb.lab.raw(rgbs[i]);
+      fn(rgbs[i]);
     }
   };
   const custom_ = () => {
@@ -34,7 +35,12 @@ function toLab() {
   };
   return performanceTest(
     'RGB to Lab',
-    [colord_, color_, convert_, custom_]
+    [
+      ['color-utils',  custom_],
+      ['colord', colord_],
+      ['color', color_],
+      ['color-convert', convert_],
+    ]
   );
 }
 
@@ -58,9 +64,10 @@ function fromLab() {
       tempColor[i].rgb();
     }
   };
+  const fn = convert.lab.rgb.raw;
   const convert_ = () => {
     for (let i = 0; i < length; i++) {
-      convert.lab.rgb.raw(tempArr[i]);
+      fn(tempArr[i]);
     }
   };
   const custom_ = () => {
@@ -70,7 +77,12 @@ function fromLab() {
   };
   return performanceTest(
     'Lab to RGB',
-    [colord_, color_, convert_, custom_]
+    [
+      ['color-utils',  custom_],
+      ['colord', colord_],
+      ['color', color_],
+      ['color-convert', convert_],
+    ]
   );
 }
 
@@ -85,9 +97,10 @@ function toLchab() {
       colors[i].lch();
     }
   };
+  const fn = convert.rgb.lch.raw;
   const convert_ = () => {
     for (let i = 0; i < length; i++) {
-      convert.rgb.lch.raw(rgbs[i]);
+      fn(rgbs[i]);
     }
   };
   const custom_ = () => {
@@ -97,7 +110,12 @@ function toLchab() {
   };
   return performanceTest(
     'RGB to LCH(ab)',
-    [colord_, color_, convert_, custom_]
+    [
+      ['color-utils',  custom_],
+      ['colord', colord_],
+      ['color', color_],
+      ['color-convert', convert_],
+    ]
   );
 }
 
@@ -121,9 +139,10 @@ function fromLchab() {
       tempColor[i].rgb();
     }
   };
+  const fn = convert.lch.rgb.raw;
   const convert_ = () => {
     for (let i = 0; i < length; i++) {
-      convert.lch.rgb.raw(tempArr[i]);
+      fn(tempArr[i]);
     }
   };
   const custom_ = () => {
@@ -133,7 +152,12 @@ function fromLchab() {
   };
   return performanceTest(
     'LCH(ab) to RGB',
-    [colord_, color_, convert_, custom_]
+    [
+      ['color-utils',  custom_],
+      ['colord', colord_],
+      ['color', color_],
+      ['color-convert', convert_],
+    ]
   );
 }
 

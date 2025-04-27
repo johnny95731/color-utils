@@ -10,23 +10,36 @@ import { rgb2hsl, hsl2rgb, rgb2hex } from '../../dist/index.js';
 const { rgbs } = SampleGenerator.defaults;
 
 function hslEquiv() {
-  const colord_ = (rgb) => {
-    const { h, s, l } = colord(rgb2hex(rgb)).toHsl();
-    return [h, s, l];
-  };
-  const color_ = (rgb) => {
-    return Color(rgb2hex(rgb)).hsl().color;
-  };
-  const convert_ = (rgb) => {
-    return convert.rgb.hsl.raw(rgb);
-  };
-  const custom_ = (rgb) => {
-    return rgb2hsl(rgb).map(val => Math.round(val));
-  };
+  const colord_ = [
+    'colord',
+    (rgb) => {
+      const { h, s, l } = colord(rgb2hex(rgb)).toHsl();
+      return [h, s, l];
+    }
+  ];
+  const color_ = [
+    'color',
+    (rgb) => {
+      return Color(rgb2hex(rgb)).hsl().color;
+    }
+  ];
+  const convert_ = [
+    'color-convert',
+    (rgb) => {
+      return convert.rgb.hsl.raw(rgb);
+    }
+  ];
+  const customRounding = [
+    'color-utils',
+    (rgb) => {
+      return rgb2hsl(rgb).map(val => Math.round(val));
+    }
+  ];
+  const custom = ['color-utils', rgb2hsl];
 
-  equivalenceTest(custom_, colord_, rgbs);
-  equivalenceTest(rgb2hsl, color_, rgbs);
-  equivalenceTest(rgb2hsl, convert_, rgbs);
+  equivalenceTest(customRounding, colord_, rgbs);
+  equivalenceTest(custom, color_, rgbs);
+  equivalenceTest(custom, convert_, rgbs);
 }
 
 console.log('HSL equivalence and stability.');

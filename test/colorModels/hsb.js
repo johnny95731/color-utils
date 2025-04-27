@@ -19,9 +19,10 @@ function toHsb() {
       colors[i].hsv();
     }
   };
+  const fn = convert.rgb.hsv.raw;
   const convert_ = () => {
     for (let i = 0; i < length; i++) {
-      convert.rgb.hsv.raw(rgbs[i]);
+      fn(rgbs[i]);
     }
   };
   const custom_ = () => {
@@ -31,7 +32,12 @@ function toHsb() {
   };
   return performanceTest(
     'RGB to HSB',
-    [colord_, color_, convert_, custom_]
+    [
+      ['color-utils',  custom_],
+      ['colord', colord_],
+      ['color', color_],
+      ['color-convert', convert_],
+    ]
   );
 }
 
@@ -55,9 +61,10 @@ function fromHsb() {
       tempColor[i].rgb();
     }
   };
+  const fn = convert.hsv.rgb.raw;
   const convert_ = () => {
     for (let i = 0; i < length; i++) {
-      convert.hsv.rgb.raw(tempArr[i]);
+      fn(tempArr[i]);
     }
   };
   const custom_ = () => {
@@ -67,7 +74,12 @@ function fromHsb() {
   };
   return performanceTest(
     'HSB to RGB',
-    [colord_, color_, convert_, custom_]
+    [
+      ['color-utils',  custom_],
+      ['colord', colord_],
+      ['color', color_],
+      ['color-convert', convert_],
+    ]
   );
 }
 

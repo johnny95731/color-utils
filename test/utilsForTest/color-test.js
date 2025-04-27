@@ -29,8 +29,8 @@ export const stabilityTest = (
 /**
  * Test two transformations are equivalent or not.
  *
- * @param {CallableFunction} fn1
- * @param {CallableFunction} fn2
+ * @param {CallableFunction | [string, CallableFunction]} fn1
+ * @param {CallableFunction | [string, CallableFunction]} fn2
  * @param {number[][] | Iterable<number[]>} sample
  * @param {CallableFunction} compFn Compare two values are equal or not.
  */
@@ -40,8 +40,19 @@ export const equivalenceTest = (
   sample,
   compFn = isSameColor
 ) => {
-  console.log(`Equivalence test start: ${fn1.name} and ${fn2.name}`);
+  // Test function name
+  let name1 = fn1.name;
+  let name2 = fn2.name;
+  if (Array.isArray(fn1)) {
+    name1 = fn1[0];
+    fn1 = fn1[1];
+  }
+  if (Array.isArray(fn2)) {
+    name2 = fn2[0];
+    fn2 = fn2[1];
+  }
 
+  console.log(`Equivalence test start: ${name1} and ${name2}`);
   for (const color of sample) {
     const r1 = fn1(color);
     const r2 = fn2(color);
