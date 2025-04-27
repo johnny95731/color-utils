@@ -6,8 +6,8 @@
 
 - 12.6KB size after minified (12.1KB with [mangle.properties.regex](#mangle))
 - High performance
-- Detect browser `<color>` support when getting string.
-- Tree-shackable.
+- Detect browser [`<color>`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/color_value) support when getting string.
+- Tree-shackable. Write functions instead of class method.
 - Immutable.
 - Typed.
 - Supports ESM and CJS.
@@ -174,7 +174,7 @@ toRgb_ | Converter from space to RGB.
 Note: `COLOR_SPACES` does not have HEX and NAMED space object. And, both `LCHab` and `LCHuv` will check `CSS.supports('color', 'lch(0 0 0)');` though these two spaces are not equvalent.
 
 <details>
-<summary>Default values of <code>isSupported_</code></summary>
+<summary>Default values of <code>.isSupported_</code></summary>
 
  space | value
 -------|-----------
@@ -233,7 +233,7 @@ getSpaceRange('lab'); // [ [ 0, 100 ], [ -125, 125 ], [ -125, 125 ] ]
 
 Convert the color array to string in CSS format.
 
-If `checkSupport` is `true`, then the function will set `sep = ' '` and change the space to RGB if the browser does not support.
+If `checkSupport` is `true`, then the function will set `sep = ' '` and change the color space to RGB when the browser does not support this color space.
 
 Currently the function does not support spaces that only support by CSS `color()` such as `xyz`.
 
@@ -244,6 +244,11 @@ getCssColor([273, 90, 51], 'HSL', false);       // "HSL(273 90% 51%)"
 getCssColor([27, 12, 86], 'xyz', false);        // "XYZ(27 12 86)"
 getCssColor([27, 12, 86], 'xyz', true);         // "RGB(139.872270897968 0 243.41593455030025)"
 ```
+
+See also
+
+- [`<color>`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value)
+- [`color()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/color)
 
 </details>
 
@@ -288,7 +293,7 @@ channel | description | min | max
 --------|-------------|-----|-----
 h | Hue        | 0 | 360
 s | Saturation | 0 | 100
-l | Luminance  | 0 | 100
+b | Brightness | 0 | 100
 
 </details>
 
@@ -516,7 +521,7 @@ isReadable('987654', '123456', { isLarge: true, levelAAA: true }) // false
 Some function arguments naming hsb, but the method works in HSL or HWB space.
 
 <details>
-<summary><code>harmonize(primary: readonly number[], degs: number[]): number[][]</code></summary>
+<summary><code>shiftHue(primary: readonly number[], degs: number[]): number[][]</code></summary>
 
 Return a palette that each color is the hue shift of primary. The primary color should be HSB, HSL, HWB color, or color space that first channel represents hue.
 
@@ -582,8 +587,7 @@ harmonize([58, 64, 48], 'shades', 3);      // [ [ 122.4, 119.8, 44.064 ], [ 81.6
 harmonize([131, 98, 76], 'complementary'); // [ [ 3.88, 193.8, 38.7 ], [ 193.8, 3.88, 158.98 ] ]
 ```
 
-The methods and its hue deg shifts
-the method the number will equals the order of method above. If the input is **invalid**, then it will use `'analogous'`
+Input a number as `method` argument will equals the order of method below. If the input is **invalid**, then it will use `'analogous'`
 
 method | deg shift
 -------|-----------
@@ -1036,7 +1040,131 @@ Return `Math.sqrt(squareSum(a, b, c))`.
 <summary><code>l2Dist3(a: number, b: number): number</code></summary>
 
 ```js
-return l2Norm(color1[0] - color2[0], color1[1] - color2[1], color1[2] - color2[2]);
+return l2Norm3(color1[0] - color2[0], color1[1] - color2[1], color1[2] - color2[2]);
 ```
+
+</details>
+
+<h2 id="benchmarks">Benchmarks</h2>
+
+Run command `npm run benchmark`.
+
+- Node version: v22.11.0.
+- CPU: Intel(R) Core(TM) i7-7700HQ CPU @ 2.80GHz
+- library: `tinybench`
+- Every test function convert 10 colors by default. For details, see `SampleGenerator.defaults` in `./test/utilsForTest/sample.js`.
+
+<details>
+<summary>XYZ</summary>
+
+`rgb2xyz`
+
+library | Latency avg (ns) | throughput avg (ops/s) | comparison
+--------|------------------|------------------------|------------
+color-utils   | 1821.1 ± 0.19% | 566821 &ensp;± 0.03% | 90% slower
+colord        | 5139.0 ± 5.52% | 211382 &ensp;± 0.05% | 96% slower
+color         | 8217.0 ± 5.29% | 133942 &ensp;± 0.09% | 98% slower
+color-convert | 228.57 ± 2.15% | 5418805 ± 0.03%      | fastest
+
+`xyz2rgb`
+
+library | Latency avg (ns) | throughput avg (ops/s) | comparison
+--------|------------------|------------------------|------------
+color-utils   | 1725.0 ± 0.40% | 609665 &ensp;± 0.04% | 87% slower
+colord        | 5375.2 ± 6.18% | 206343 &ensp;± 0.06% | 95% slower
+color         | 9078.4 ± 0.68% | 116323 &ensp;± 0.08% | 97% slower
+color-convert | 271.65 ± 1.68% | 4527525 ± 0.02% | fastest
+
+</details>
+
+<details>
+<summary>CMYK</summary>
+
+`rgb2cmyk`
+
+library | Latency avg (ns) | throughput avg (ops/s) | comparison
+--------|------------------|------------------------|------------
+color-utils   | 124.54 ± 0.41% | 9074605 ± 0.02% | fastest
+colord        | 1207.4 ± 0.18% | 852937 &ensp;± 0.03% | 91% slower
+color         | 6611.2 ± 8.00% | 171155 &ensp;± 0.07% | 98% slower
+color-convert | 187.30 ± 1.32% | 7109575 ± 0.03% | 22% slower
+
+`cmyk2rgb`
+
+library | Latency avg (ns) | throughput avg (ops/s) | comparison
+--------|------------------|------------------------|------------
+color-utils   | 111.24 ± 0.38% | 9546184 ± 0.01% | fastest
+colord        | 2159.8 ± 0.79% | 493868 &ensp;± 0.04% | 95% slower
+color         | 5433.1 ± 0.72% | 190225 &ensp;± 0.03% | 98% slower
+color-convert | 185.55 ± 1.17% | 7044702 ± 0.03% | 26% slower
+
+</details>
+
+<details>
+<summary>HEX</summary>
+
+`rgb2hex`
+
+library | Latency avg (ns) | throughput avg (ops/s) | comparison
+--------|------------------|------------------------|------------
+color-utils   | 1260.0 ± 0.30% | 804682 ± 0.01% | fastest
+colord        | 1504.9 ± 7.80% | 726625 ± 0.02% | 10% slower
+color         | 25645&thinsp; ± 0.59% | 39933 &ensp;± 0.09% | 95% slower
+color-convert | 1734.6 ± 0.64% | 594626 ± 0.02% | 26% slower
+
+`hex2rgb`
+
+library | Latency avg (ns) | throughput avg (ops/s) | comparison
+--------|------------------|------------------------|------------
+color-utils   | 1893.9 ± 0.67% | 544611 ± 0.01% | fastest
+colord        | 4055.7 ± 0.81% | 257520 ± 0.03% | 53% slower
+color         | 10063&thinsp; ± 0.69% | 102302 ± 0.05% | 81% slower
+color-convert | 2052.2 ± 0.90% | 514284 ± 0.02% | 6% slower
+
+</details>
+
+<details>
+<summary>HSB</summary>
+
+`rgb2hsb`
+
+library | Latency avg (ns) | throughput avg (ops/s) | comparison
+--------|------------------|------------------------|------------
+color-utils   | 193.43 ± 0.35% | 5511814 ± 0.03% | fastest
+colord        | 478.54 ± 2.38% | 2271904 ± 0.03% | 59% slower
+color         | 10462&thinsp; ± 5.43% | 118337 &ensp;± 0.20% | 98% slower
+color-convert | 506.35 ± 0.80% | 2304598 ± 0.04% | 58% slower
+
+`hsb2rgb`
+
+library | Latency avg (ns) | throughput avg (ops/s) | comparison
+--------|------------------|------------------------|------------
+color-utils   | 257.93 ± &ensp;0.13% | 4286701 ± 0.02% | fastest
+colord        | 3552.7 ± 10.13% | 350989 &ensp;± 0.07% | 92% slower
+color         | 6898.6 ± &ensp;2.49% | 153517 &ensp;± 0.06% | 96% slower
+color-convert | 284.37 ± &ensp;5.50% | 4270099 ± 0.02% | 0.39% slower
+
+</details>
+
+<details>
+<summary>NAMED</summary>
+
+`rgb2named`
+
+library | Latency avg (ns) | throughput avg (ops/s) | comparison
+--------|------------------|------------------------|------------
+color-utils   | 31319 &ensp;± 4.58% | 36141 ± 0.17% | fastest
+colord        | 724427 ± 0.87% | 1402 &ensp;± 0.53% | 96% slower
+color         | 75252 &ensp;± 0.35% | 13445 ± 0.12% | 63% slower
+color-convert | 76712 &ensp;± 0.39% | 13260 ± 0.15% | 63% slower
+
+`named2rgb`
+
+library | Latency avg (ns) | throughput avg (ops/s) | comparison
+--------|------------------|------------------------|------------
+color-utils   | 216.23 ± 0.86% | 5104754 ± 0.03% | fastest
+colord        | 11034&thinsp; ± 5.59% | 99782 &ensp;± 0.10% | 98% slower
+color         | 9834.4 ± 0.42% | 103986 &ensp;± 0.05% | 98% slower
+color-convert | 558.28 ± 0.67% | 1908326 ± 0.02% | 63% slower
 
 </details>
