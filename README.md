@@ -42,13 +42,15 @@ More infomations abous color spaces: [Color Space Ranges](#color-space-ranges)
 - CMYK
 - NAMED (Closest CSS `<named-color>`).
 
-CIE color spaces:
+Absolute color space:
 
 - XYZ (D65 is the default of reference white. Calling `setReferenceWhite('D50')` to switch to D50)
 - LAB
 - LCHab
 - LUV
 - LCHuv
+- Oklab
+- Oklch
 
 <h2>API</h2>
 
