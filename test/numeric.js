@@ -1,5 +1,5 @@
 import { performanceTest } from './utilsForTest/perf.js';
-import { map } from '../dist/index.js';
+import { dot3, map } from '../dist/index.js';
 
 
 function randPositiveInt() {
@@ -187,6 +187,106 @@ function power_() {
   );
 }
 
+function invertMat3x3_() {
+  // XYZ_2_LMS
+  const mat = [
+    [0.8189330101, 0.3618667424, -0.1288597137],
+    [0.0329845436, 0.9293118715, 0.0361456387],
+    [0.0482003018, 0.2643662691, 0.6338517070],
+  ];
+  const func1 = () => {
+    const [
+      [a, b, c],
+      [d, e, f],
+      [g, h, i]
+    ] = mat;
+    const x = e*i - h*f,
+      y = f*g - d*i,
+      z = d*h - g*e,
+      det = a*x + b*y + c*z;
+
+    return det ? [
+      [x/det, (c*h - b*i)/det, (b*f - c*e)/det],
+      [y/det, (a*i - c*g)/det, (d*c - a*f)/det],
+      [z/det, (g*b - a*h)/det, (a*e - d*b)/det]
+    ] : null;
+  };
+  const func2 = () => {
+    const [
+      [a, b, c],
+      [d, e, f],
+      [g, h, i]
+    ] = mat;
+
+    const A =  e*i - f*h;
+    const B = -(d*i - f*g);
+    const C =  d*h - e*g;
+    const D = -(b*i - c*h);
+    const E =  a*i - c*g;
+    const F = -(a*h - b*g);
+    const G =  b*f - c*e;
+    const H = -(a*f - c*d);
+    const I =  a*e - b*d;
+
+    const det = a*A + b*B + c*C;
+
+    const invDet = det;
+
+    return isFinite(det) ? [
+      [A / invDet, D / invDet, G / invDet],
+      [B / invDet, E / invDet, H / invDet],
+      [C / invDet, F / invDet, I / invDet]
+    ] : null;
+  };
+
+  return performanceTest(
+    'Calc inverse matrix',
+    [func1, func2],
+    { time: 300 }
+  );
+}
+
+const matrixMultiplyVector = () => {
+  // LMS_2_LAB
+  const mat = [
+    [0.2104542553, 0.7936177850, -0.0040720468],
+    [1.9779984951, -2.4285922050, 0.4505937099],
+    [0.0259040371, 0.7827717662, -0.8086757660],
+  ];
+  const vec = [5.4213183, 23.944321, 99.1234312];
+
+  const func1 = () => {
+    const row1 = mat[0];
+    const row2 = mat[1];
+    const row3 = mat[2];
+    let i = 0;
+    let x = 0, y = 0, z = 0;
+    let linear;
+    for (; i < 3;) {
+      linear = vec[i];
+      // Same as `dot3(rgb2xyzMat[number], linearRgb)`
+      x += row1[i] * linear;
+      y += row2[i] * linear;
+      z += row3[i++] * linear;
+    }
+    return [x, y, z];
+  };
+
+  const func2 = () => {
+    return [
+      dot3(mat[0], vec),
+      dot3(mat[1], vec),
+      dot3(mat[2], vec),
+    ];
+  };
+
+  return performanceTest(
+    'Matrix x vector',
+    [func1, func2],
+    { time: 500 }
+  );
+};
+
 const fns = [
   randPositiveInt,
   rounding,
@@ -195,8 +295,9 @@ const fns = [
   atan2,
   elementwiseMean,
   power_,
+  invertMat3x3_,
+  matrixMultiplyVector,
 ];
 for (const fn of fns) {
   await fn();
 }
-

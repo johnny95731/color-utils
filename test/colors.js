@@ -5,7 +5,7 @@ import { performanceTest } from './utilsForTest/perf.js';
 import { SampleGenerator } from './utilsForTest/sample.js';
 import {
   dot3, randInt, getContrastRatio, isReadable, linearRgb2srgb, randRgbGen,
-  rgb2hex, rgb2hue, getRelativeLuminance, srgb2linearRgb
+  rgb2hex, rgb2hue, getRelativeLuminance, srgb2linearRgb,
 } from '../dist/index.js';
 
 extend([a11yPlugin]);

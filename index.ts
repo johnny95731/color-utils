@@ -19,3 +19,4 @@ export * from 'src/colorModels/hsl';
 export * from 'src/colorModels/hwb';
 export * from 'src/colorModels/lch';
 export * from 'src/colorModels/named';
+export * from 'src/colorModels/oklab';

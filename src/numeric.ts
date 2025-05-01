@@ -1,4 +1,4 @@
-import { map } from './helpers';
+import { map, type DeepReadonly } from './helpers';
 
 /**
  * An alias of x**y. About 25%~30% faster than x**y = Math.pow(x,y) for non-integer `y`.
@@ -21,7 +21,6 @@ export const randInt = (max: number) => {
  * @param num A number.
  * @param place Default: `0`. Rounding to specific place value. Positive means decimal places
  * and negative means whole number places.
- * @return Percentage number.
  */
 export const round = (num: number, place: number = 0): number =>
   Math.round(10**place * num) / 10**place;
@@ -119,4 +118,22 @@ export const elementwiseMean = (arr1: readonly number[], arr2: readonly number[]
     Math.min(arr1.length, arr2.length),
     i => (arr1[i] + arr2[i]) / 2,
   );
+};
+
+export type Array3<T = number> = [T, T, T]
+export type Mat3x3<T = number> = Array3<Array3<T>>
+
+/**
+ * Matrix-vector product.
+ * Multiply a 3x3 matrix by a 3 vector
+ */
+export const matVecProduct3 = <
+  Mat extends number[][] | Mat3x3,
+  Vec extends number[] | Array3,
+>(mat: DeepReadonly<Mat>, vec: DeepReadonly<Vec>) => {
+  return [
+    dot3(mat[0], vec),
+    dot3(mat[1], vec),
+    dot3(mat[2], vec),
+  ];
 };

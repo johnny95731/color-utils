@@ -1,7 +1,6 @@
 import { map } from '../helpers';
 import { clip, pow, rangeMapping } from '../numeric';
 import { lab2rgb, rgb2lab } from '../colorModels/cielab';
-import { getColorSpace, type ColorSpace } from '../colors';
 
 
 // # Constants
@@ -133,29 +132,24 @@ export const getAdjuster = (method: ContrastMethod): ContrastFunction => {
 
 
 /**
- * Adjust the contrast of array of colors.
- * @param colors Color of array.
+ * Adjust the contrast of array of RGB colors.
+ * @param rgbs RGB colors.
  * @param method Adjust method.
  * @param space Default: 'RGB'. Color space of input and output colors.
  * @param args
+ * @returns RGB colors.
  */
 export const adjContrast = (
-  colors: number[][],
+  rgbs: number[][],
   method: ContrastMethod | number,
-  space: ColorSpace | string = 'RGB',
   ...args: number[]
 ): number[][] => {
   if (typeof method === 'number') method = CONTRAST_METHODS[method];
   if (!method) method = 'linear';
 
-  space = getColorSpace(space);
-
   const op = getAdjuster(method);
 
-  const { fromRgb_: fromRgb, toRgb_: toRgb } = space;
-  const isRGB = space.name_ ==='RGB';
-  const rgbs = isRGB ? colors : map(colors, color => toRgb(color));
   const result =  op(rgbs, ...args);
 
-  return isRGB ? result : map(result, rgb => fromRgb(rgb));
+  return result;
 };

@@ -1,7 +1,6 @@
-import { map } from '../helpers';
+import { cloneDeep, map } from '../helpers';
+import type { Mat3x3 } from '../numeric';
 
-type Array3<T = number> = [T, T, T]
-type Mat3x3<T = number> = Array3<Array3<T>>
 /**
  * Matrix factors for RGB to CIE XYZ.
  *
@@ -59,15 +58,16 @@ export const setReferenceWhite = (() => {
       [d, e, f],
       [g, h, i]
     ] = mat;
-    const x = e * i - h * f,
-      y = f * g - d * i,
-      z = d * h - g * e,
-      det = a * x + b * y + c * z;
-    return det !== 0 ? [
-      [x, c * h - b * i, b * f - c * e],
-      [y, a * i - c * g, d * c - a * f],
-      [z, g * b - a * h, a * e - d * b]
-    ].map(r => r.map(v => v /= det)) as Mat3x3 : null;
+    const x = e*i - h*f,
+      y = f*g - d*i,
+      z = d*h - g*e,
+      det = a*x + b*y + c*z;
+
+    return det ? [
+      [x/det, (c*h - b*i)/det, (b*f - c*e)/det],
+      [y/det, (a*i - c*g)/det, (d*c - a*f)/det],
+      [z/det, (g*b - a*h)/det, (a*e - d*b)/det]
+    ] : null;
   };
 
   const setReferenceWhite = (white: 'D65' | 'D50') => {
@@ -75,7 +75,7 @@ export const setReferenceWhite = (() => {
     const rowSum = map(mat, (row) => row[0] + row[1] + row[2]);
     const invMat = invertMat3x3(mat as Mat3x3);
     if (invMat) {
-      rgb2xyzMat.splice(0, 3, ...map(mat, (row) => [...row]) as Mat3x3);
+      rgb2xyzMat.splice(0, 3, ...cloneDeep(mat));
       xyz2rgbMat.splice(0, 3, ...invMat);
       xyzMax.splice(0, 3, ...rowSum);
     };

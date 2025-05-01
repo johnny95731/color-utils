@@ -15,11 +15,11 @@ type lcc2lch = (lcc: readonly number[]) => number[]
 type lch2lcc = (lch: readonly number[]) => number[]
 
 export const lcc2lch: lcc2lch = (lcc: readonly number[]): number[] => {
-  const [l, c1, c2] = lcc;
-  // short: (rad2deg(Math.atan2(y,x)) + 360) % 360;
+  const c1 = lcc[1];
+  const c2 = lcc[2];
   const deg = rad2deg(Math.atan2(c2, c1));
   return [
-    l,
+    lcc[0],
     l2Norm3(c1, c2),
     deg < 0 ? deg + 360 : deg,
   ];

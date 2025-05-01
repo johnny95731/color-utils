@@ -42,8 +42,8 @@ export const performanceTest = async (
     }
     const comparison = avgs.map((val, i) => {
       if (i !== idx) {
-        const percentage = 100 * (1 - val / max);
-        return `${round(percentage, percentage < 1 ? 2 : 0)}% slower`;
+        const percent = 100 * (1 - val / max);
+        return `${round(percent, percent < 1 ? 2 : 0)}% slower`;
       } else {
         return 'fastest';
       }

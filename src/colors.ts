@@ -9,6 +9,7 @@ import { cmyk2rgb, rgb2cmyk } from './colorModels/cmyk';
 import { lab2rgb, lchab2rgb, rgb2lab, rgb2lchab } from './colorModels/cielab';
 import { lchuv2rgb, luv2rgb, rgb2lchuv, rgb2luv } from './colorModels/cieluv';
 import { xyzMax } from './colorModels/cie-utils';
+import { oklab2rgb, oklch2rgb, rgb2oklab, rgb2oklch } from './colorModels/oklab';
 
 
 export type ColorSpace = {
@@ -33,8 +34,8 @@ export type ColorSpace = {
    *
    * The most common digits are `255`, `100`, and `360`.
    *  - `255`: Maximum of uint8.
-   *  - `100`: The value is percentage.
-   *  - `360`: The value is degree.
+   *  - `100`: The value is a percentage.
+   *  - `360`: The unit is a degree.
    *  - others: Usually see this in CIE spaces. The value eather follows the CSS
    *    rules (CIELAB) or represents the extreme value when transform from RGB
    *    to the space.
@@ -58,7 +59,7 @@ export type ColorSpace = {
  */
 export const COLOR_SPACES: ColorSpace[] = (() => {
   const HCL_MAX = [360, 100, 100] as const; // For Hue-Chroma-Luminance models.
-  const LCH_MAX = [100, 150, 360] as const; // Reverse of HCL: Luminance-Chroma-Hue
+  const lCH_MAX = [100, 150, 360] as const;
   const identityMap = (x: readonly number[]) => [...x];
 
   const spaces = [
@@ -131,7 +132,7 @@ export const COLOR_SPACES: ColorSpace[] = (() => {
       fromRgb_: rgb2lchab,
       toRgb_: lchab2rgb,
       labels_: ['L*', 'C*', 'h'],
-      max_: LCH_MAX,
+      max_: lCH_MAX,
       isSupported_: true,
     },
     {
@@ -139,8 +140,24 @@ export const COLOR_SPACES: ColorSpace[] = (() => {
       fromRgb_: rgb2lchuv,
       toRgb_: lchuv2rgb,
       labels_: ['L*', 'C*', 'h'],
-      max_: LCH_MAX,
+      max_: lCH_MAX,
       isSupported_: false,
+    },
+    {
+      name_: 'Oklab',
+      fromRgb_: rgb2oklab,
+      toRgb_: oklab2rgb,
+      labels_: ['L', 'a', 'b'],
+      max_: [[0, 1], [-0.4, 0.4], [-0.4, 0.4]],
+      isSupported_: true,
+    },
+    {
+      name_: 'Oklch',
+      fromRgb_: rgb2oklch,
+      toRgb_: oklch2rgb,
+      labels_: ['L', 'C', 'h'],
+      max_: [1, 0.4, 360],
+      isSupported_: true,
     },
   ] satisfies (
       Omit<ColorSpace, 'max_'> &
@@ -155,7 +172,6 @@ export const COLOR_SPACES: ColorSpace[] = (() => {
       obj.isSupported_ = CSS.supports('color', `${css}(${vals})`);
     }
   }
-
   return spaces as ColorSpace[];
 })();
 
@@ -210,6 +226,32 @@ export const toSpace = (
 };
 
 
+export type CssColorOptions = {
+  /**
+   * Check the browser support or not. If browser does not support the format,
+   * return string in RGB space.
+   * @default false
+   */
+  checkSupport_?: boolean,
+  /**
+   * Seperator of values. If `checkSupport_` is `true`, the seperator will
+   * always be `' '`.
+   * @default ' '
+   */
+  sep_?: string,
+  /**
+   * Convert all values to percent except degree.
+   * @default true
+   */
+  percent_?: boolean,
+  /**
+   * Argument for rounding values. Set `false` to disable rounding. `true` equials
+   * default value.
+   * @default 2
+   */
+  place_?: number | boolean
+}
+
 /**
  * Return CSS `<color>` value format: `space(val val val)`.
  * If `checkSupport === true` and the brwoser does not support, then return
@@ -219,31 +261,52 @@ export const toSpace = (
  * MDN <color>: https://developer.mozilla.org/en-US/docs/Web/CSS/color_value
  * @param color Color.
  * @param space Color space of color.
- * @param checkSupport Default: `false`. Check the browser support or not. T
- * @param sep Default: `' '`. Seperator of color function.
+ * @param options
  * @returns
  */
 export const getCssColor = (
-  color: number[],
+  color: readonly number[],
   space: ColorSpace | string = 'RGB',
-  checkSupport: boolean = false,
-  sep: string = ' '
+  options: CssColorOptions = {},
 ): string => {
+  let temp: number;
+  let suffix: string;
+  let {
+    checkSupport_ = false, // eslint-disable-line
+    sep_ = ' ',
+    percent_ = true, // eslint-disable-line
+    place_ = 2
+  } = options;
   space = getColorSpace(space);
-  if (checkSupport) sep = ' ';
 
-  if (checkSupport && !space.isSupported_) {
-    return getCssColor(space.toRgb_(color), COLOR_SPACES[0], false, sep);
+  if (checkSupport_ && !space.isSupported_) {
+    return getCssColor(
+      space.toRgb_(color),
+      COLOR_SPACES[0],
+      { checkSupport_, sep_, percent_, place_ }
+    );
   }
-  const strs = map(color, (val, i) => {
-    if (space.max_[i] === 100) {
-      return val + '%';
-    }
-    return val;
-  });
-  const css = space.name_.replace(/[a-z]/g, '');
+  sep_ = checkSupport_ ? ' ' : sep_;
+  place_ = place_ === true ? 2 : place_;
+  const noRounding = place_ === false;
+  const range = getSpaceRange(space);
 
-  return `${css}(${strs.join(sep)})`;
+  const vals = map(range, ([,max], i) => {
+    temp = color[i];
+    if (
+      max === 1 ||
+      max === 100 ||
+      (percent_ && max !== 360)
+    ) {
+      temp *= 100 / range[i][1];
+      suffix = '%';
+    } else {
+      suffix = '';
+    }
+    return (noRounding ? temp : round(temp, place_ as number)) + suffix;
+  });
+  const css = space.name_.startsWith('LCH') ? 'lch' : space.name_;
+  return `${css}(${vals.join(sep_)})`;
 };
 
 /**
@@ -334,7 +397,7 @@ export const getContrastRatio = (
  * WCAG 2.2 requirements about contrast ratio of text.
  * https://www.w3.org/TR/WCAG/#contrast-minimum
  */
-type ReadbleOptions = {
+export type ReadbleOptions = {
   /**
    * Text size is large scale (`true`) or normal scale (`false`).
    *

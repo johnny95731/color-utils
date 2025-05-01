@@ -4,7 +4,7 @@
 
 <h2>Features</h2>
 
-- 13.0KB size after minified (12.5KB with [mangle.properties.regex](#mangle))
+- 13.9KB size after minified (13.4KB with [mangle.properties.regex](#mangle))
 - High performance. [Benchmark](#benchmark)
 - Detect browser [`<color>`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/color_value) support when getting string.
 - Tree-shackable. Write functions instead of class method.
@@ -26,7 +26,7 @@ import { rgb2hex, rgb2hsb, rgb2gray, randRgbGen } from '@johnny95731/color-utils
 
 const rgb = randRgbGen(); // [0, 127, 200];
 
-rgb2hex(rgb);  // '#007FC8'
+rgb2hex(rgb);  // "#007FC8"
 rgb2hsb(rgb);  // [ 201.9, 100, 78.43137254901961 ]
 rgb2gray(rgb); // 97.34899999999999
 ```
@@ -229,20 +229,48 @@ getSpaceRange('lab'); // [ [ 0, 100 ], [ -125, 125 ], [ -125, 125 ] ]
 </details>
 
 <details>
-<summary><code>getCssColor(color: readonly number[], space: ColorSpace | string, checkSupport: boolean = false, sep: string = ' '): string</code></summary>
+<summary><code>getCssColor(color: readonly number[], space: ColorSpace | string, options?: CssColorOptions): string</code></summary>
 
-Convert the color array to string in CSS format.
+Convert the color to string.
 
 If `checkSupport` is `true`, then the function will set `sep = ' '` and change the color space to RGB when the browser does not support this color space.
 
 Currently the function does not support spaces that only support by CSS `color()` such as `xyz`.
 
 ```js
-getCssColor([140, 17, 243], 'RGB', false);      // "RGB(140 17 243)"
-getCssColor([140, 17, 243], 'RGB', false, ','); // "RGB(140,17,243)"
-getCssColor([273, 90, 51], 'HSL', false);       // "HSL(273 90% 51%)"
-getCssColor([27, 12, 86], 'xyz', false);        // "XYZ(27 12 86)"
-getCssColor([27, 12, 86], 'xyz', true);         // "RGB(139.872270897968 0 243.41593455030025)"
+getCssColor([140, 17, 243], 'RGB');                         // "RGB(54.9% 6.67% 95.29%)"
+getCssColor([140, 17, 243], 'RGB', { sep_: ',' });          // "RGB(54.9%,6.67%,95.29%)"
+getCssColor([140, 17, 243], 'RGB', { percent_: false });    // "RGB(140 17 243)"
+getCssColor([273, 90, 51], 'HSL',);                         // "HSL(273 90% 51%)"
+getCssColor([27, 12, 86], 'xyz');                           // "XYZ(28.41% 12% 78.98%)"
+getCssColor([27, 12, 86], 'xyz', { checkSupport_: true });  // "RGB(54.85% 0% 95.46%)"
+```
+
+```ts
+type CssColorOptions = {
+  /**
+   * Check the browser support or not. If browser does not support the color,
+   * return string in RGB space.
+   * @default false
+   */
+  checkSupport_?: boolean,
+  /**
+   * Seperator of values. If checkSupport_ is true, the seperator will always be ' '
+   * @default ' '
+   */
+  sep_?: string,
+  /**
+   * Convert all values to percent except deg.
+   * @default true
+   */
+  percent_?: boolean,
+  /**
+   * Argument for rounding values. Set false to disable rounding. true equials
+   * default value.
+   * @default 2
+   */
+  place_?: number | boolean
+}
 ```
 
 See also
@@ -385,7 +413,7 @@ The LCH space that converted from LAB.
 
 channel | description | min | max
 --------|-------------|-----|-----
-l | Lightness | 0 | 360
+l | Lightness | 0 | 100
 c | Chroma    | 0 | 150
 h | Hue       | 0 | 360
 
@@ -411,8 +439,34 @@ The LCH space that converted from LUV.
 
 channel | description | min | max
 --------|-------------|-----|-----
-l | Lightness | 0 | 360
+l | Lightness | 0 | 100
 c | Chroma    | 0 | 150
+h | Hue       | 0 | 360
+
+</details>
+
+<details>
+<summary>LAB</summary>
+
+The range of `a` and `b` follows the format of CSS. See: [lab()](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/lab).
+
+channel | description | min | max
+--------|-------------|-----|-----
+l | Lightness   |    0 | 1
+a | Chrominance | -0.4 | 0.4
+b | Chrominance | -0.4 | 0.4
+
+</details>
+
+<details>
+<summary>LCHab</summary>
+
+The LCH space that converted from LAB.
+
+channel | description | min | max
+--------|-------------|-----|-----
+l | Lightness | 0 | 1
+c | Chroma    | 0 | 0.4
 h | Hue       | 0 | 360
 
 </details>
@@ -620,29 +674,31 @@ meanMix([155, 122, 126], [211, 243, 242]); // [ 183, 182.5, 184 ]
 </details>
 
 <details>
-<summary><code>gammaMix(color1: readonly number[], color2: readonly number[], space: ColorSpace | string, gamma: number): number[]</code></summary>
+<summary><code>gammaMix(rgb1: readonly number[], rgb2: readonly number[], gamma: number): number[]</code></summary>
 
-1. Evaluate the `meanMix` value `mean` in RGB space.
+1. Evaluate the elementwise mean `mean` of colors.
 2. Convert `mean` to HSL space.
 3. Evaluate new saturation and luminance: `newVal = 100 * (val / 100)**gamma;`.
 4. Convert new HSL color to original space and return.
 
-The return space is the **same** as the input space.
+The inputs and output are in RGB space.
 
-If `gamma < 1`, the returns will brighter than `meanMix`.
-If `gamma > 1`, the returns will deeper than `meanMix`.
+If `gamma < 1`, the returns will ***brighter*** than `meanMix`.
+If `gamma > 1`, the returns will ***deeper*** than `meanMix`.
 
 ```js
-gammaMix([42, 62, 206], [55, 202, 93], 'RGB', 0.7);     // [ 54.39561213833195, 181.8755020626048, 208.5928442623028 ]
-gammaMix([155, 122, 126], [211, 243, 242], 'RGB', 1.2); // [ 171.41502723522638, 171.18140357959763, 171.8822745464839 ]
+gammaMix([42, 62, 206], [55, 202, 93], 0.7);     // [ 54.39561213833195, 181.8755020626048, 208.5928442623028 ]
+gammaMix([155, 122, 126], [211, 243, 242], 1.2); // [ 171.41502723522638, 171.18140357959763, 171.8822745464839 ]
 ```
 
 </details>
 
 <details>
-<summary><code>brighterMix(color1: readonly number[], color2: readonly number[], space: ColorSpace | string): number[]</code></summary>
+<summary><code>brighterMix(rgb1: readonly number[], rgb2: readonly number[]): number[]</code></summary>
 
 `gammaMix` with `gamma = 0.3`.
+
+The inputs and output are in RGB space.
 
 ```js
 brighterMix([42, 62, 206], [55, 202, 93]);     // [ 140.49399108764436, 225.63360346857013, 243.47723480588996 ]
@@ -652,9 +708,11 @@ brighterMix([155, 122, 126], [211, 243, 242]); // [ 228.89399229092206, 224.8103
 </details>
 
 <details>
-<summary><code>deeperMix(color1: readonly number[], color2: readonly number[], space: ColorSpace | string): number[]</code></summary>
+<summary><code>deeperMix(rgb1: readonly number[], rgb2: readonly number[]): number[]</code></summary>
 
 `gammaMix` with `gamma = 1.5`.
+
+The inputs and output are in RGB space.
 
 ```js
 deeperMix([42, 62, 206], [55, 202, 93]);     // [ 39.21213833570636, 76.37097203065198, 84.1587515475568 ]
@@ -664,10 +722,12 @@ deeperMix([155, 122, 126], [211, 243, 242]); // [ 155.3090002573382, 155.2379985
 </details>
 
 <details>
-<summary><code>softLightBlend(color1: readonly number[], color2: readonly number[], space: ColorSpace | string, formula: 'photoshop' | 'pegtop' | 'illusions.hu' | 'w3c' = 'w3c'): number[]</code></summary>
+<summary><code>softLightBlend(rgb1: readonly number[], rgb2: readonly number[], formula: 'photoshop' | 'pegtop' | 'illusions.hu' | 'w3c' = 'w3c'): number[]</code></summary>
 
 See [wiki blend modes](https://en.wikipedia.org/wiki/Blend_modes#Soft_Light).
 The order of input color will influence the result.
+
+The inputs and output are in RGB space.
 
 ```js
 softLightBlend([42, 62, 206], [55, 202, 93], 'RGB');              // [ 22.051211072664362, 99.24922945171917, 195.2889504036909 ]
@@ -678,9 +738,11 @@ softLightBlend([55, 202, 93], [42, 62, 206], 'RGB', 'photoshop'); // [ 26.072664
 </details>
 
 <details>
-<summary><code>additive(color1: readonly number[], color2: readonly number[], space: ColorSpace | string): number[]</code></summary>
+<summary><code>additive(rgb1: readonly number[], rgb2: readonly number[]): number[]</code></summary>
 
 Add their RGB values.
+
+The inputs and output are in RGB space.
 
 ```js
 additive([42, 62, 206], [55, 202, 93]);     // [ 97, 255, 255 ]
@@ -690,10 +752,12 @@ additive([155, 122, 126], [211, 243, 242]); // [ 255, 255, 255 ]
 </details>
 
 <details>
-<summary><code>mixColors(colors: readonly number[][], method: Mixing | number = 'mean', space: ColorSpace | string): number[]</code></summary>
+<summary><code>mixColors(rgbs: readonly number[][], method: Mixing | number = 'mean'): number[]</code></summary>
 
 Mix colors (at least two) by specifying the method.
 The return space is the **same** as the input space.
+
+The inputs and output are in RGB space.
 
 ```ts
 type Mixing =  "additive" | "mean" | "brighter" | "deeper" | "soft light";
@@ -703,13 +767,15 @@ type Mixing =  "additive" | "mean" | "brighter" | "deeper" | "soft light";
 
 <h3>Contrast</h3>
 
-The functions for adjust a group of colors.
+The functions for adjusting contrast of colors.
 
 <details>
 <summary><code>scaling(rgbs: readonly number[][], c: number = 1): number[][]</code></summary>
 
 Scale ths values of RGBs by multiplying `c`.
-The values will be clipped to `[0, 255]`
+The values will be clipped to `[0, 255]`.
+
+The inputs and output are in RGB space.
 
 ```js
 scaling([170, 107, 170], 1.2); // [ [ 204, 128.4, 204 ] ]
@@ -725,6 +791,10 @@ Calculate the new value of RGBs by the formula `newVal = 255 * (val / 255)**gamm
 If `gamma < 1`, the returns will brighter than original color.
 If `gamma > 1`, the returns will deeper than original color.
 
+The inputs and output are in RGB space.
+
+The inputs and output are in RGB space.
+
 ```js
 gammaCorrection([148, 241, 14], 2);  // [ [ 85.9, 227.77, 0.77 ] ]
 gammaCorrection([178, 4, 200], 0.7); // [ [ 198.27, 13.91, 215.12 ] ]
@@ -735,11 +805,13 @@ gammaCorrection([178, 4, 200], 0.7); // [ [ 198.27, 13.91, 215.12 ] ]
 <details>
 <summary><code>autoEnhancement(rgbs: readonly number[][]): number[][]</code></summary>
 
-Enhance the contrast of input RGBs.
+Enhance the contrast by the following steps:
 
 1. Find minimum lightness and maximum lightness in LAB space.
 2. Scaling from `[minimum, maximum]` to `[0, 100]`
 3. Convert new color to RGB space and return.
+
+The inputs and output are in RGB space.
 
 </details>
 
@@ -750,17 +822,20 @@ Adjust the brightness of input RGBs.
 The outputs become darker when coeff close to 0 and become brighter when coeff close to 1
 
 1. Find mean lightness `meanL` in LAB space.
-2. Calculate `gamma = log(coeff) / log(meanL / 100);`
+2. Calculate `gamma = log(coeff) / log(meanL / 100);`.
 3. Do gamma correction to L channel with `gamma`.
 4. Convert new color to RGB space and return.
+
+The inputs and output are in RGB space.
 
 </details>
 
 <details>
-<summary><code>adjContrast(colors: number[][], method: ContrastMethod | number, space: ColorSpace | string, ...args: number[]): number[][]</code></summary>
+<summary><code>adjContrast(rgbs: number[][], method: ContrastMethod | number, space: ColorSpace | string, ...args: number[]): number[][]</code></summary>
 
-Adjust the contrast of array of colors by specifying the method.
-The return space is the **same** as the input space.
+Adjust the contrast of array of RGB colors by specifying the method.
+
+The inputs and output are in RGB space.
 
 ```ts
 type ContrastMethod = "linear" | "gamma" | "auto enhancement" | "auto brightness";
@@ -770,12 +845,12 @@ type ContrastMethod = "linear" | "gamma" | "auto enhancement" | "auto brightness
 
 <h3>Sorting</h3>
 
-Except the `distE76` function, the other color difference function is not symmetry.
+Except the `distE76` function, the other color difference function is not symmetry (`f(a,b)` may not equal to `f(b,a)`).
 
 <details>
 <summary><code>diffLuminance(rgb1: readonly number[], rgb2: readonly number[]): number[][]</code></summary>
 
-Return the difference of grayscale `rgb2gray(rgb1) - rgb2gray(rgb2)`.
+Return the difference of grayscales `rgb2gray(rgb1) - rgb2gray(rgb2)`.
 </details>
 
 <details>
@@ -791,7 +866,7 @@ This is the CIE 1976 color difference (CIE76 or E76).
 
 Return the square of CIE 1994 color difference (CIE94 or E94).
 
-The reason for ***square***:
+The ***square***:
 CIE94 formula will take square root. This function is present for comparing the color difference between colors, e.g. `distE94(lab1, lab2) < distE94(lab1, lab3)`, thus the square root is unnecessary.
 
 </details>
@@ -815,7 +890,8 @@ In-place shuffle an array by Fisher-Yates shuffle.
 <details>
 <summary><code>tspGreedy&lt;T>(arr: T[], rgbGetter: (color: T) => number[], diffOp: CIEDifferenceFn, copy: boolean = false): T[]</code></summary>
 
-Sort an array of objects by Greedy algorithm. The first item will not be moved.
+Sort by Greedy algorithm.
+The first item will be fixed. The second is the closest item to the first and so on.
 
 The argument `rgbGetter` make this function can handle the object such as
 `{ color : number[], otherProperty: unknown }`.
@@ -825,10 +901,30 @@ The argument `rgbGetter` make this function can handle the object such as
 <details>
 <summary><code>sortColors&lt;T>(colors: readonly T[], method: Sort | number, rgbGetter: (color: T) => number[]): T[]</code></summary>
 
-Return a sorted and copied array of objects .
+Return a sorted and copied ([cloneDeep](#clone-deep)) array of objects.
 
 The argument `rgbGetter` make this function can handle the object such as
 `{ color : number[], otherProperty: unknown }`.
+
+```ts
+type Mixing =  "luminance" | "random" | "reversion" | "CIE76" | "CIE94" | "CIEDE2000";
+```
+
+method    | description
+----------|------------
+luminance | Ascending in brightness (grayscale)
+random    | Shuffle.
+reversion | Reverse the order of input array.
+CIE76     | `tspGreedy` with `diffOp = distE76`.
+CIE94     | `tspGreedy` with `diffOp = distE94`.
+CIEDE2000 | `tspGreedy` with `diffOp = distE00`.
+
+</details>
+
+<details>
+<summary><code>sortRgbs(rgbs: readonly number[][], method: Sort | number): number[][]</code></summary>
+
+Return a sorted and copied array of RGB colors. Similar to `sortColors` but input RGB colors directly.
 
 ```ts
 type Mixing =  "luminance" | "random" | "reversion" | "CIE76" | "CIE94" | "CIEDE2000";
@@ -880,7 +976,7 @@ and `cieTransInv` is the inverse function of `cieTrans`.
 
 </details>
 
-<details>
+<details id="clone-deep">
 <summary><code>cloneDeep&lt;T>(obj: T, cloneCustom: boolean = false): DeepWriteable&lt;T></code></summary>
 
 Deeply clone object.
@@ -960,20 +1056,6 @@ Math.round(10**place * num) / 10**place;
 
 <details>
 <summary><code>clip(num: number, min?: number, max?: number): number</code></summary>
-
-Limit the number in the interval [`min`, `max`]. If `min` and/or `max` is `undefined`,
-it will be regarded as unbound.
-
-```ts
-if (num < min!) num = min!; // max < min return min
-else if (num > max!) num = max!;
-return num;
-```
-
-</details>
-
-<details>
-<summary><code>rangeMapping(num: number, min?: number, max?: number): number</code></summary>
 
 Limit the number in the interval [`min`, `max`]. If `min` and/or `max` is `undefined`,
 it will be regarded as unbound.

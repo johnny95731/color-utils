@@ -1,4 +1,4 @@
-import { clip, dot3 } from '../numeric';
+import { clip, dot3, matVecProduct3 } from '../numeric';
 import { linearRgb2srgb, srgb2linearRgb, } from '../colors';
 import { rgb2xyzMat, xyz2rgbMat } from './cie-utils';
 
@@ -9,21 +9,12 @@ import { rgb2xyzMat, xyz2rgbMat } from './cie-utils';
  * @return CIE XYZ color array.
  */
 export const rgb2xyz = (rgb: readonly number[]): number[] => {
-  const row1 = rgb2xyzMat[0];
-  const row2 = rgb2xyzMat[1];
-  const row3 = rgb2xyzMat[2];
-
-  let i = 0;
-  let x = 0, y = 0, z = 0;
-  let linear: number;
-  for (; i < 3;) {
-    linear = srgb2linearRgb(rgb[i]);
-    // Same as `dot3(rgb2xyzMat[number], linearRgb)`
-    x += row1[i] * linear;
-    y += row2[i] * linear;
-    z += row3[i++] * linear;
-  }
-  return [x, y, z];
+  const linear = [
+    srgb2linearRgb(rgb[0]),
+    srgb2linearRgb(rgb[1]),
+    srgb2linearRgb(rgb[2]),
+  ];
+  return matVecProduct3(rgb2xyzMat, linear);
 };
 
 /**

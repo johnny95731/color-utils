@@ -79,6 +79,7 @@ export const distE00: CIEDifferenceFn = (() => {
   const f7 = (val: number) => (val = pow(val, 7), Math.sqrt(val / (val + pow(25, 7))));
   const cos = (deg: number) => Math.cos(deg2rad(deg));
   const sin = (deg: number) => Math.sin(deg2rad(deg));
+  // cos(3*H) = 4*cos(H)**3 - 3*cos(H)
   const cos3H = (cosH: number) => 4*cosH*cosH*cosH - 3*cosH;
 
   const cos30 = cos(30);
@@ -266,4 +267,17 @@ export const sortColors = <T>(
     );
   }
   return result;
+};
+
+
+/**
+ * Sort array of RGB colors.
+ * @param rgbs Sort RGB colors.
+ * @param method Sort method.
+ */
+export const sortRgbs = (
+  rgbs: readonly number[][],
+  method: Sort | number,
+): number[][] => {
+  return sortColors(rgbs, method, (rgb: number[]) => rgb);
 };
