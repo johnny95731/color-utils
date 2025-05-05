@@ -6,8 +6,8 @@
 
 - 13.9KB size after minified (13.4KB with [mangle.properties.regex](#mangle))
 - High performance. [Benchmark](#benchmark)
-- Detect browser [`<color>`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/color_value) support when getting string.
-- Tree-shackable. Write functions instead of class method.
+- Detect browser [`<color>`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value) support when getting string.
+- Functional programing. Unused functions are tree-shakable.
 - Immutable.
 - Typed.
 - Supports ESM and CJS.
@@ -448,9 +448,9 @@ h | Hue       | 0 | 360
 </details>
 
 <details>
-<summary>LAB</summary>
+<summary>Oklab</summary>
 
-The range of `a` and `b` follows the format of CSS. See: [lab()](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/lab).
+The range of `a` and `b` follows the format of CSS. See: [oklab()](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/oklab).
 
 channel | description | min | max
 --------|-------------|-----|-----
@@ -461,9 +461,7 @@ b | Chrominance | -0.4 | 0.4
 </details>
 
 <details>
-<summary>LCHab</summary>
-
-The LCH space that converted from LAB.
+<summary>Oklch</summary>
 
 channel | description | min | max
 --------|-------------|-----|-----
@@ -1135,8 +1133,10 @@ Run command `npm run benchmark`.
 
 - Node version: v22.11.0.
 - CPU: Intel(R) Core(TM) i7-7700HQ CPU @ 2.80GHz
-- library: `tinybench`
+- library: `tinybench` 3.1.1
 - Every test function convert 10 colors by default. For details, see `SampleGenerator.defaults` in `./test/utilsForTest/sample.js`.
+
+Only list some benchmaks since some conversions have similar formula and performance.
 
 <details>
 <summary>XYZ</summary>
