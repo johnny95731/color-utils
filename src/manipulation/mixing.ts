@@ -1,14 +1,13 @@
 import { map } from '../helpers';
 import { clip, elementwiseMean, pow } from '../numeric';
 import { hsl2rgb, rgb2hsl } from '../colorModels/hsl';
-import type { ColorSpace } from '../colors';
 
 
 /**
  * Support mix modes.
  */
 export const MIXING_MODES = [
-  'mean', 'brighter', 'deeper', 'soft light', 'additive'
+  'mean', 'brighter', 'deeper', 'soft light', 'additive', 'weighted'
 ] as const;
 
 /**
@@ -17,16 +16,35 @@ export const MIXING_MODES = [
 export type Mixing = typeof MIXING_MODES[number];
 
 export type MixOp =
-((c1: readonly number[], c2: readonly number[]) => number[]) |
-((c1: readonly number[], c2: readonly number[], space?: ColorSpace | string) => number[]);
+  ((c1: readonly number[], c2: readonly number[]) => number[]) |
+  ((c1: readonly number[], c2: readonly number[], formula: string) => number[]) |
+  ((c1: readonly number[], c2: readonly number[], ...args: number[]) => number[]);
 
+
+/**
+ * Mixing two colors by evaluate their elementwise weighted sum.
+ * @param color1 Color array.
+ * @param color2 Color array.
+ * @param weight1 Default: `0.5`. Weight of `color1`. Should be in range [0, 1].
+ */
+export const mix = (
+  color1: readonly number[],
+  color2: readonly number[],
+  weight1: number = 0.5,
+  weight2: number = 1 - weight1,
+) => {
+  return map(
+    Math.min(color1.length, color2.length),
+    i => weight1 * color1[i] + weight2 * color2[i]
+  );
+};
 
 /**
  * Mixing two colors by evaluate their elementwise average.
  * @param color1 Color array.
  * @param color2 Color array.
  */
-export const meanMix: MixOp = elementwiseMean;
+export const meanMix = elementwiseMean;
 
 
 // Simply mix and adjust it.
@@ -58,13 +76,13 @@ export const gammaMix = (
  * @param rgb2 RGB color.
  * @returns Color in `space`
  */
-export const brighterMix: MixOp = (
+export const brighterMix = (
   rgb1: readonly number[],
   rgb2: readonly number[],
 ) =>
   gammaMix(rgb1, rgb2, 0.3);
 
-export const deeperMix: MixOp = (
+export const deeperMix = (
   rgb1: readonly number[],
   rgb2: readonly number[],
 ) =>
@@ -79,7 +97,7 @@ export const deeperMix: MixOp = (
  * @param formula Default: 'w3c'. The softlight formula.
  * @returns RGB color.
  */
-export const softLightBlend: MixOp = (
+export const softLightBlend = (
   rgb1: readonly number[],
   rgb2: readonly number[],
   formula: 'photoshop' | 'pegtop' | 'illusions.hu' | 'w3c' = 'w3c'
@@ -131,7 +149,7 @@ export const softLightBlend: MixOp = (
  * @param rgb2 Color array.
  * @returns RGB color.
  */
-export const additive: MixOp = (
+export const additive = (
   rgb1: readonly number[],
   rgb2: readonly number[],
 ): number[] => {
@@ -153,6 +171,7 @@ export const additive: MixOp = (
 export const mixColors = (
   rgbs: readonly number[][],
   method: Mixing | number = 'mean',
+  ...args: unknown[]
 ): number[] => {
   if (typeof method === 'number') method = MIXING_MODES[method];
 
@@ -161,14 +180,16 @@ export const mixColors = (
     [MIXING_MODES[1]]: brighterMix,
     [MIXING_MODES[2]]: deeperMix,
     [MIXING_MODES[3]]: softLightBlend,
-    [MIXING_MODES[4]]: additive
+    [MIXING_MODES[4]]: additive,
+    [MIXING_MODES[5]]: mix,
   } as const satisfies Record<Mixing, MixOp>;
-  const op = ops[method] ?? elementwiseMean;
+  const op: MixOp = ops[method] ?? meanMix;
 
   let result = [...rgbs[0]];
   let i: number = 1;
   while (i < rgbs.length) {
-    result = op(result, rgbs[i++]);
+    // @ts-expect-error
+    result = op(result, rgbs[i++], ...args);
   }
   return result;
 };
