@@ -18,3 +18,4 @@ import 'src/colorModels/hsl';
 import 'src/colorModels/hwb';
 import 'src/colorModels/lch';
 import 'src/colorModels/named';
+import 'src/colorModels/oklab';
