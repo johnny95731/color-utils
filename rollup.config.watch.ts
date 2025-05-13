@@ -12,7 +12,7 @@ export const terserOption = {
     unused: true,
   },
   mangle: {
-    keep_fnames: false,
+    keep_fnames: true,
     properties: false
   },
   nameCache: undefined,
