@@ -8,7 +8,7 @@ import { hwb2rgb, rgb2hwb } from './colorModels/hwb';
 import { cmyk2rgb, rgb2cmyk } from './colorModels/cmyk';
 import { lab2rgb, lchab2rgb, rgb2lab, rgb2lchab } from './colorModels/cielab';
 import { lchuv2rgb, luv2rgb, rgb2lchuv, rgb2luv } from './colorModels/cieluv';
-import { xyzMax } from './colorModels/cie-utils';
+import { xyzSpace } from './colorModels/cie-utils';
 import { oklab2rgb, oklch2rgb, rgb2oklab, rgb2oklch } from './colorModels/oklab';
 
 
@@ -18,7 +18,7 @@ export type ColorSpace = {
    */
   readonly name_: string,
   /**
-   * Browser support this color value or not.
+   * Browser support.
    */
   isSupported_: boolean,
   /**
@@ -53,6 +53,10 @@ export type ColorSpace = {
    * @returns RGB values.
    */
   readonly toRgb_: (x: readonly number[]) => number[],
+  /**
+   * White point. The property only exists in XYZ space.
+   */
+  white_?: 'D65' | 'D50'
 }
 /**
  * Support color spaces.
@@ -103,14 +107,15 @@ export const COLOR_SPACES: ColorSpace[] = (() => {
       max_: map(4, () => 100),
       isSupported_: false,
     },
-    {
-      name_: 'XYZ',
-      fromRgb_: rgb2xyz,
-      toRgb_: xyz2rgb,
-      labels_: ['X', 'Y', 'Z'],
-      max_: xyzMax,
-      isSupported_: false,
-    },
+    (
+      // `xyzSpace` missing 2 properties:
+      // statement the code here
+      // @ts-expect-error
+      xyzSpace.fromRgb_ = rgb2xyz,
+      // @ts-expect-error
+      xyzSpace.toRgb_ = xyz2rgb,
+      xyzSpace
+    ),
     {
       name_: 'LAB',
       fromRgb_: rgb2lab,
@@ -169,7 +174,12 @@ export const COLOR_SPACES: ColorSpace[] = (() => {
     if (isInBrowser) {
       const css = /^LCH/.test(obj.name_) ? 'lch' : obj.name_;
       const vals = map(obj.labels_, () => 0).join(' ');
-      obj.isSupported_ = CSS.supports('color', `${css}(${vals})`);
+      obj.isSupported_ = CSS.supports(
+        'color',
+        css === 'XYZ' ?
+          `color(xyz ${vals})` :
+          `${css}(${vals})`
+      );
     }
   }
   return spaces as ColorSpace[];
@@ -304,9 +314,11 @@ export const getCssColor = (
       suffix = '';
     }
     return (noRounding ? temp : round(temp, place_ as number)) + suffix;
-  });
+  }).join(sep_);
   const css = space.name_.startsWith('LCH') ? 'lch' : space.name_;
-  return `${css}(${vals.join(sep_)})`;
+  return checkSupport_ && css === 'XYZ' ?
+    `color(xyz ${vals})` :
+    `${css}(${vals})`;
 };
 
 /**

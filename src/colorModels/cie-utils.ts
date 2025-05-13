@@ -1,3 +1,4 @@
+import type { ColorSpace } from 'src/colors';
 import { cloneDeep, map } from '../helpers';
 import type { Mat3x3 } from '../numeric';
 
@@ -27,6 +28,14 @@ export const xyz2rgbMat = [] as Mat3x3;
  */
 // @ts-expect-error Initialize by `setReferenceWhite`
 export const xyzMax = [] as Array3;
+
+export const xyzSpace = {
+  name_: 'XYZ',
+  labels_: ['X', 'Y', 'Z'],
+  max_: xyzMax,
+  isSupported_: true,
+  white_: 'D65'
+} as ColorSpace;
 
 /**
  * Change the transformation matrix between CIEXYZ and RGB by changing the
@@ -78,6 +87,7 @@ export const setReferenceWhite = (() => {
       rgb2xyzMat.splice(0, 3, ...cloneDeep(mat));
       xyz2rgbMat.splice(0, 3, ...invMat);
       xyzMax.splice(0, 3, ...rowSum);
+      xyzSpace.white_ =  white === 'D50' ? white : 'D65';
     };
   };
   setReferenceWhite('D65'); // Initialize

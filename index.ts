@@ -8,7 +8,7 @@ export * from 'src/manipulation/harmony';
 export * from 'src/manipulation/contrast';
 export * from 'src/manipulation/sorting';
 
-export * from 'src/colorModels/cie-utils';
+export { setReferenceWhite, cieTrans, cieTransInv } from 'src/colorModels/cie-utils';
 export * from 'src/colorModels/cielab';
 export * from 'src/colorModels/cieluv';
 export * from 'src/colorModels/ciexyz';
