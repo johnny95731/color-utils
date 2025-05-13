@@ -317,7 +317,7 @@ export const getCssColor = (
   }).join(sep_);
   const css = space.name_.startsWith('LCH') ? 'lch' : space.name_;
   return checkSupport_ && css === 'XYZ' ?
-    `color(xyz ${vals})` :
+    `color(xyz-${(space.white_ ?? 'D65').toLowerCase()} ${vals})` :
     `${css}(${vals})`;
 };
 
