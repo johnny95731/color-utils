@@ -33,6 +33,11 @@ export const mix = (
   weight1: number = 0.5,
   weight2: number = 1 - weight1,
 ) => {
+  // Normalize to weight1 + weight2 = 1
+  if (weight1 + weight2 > 1) {
+    weight1 /= weight1 + weight2;
+    weight2 = 1 - weight1;
+  }
   return map(
     Math.min(color1.length, color2.length),
     i => weight1 * color1[i] + weight2 * color2[i]
