@@ -16,7 +16,7 @@ export type ColorSpace = {
   /**
    * Name of the color space.
    */
-  readonly name_: string,
+  name_: string,
   /**
    * Browser support.
    */
@@ -40,19 +40,19 @@ export type ColorSpace = {
    *    rules (CIELAB) or represents the extreme value when transform from RGB
    *    to the space.
    */
-  readonly max_: readonly number[] | readonly (readonly [number, number])[]
+  max_: readonly number[] | readonly (readonly [number, number])[]
   /**
    * Convert RGB to specified color space.
    * @param x RGB values.
    * @returns specified color space values.
    */
-  readonly fromRgb_: (x: readonly number[]) => number[],
+  fromRgb_: (x: readonly number[]) => number[],
   /**
    * Convert specified color space to RGB space.
    * @param x specified color space values.
    * @returns RGB values.
    */
-  readonly toRgb_: (x: readonly number[]) => number[],
+  toRgb_: (x: readonly number[]) => number[],
   /**
    * White point. The property only exists in XYZ space.
    */
@@ -110,9 +110,7 @@ export const COLOR_SPACES: ColorSpace[] = (() => {
     (
       // `xyzSpace` missing 2 properties:
       // statement the code here
-      // @ts-expect-error
       xyzSpace.fromRgb_ = rgb2xyz,
-      // @ts-expect-error
       xyzSpace.toRgb_ = xyz2rgb,
       xyzSpace
     ),
