@@ -69,6 +69,6 @@
     "pkg": "rollup -c rollup.config.pkg.ts --configPlugin @rollup/plugin-typescript",
     "watch": "rollup -c rollup.config.watch.ts --configPlugin @rollup/plugin-typescript -w",
     "benchmark": "node ./test/trans-perf.js",
-    "equiv=test": "node ./test/trans-equiv-tests.js"
+    "equiv": "node ./test/trans-equiv-tests.js"
   }
 }
