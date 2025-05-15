@@ -36,8 +36,10 @@ function xyzEquiv() {
   ];
   const custom = ['color-utils', rgb2xyz];
 
+  console.log('To D50');
   setReferenceWhite('D50'); // colord use different reference white
   equivalenceTest(custom, colord_, rgbs, compFn);
+  console.log('To D65');
   setReferenceWhite('D65');
   equivalenceTest(custom, color_, rgbs, compFn);
   equivalenceTest(custom, convert_, rgbs, compFn);
