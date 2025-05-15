@@ -1,14 +1,14 @@
 import { random, extend } from 'colord';
 import a11yPlugin from 'colord/plugins/a11y';
+import labPlugin from 'colord/plugins/lab';
 
 import { performanceTest } from './utilsForTest/perf.js';
 import { SampleGenerator } from './utilsForTest/sample.js';
 import {
-  dot3, randInt, getContrastRatio, isReadable, linearRgb2srgb, randRgbGen,
-  rgb2hex, rgb2hue, getRelativeLuminance, srgb2linearRgb,
+  dot3, randInt, getContrastRatio, isReadable, linearRgb2srgb, randRgbGen, rgb2hex, rgb2hue, getRelativeLuminance, srgb2linearRgb, getCssColor, COLOR_SPACES, rgb2hsl, rgb2lab
 } from '../dist/index.js';
 
-extend([a11yPlugin]);
+extend([a11yPlugin, labPlugin]);
 
 
 const { rgbs, colors, colords, length } = SampleGenerator.defaults;
@@ -29,7 +29,7 @@ function generation() {
     return s;
   };
 
-  const randRgb2hex_ = () => rgb2hex(randRgbGen());
+  const randRgb2hex = () => rgb2hex(randRgbGen());
   const colord_ = () => random();
 
 
@@ -38,9 +38,94 @@ function generation() {
     [
       randomHex,
       randomHexArr,
+      randRgb2hex,
       randRgbGen,
-      randRgb2hex_,
       colord_
+    ],
+    { time: 300 }
+  );
+}
+
+function rgbString() {
+  const custom_ = () => {
+    for (let i = 0; i < length; i++) {
+      getCssColor(rgbs[i], COLOR_SPACES[0]);
+    }
+  };
+  const colord_ = () => {
+    for (let i = 0; i < length; i++) {
+      colords[i].toRgbString();
+    }
+  };
+  const color_ = () => {
+    for (let i = 0; i < length; i++) {
+      colors[i].toString();
+    }
+  };
+
+  return performanceTest(
+    'RGB string',
+    [
+      ['color-utils', custom_],
+      ['colord', colord_],
+      ['color', color_],
+    ],
+    { time: 300 }
+  );
+}
+
+function hslString() {
+  const custom_ = () => {
+    for (let i = 0; i < length; i++) {
+      getCssColor(rgb2hsl(rgbs[i]), COLOR_SPACES[1]);
+    }
+  };
+  const colord_ = () => {
+    for (let i = 0; i < length; i++) {
+      colords[i].toHslString();
+    }
+  };
+  const color_ = () => {
+    for (let i = 0; i < length; i++) {
+      colors[i].hsl().toString();
+    }
+  };
+
+  return performanceTest(
+    'HSL string',
+    [
+      ['color-utils', custom_],
+      ['colord', colord_],
+      ['color', color_],
+    ],
+    { time: 300 }
+  );
+}
+
+function labString() {
+  const custom_ = () => {
+    for (let i = 0; i < length; i++) {
+      getCssColor(rgb2lab(rgbs[i]), COLOR_SPACES[6]);
+    }
+  };
+  const colord_ = () => {
+    for (let i = 0; i < length; i++) {
+      const { l, a, b } = colords[i].toLab();
+      return `lab(${l} ${a} ${b})`;
+    }
+  };
+  const color_ = () => {
+    for (let i = 0; i < length; i++) {
+      colors[i].lab().toString();
+    }
+  };
+
+  return performanceTest(
+    'LAB string',
+    [
+      ['color-utils', custom_],
+      ['colord', colord_],
+      ['color', color_],
     ],
     { time: 300 }
   );
@@ -65,7 +150,6 @@ function rgbLinearize() {
     }
   };
 
-
   return performanceTest(
     'linearization of RGB',
     [srgb2linearRgb_, linearRgb2srgb_],
@@ -73,11 +157,6 @@ function rgbLinearize() {
 }
 
 function rgb2gray_() {
-  const colord_ = () => {
-    for (let i = 0; i < length; i++) {
-      colords[i].brightness() * 255; // eslint-disable-line
-    }
-  };
   const rgb2grayDot = (rgb) => dot3(rgb, [.299, .587, .114]);
   const customDot_ = () => {
     for (let i = 0; i < length; i++) {
@@ -90,15 +169,28 @@ function rgb2gray_() {
       rgb2grayMul(rgbs[i]);
     }
   };
-
+  const colord_ = () => {
+    for (let i = 0; i < length; i++) {
+      colords[i].brightness() * 255; // eslint-disable-line
+    }
+  };
 
   return performanceTest(
     'To grayscale (same as Y channel of YIQ.)',
-    [colord_, customDot_, customMul_],
+    [
+      ['color-utils dot', customDot_],
+      ['color-utils mul', customMul_],
+      ['colord', colord_],
+    ],
   );
 }
 
 function hue_() {
+  const custom_ = () => {
+    for (let i = 0; i < length; i++) {
+      rgb2hue(rgbs[i]);
+    }
+  };
   const colord_ = () => {
     for (let i = 0; i < length; i++) {
       colords[i].hue();
@@ -109,15 +201,14 @@ function hue_() {
       colors[i].hue();
     }
   };
-  const custom_ = () => {
-    for (let i = 0; i < length; i++) {
-      rgb2hue(rgbs[i]);
-    }
-  };
 
   return performanceTest(
     'Hue',
-    [colord_, color_, custom_],
+    [
+      ['color-utils', custom_],
+      ['colord', colord_],
+      ['color', color_]
+    ],
   );
 }
 
@@ -140,7 +231,11 @@ function relativeLuminance_() {
 
   return performanceTest(
     'Relative luminance',
-    [colord_, color_, custom_],
+    [
+      ['color-utils', custom_],
+      ['colord', colord_],
+      ['color', color_]
+    ],
   );
 }
 
@@ -163,7 +258,11 @@ function contrastRatio_() {
 
   return performanceTest(
     'contrast ratio',
-    [colord_, color_, custom_],
+    [
+      ['color-utils', custom_],
+      ['colord', colord_],
+      ['color', color_]
+    ],
   );
 }
 
@@ -181,13 +280,19 @@ function isReadable_() {
 
   return performanceTest(
     'Is readable',
-    [colord_, custom_],
+    [
+      ['color-utils', custom_],
+      ['colord', colord_],
+    ],
   );
 }
 
 
 const fns = [
   generation,
+  rgbString,
+  hslString,
+  labString,
   rgbLinearize,
   rgb2gray_,
   hue_,
