@@ -29,8 +29,7 @@ export type ColorSpace = {
    * Range of each channel of a color spaces.
    *
    * The type of values:
-   *  - `number[]`: the maximum of each channel.
-   *  - `([number, number])[]`: the range of each channel.
+   *  - `[number, number][]`: the minimum and maximum of each channel.
    *
    * The most common digits are `255`, `100`, and `360`.
    *  - `255`: Maximum of uint8.
@@ -40,7 +39,7 @@ export type ColorSpace = {
    *    rules (CIELAB) or represents the extreme value when transform from RGB
    *    to the space.
    */
-  max_: readonly number[] | readonly (readonly [number, number])[]
+  max_: readonly (readonly [number, number])[]
   /**
    * Convert RGB to specified color space.
    * @param x RGB values.
@@ -62,8 +61,8 @@ export type ColorSpace = {
  * Support color spaces.
  */
 export const COLOR_SPACES: ColorSpace[] = (() => {
-  const HCL_MAX = [360, 100, 100] as const; // For Hue-Chroma-Luminance models.
-  const lCH_MAX = [100, 150, 360] as const;
+  const HCL_MAX = [[0, 360], [0, 100], [0, 100]] as const; // For Hue-Chroma-Luminance models.
+  const LCH_MAX = [[0, 100], [0, 150], [0, 360]] as const;
   const identityMap = (x: readonly number[]) => [...x];
 
   const spaces = [
@@ -72,7 +71,7 @@ export const COLOR_SPACES: ColorSpace[] = (() => {
       fromRgb_: identityMap,
       toRgb_: identityMap,
       labels_: ['Red', 'Green', 'Blue'],
-      max_: map(3, () => 255),
+      max_: map(3, () => [0, 255]),
       isSupported_: true,
     },
     {
@@ -104,7 +103,7 @@ export const COLOR_SPACES: ColorSpace[] = (() => {
       fromRgb_: rgb2cmyk,
       toRgb_: cmyk2rgb,
       labels_: ['Cyan', 'Magenta', 'Yellow', 'Black'],
-      max_: map(4, () => 100),
+      max_: map(4, () => [0, 100]),
       isSupported_: false,
     },
     (
@@ -135,7 +134,7 @@ export const COLOR_SPACES: ColorSpace[] = (() => {
       fromRgb_: rgb2lchab,
       toRgb_: lchab2rgb,
       labels_: ['L*', 'C*', 'h'],
-      max_: lCH_MAX,
+      max_: LCH_MAX,
       isSupported_: true,
     },
     {
@@ -143,7 +142,7 @@ export const COLOR_SPACES: ColorSpace[] = (() => {
       fromRgb_: rgb2lchuv,
       toRgb_: lchuv2rgb,
       labels_: ['L*', 'C*', 'h'],
-      max_: lCH_MAX,
+      max_: LCH_MAX,
       isSupported_: false,
     },
     {
@@ -159,7 +158,7 @@ export const COLOR_SPACES: ColorSpace[] = (() => {
       fromRgb_: rgb2oklch,
       toRgb_: oklch2rgb,
       labels_: ['L', 'C', 'h'],
-      max_: [1, 0.4, 360],
+      max_: [[0, 1], [0, 0.4], [0, 360]],
       isSupported_: true,
     },
   ] satisfies (
@@ -200,19 +199,13 @@ export const getColorSpace = (
 };
 
 /**
- * If the type of `space.max_` is `number[]`, convert to `[0, max_[number]][]`.
- * Otherwise, return a copy of space.max_.
- * @param space
- * @returns
+ * Deprecated.
+ * Return the range of a space.
  */
 export const getSpaceRange = (
   space: ColorSpace | string
 ): [number, number][] => {
-  const max_ = getColorSpace(space).max_;
-  if (Array.isArray(max_[0])) {
-    return map(max_ as readonly (readonly [number, number])[], r => [r[0], r[1]]);
-  }
-  return map(max_ as readonly number[], val => [0, val]);
+  return map(getColorSpace(space).max_, r => [r[0], r[1]]);
 };
 
 /**
@@ -298,9 +291,8 @@ export const getCssColor = (
   if (checkSupport_) sep_ =' ';
   if (place_ === true) place_ = 2;
   const noRounding = place_ === false;
-  const range = getSpaceRange(space);
 
-  const vals = map(range, (r, i) => {
+  const vals = map(space.max_, (r, i) => {
     max = r[1];
     temp = color[i];
     if (

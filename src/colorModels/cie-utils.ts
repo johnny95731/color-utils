@@ -32,9 +32,8 @@ export const xyzMax = [] as Array3;
 export const xyzSpace = {
   name_: 'XYZ',
   labels_: ['X', 'Y', 'Z'],
-  max_: xyzMax,
-  isSupported_: true,
-  white_: 'D65'
+  isSupported_: true
+  // Init max_ and white_ in setReferenceWhite
 } as ColorSpace;
 
 /**
@@ -87,6 +86,8 @@ export const setReferenceWhite = (() => {
       rgb2xyzMat.splice(0, 3, ...cloneDeep(mat));
       xyz2rgbMat.splice(0, 3, ...invMat);
       xyzMax.splice(0, 3, ...rowSum);
+
+      xyzSpace.max_ = map(rowSum, val => [0, val]);
       xyzSpace.white_ =  white === 'D50' ? white : 'D65';
     };
   };
