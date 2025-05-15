@@ -23,7 +23,7 @@ export const performanceTest = async (
   const bench = new Bench({ name: testName, time: 1000, ...options });
   fns.forEach(fn => {
     if (Array.isArray(fn)) {
-      bench.add(fn[0], fn[1]);
+      bench.add(...fn);
     } else {
       bench.add(fn.name, fn);
     }
