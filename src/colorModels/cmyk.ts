@@ -5,15 +5,12 @@
  * @return CMYK color array.
  */
 export const rgb2cmyk = (rgb: readonly number[]): number[] => {
-  const r = rgb[0] / 255;
-  const g = rgb[1] / 255;
-  const b = rgb[2] / 255;
-  const max = Math.max(r, g, b);
+  const max = Math.max(rgb[0], rgb[1], rgb[2]);
   return [
-    (1 - r / max) * 100 || 0,
-    (1 - g / max) * 100 || 0,
-    (1 - b / max) * 100 || 0,
-    (1 - max) * 100
+    (1 - rgb[0] / max) * 100 || 0,
+    (1 - rgb[1] / max) * 100 || 0,
+    (1 - rgb[2] / max) * 100 || 0,
+    (1 - max / 255) * 100
   ];
 };
 
@@ -27,7 +24,6 @@ export const cmyk2rgb = (cmyk: readonly number[]): number[] => {
   const m = cmyk[1] / 100;
   const y = cmyk[2] / 100;
   const k = cmyk[3] / 100;
-
   return [
     255 * (1 - Math.min(1, c * (1 - k) + k)),
     255 * (1 - Math.min(1, m * (1 - k) + k)),

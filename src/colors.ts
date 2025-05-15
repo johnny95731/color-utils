@@ -1,4 +1,4 @@
-import { cloneDeep, map } from './helpers';
+import { map } from './helpers';
 import { dot3, pow, randInt, round } from './numeric';
 import { hex2rgb } from './colorModels/hex';
 import { rgb2xyz, xyz2rgb } from './colorModels/ciexyz';
@@ -210,9 +210,9 @@ export const getSpaceRange = (
 ): [number, number][] => {
   const max_ = getColorSpace(space).max_;
   if (Array.isArray(max_[0])) {
-    return cloneDeep(max_ as readonly (readonly [number, number])[]);
+    return map(max_ as readonly (readonly [number, number])[], r => [r[0], r[1]]);
   }
-  return map(max_ as readonly number[] , val => [0, val]);
+  return map(max_ as readonly number[], val => [0, val]);
 };
 
 /**
@@ -278,7 +278,8 @@ export const getCssColor = (
   options: CssColorOptions = {},
 ): string => {
   let temp: number;
-  let suffix: string;
+  let suffix: string | number;
+  let max: number;
   let {
     checkSupport_ = false, // eslint-disable-line
     sep_ = ' ',
@@ -294,25 +295,27 @@ export const getCssColor = (
       { checkSupport_, sep_, percent_, place_ }
     );
   }
-  sep_ = checkSupport_ ? ' ' : sep_;
-  place_ = place_ === true ? 2 : place_;
+  if (checkSupport_) sep_ =' ';
+  if (place_ === true) place_ = 2;
   const noRounding = place_ === false;
   const range = getSpaceRange(space);
 
-  const vals = map(range, ([,max], i) => {
+  const vals = map(range, (r, i) => {
+    max = r[1];
     temp = color[i];
     if (
-      max === 1 ||
-      max === 100 ||
-      (percent_ && max !== 360)
+      (percent_ && max !== 360) ||
+      max === 1
     ) {
-      temp *= 100 / range[i][1];
+      temp *= 100 / max;
       suffix = '%';
     } else {
-      suffix = '';
+      suffix = 0;
     }
+    // @ts-expect-error
     return (noRounding ? temp : round(temp, place_ as number)) + suffix;
   }).join(sep_);
+  // const css = /^LCH/.test(space.name_) ? 'lch' : space.name_;
   const css = space.name_.startsWith('LCH') ? 'lch' : space.name_;
   return checkSupport_ && css === 'XYZ' ?
     `color(xyz-${(space.white_ ?? 'D65').toLowerCase()} ${vals})` :
@@ -397,9 +400,9 @@ export const getContrastRatio = (
   rgb1: string | readonly number[],
   rgb2: string | readonly number[],
 ) => {
-  const lum1 = getRelativeLuminance(rgb1);
-  const lum2 = getRelativeLuminance(rgb2);
-  const ratio = (lum1 + 0.05) / (lum2 + 0.05);
+  const ratio =
+    (getRelativeLuminance(rgb1) + 0.05) /
+    (getRelativeLuminance(rgb2) + 0.05);
   return round(ratio < 1 ? 1 / ratio : ratio, 2);
 };
 
