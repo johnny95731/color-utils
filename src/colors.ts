@@ -307,8 +307,7 @@ export const getCssColor = (
     // @ts-expect-error
     return (noRounding ? temp : round(temp, place_ as number)) + suffix;
   }).join(sep_);
-  // const css = /^LCH/.test(space.name_) ? 'lch' : space.name_;
-  const css = space.name_.startsWith('LCH') ? 'lch' : space.name_;
+  const css = /^LCH/.test(space.name_) ? 'lch' : space.name_;
   return checkSupport_ && css === 'XYZ' ?
     `color(xyz-${(space.white_ ?? 'D65').toLowerCase()} ${vals})` :
     `${css}(${vals})`;
