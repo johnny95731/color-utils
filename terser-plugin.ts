@@ -1,7 +1,28 @@
 import { minify } from 'terser';
-import merge from 'lodash-es/merge.js';
 import type {  Plugin } from 'rollup';
 import type { MinifyOptions } from 'terser';
+
+const isObject = (item: unknown) => {
+  return (item && typeof item === 'object' && !Array.isArray(item));
+};
+// eslint-disable-next-line
+const mergeDeep = (target: any, ...sources: any[]) => {
+  if (!sources.length) return target;
+  const source = sources.shift();
+
+  if (isObject(target) && isObject(source)) {
+    for (const key in source) {
+      if (isObject(source[key])) {
+        if (!target[key]) Object.assign(target, { [key]: {} });
+        mergeDeep(target[key], source[key]);
+      } else {
+        Object.assign(target, { [key]: source[key] });
+      }
+    }
+  }
+  return mergeDeep(target, ...sources);
+};
+
 
 const defaultOptions = {
   compress: {
@@ -18,7 +39,7 @@ const defaultOptions = {
 
 
 export default (options: MinifyOptions) => {
-  const mergedOption = merge({}, defaultOptions, options);
+  const mergedOption = mergeDeep({}, defaultOptions, options);
   return {
     name: 'terser',
     renderChunk: {
