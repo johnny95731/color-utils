@@ -6,14 +6,14 @@ import type { RollupOptions } from 'rollup';
 
 const outDir = 'dist-min/';
 
-const terserOption = {
+const terserMangleProps = {
   compress: {
     toplevel: false,
     unused: true,
   },
 };
 
-const terserOption2 = {
+const terserNoMangleProps = {
   compress: {
     toplevel: false,
     unused: true,
@@ -29,34 +29,41 @@ const config = [
   {
     input: 'index.min.ts',
     plugins: [
-      terser([outDir], terserOption),
+      terser([outDir], terserMangleProps),
       typescript(),
     ],
     treeshake: false,
     output: {
       name: 'minified',
-      file: `${outDir}min-mangle-size-test.js`,
+      file: `${outDir}mangle-size.js`,
       format: 'es',
-      generatedCode: {
-        constBindings: true
-      }
+    },
+  },
+  {
+    input: 'conversions.min.ts',
+    plugins: [
+      terser([outDir], terserNoMangleProps),
+      typescript(),
+    ],
+    treeshake: false,
+    output: {
+      name: 'conversinons',
+      file: `${outDir}conversions-size.js`,
+      format: 'es',
     },
   },
   {
     input: 'index.min.ts',
     plugins: [
-      terser([outDir], terserOption2),
+      terser([outDir], terserNoMangleProps),
       typescript(),
     ],
     treeshake: false,
     output: {
-      name: 'minified',
-      file: `${outDir}min-nonmangle-size-test.js`,
+      name: 'minified2',
+      file: `${outDir}no-nmangle-size.js`,
       format: 'es',
-      generatedCode: {
-        constBindings: true
-      }
     },
-  }
+  },
 ] as RollupOptions[];
 export default config;
