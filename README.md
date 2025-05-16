@@ -2,12 +2,14 @@
 
 **color-utils** provides functions for color conversions, harmonies, mix, and sort.
 
+:speech_balloon: Newer README.md may push to github but not publish in npm.
+
 <h2>Features</h2>
 
-- 13.9KB size after minified (13.4KB with [mangle.properties.regex](#mangle))
+- **Small**: 10.4KB for conversions only. 14.3KB size after minified (12.8KB with [mangle.properties.regex](#mangle))
 - High performance. [Benchmark](#benchmark)
 - Detect browser [`<color>`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value) support when getting string.
-- Functional programing. Unused functions are tree-shakable.
+- Functions instead of object. Tree-shaking and minifying are more simpler.
 - Immutable.
 - Typed.
 - Supports ESM and CJS.
@@ -58,8 +60,10 @@ Absolute color space:
 
 Some properties of object has a underscore `_` after the name. If you are using minifier such as terser, you can set `mangle.properties.regex = /[^_]_$/` to mangle theese properties.
 
-:grey_exclamation: The `mangle.properties` may cause errow when bundler generate multiple chuncks (files) due to the mangled name is different in different files.
-If this happened, you may need to set `nameCache: {}` or create a custom plugin for bundler (if `nameCache` in @rollup/plugin-terser or vite does not work).
+:grey_exclamation: The `mangle.properties` may cause error when bundler generate multiple chuncks (files) because the mangled property names are different in different files.
+If this happened, you may need to set `nameCache: {}` (terser) or create a custom plugin for bundler (if `nameCache` in @rollup/plugin-terser or vite does not work).
+
+This may **not** work in SSR or SSG.
 </div>
 
 <details>
@@ -68,29 +72,21 @@ If this happened, you may need to set `nameCache: {}` or create a custom plugin 
 In this repository [github terser-plugin.ts](https://github.com/johnny95731/color-utils/blob/main/terser-plugin.ts)
 
 ```ts
-(
-  outDir = ['./dist'],
+export default (
   options: MinifyOptions
 ) => {
   const mergedOption = merge({}, defaultOptions, options);
   return {
     name: 'terser',
-    closeBundle: {
+    renderChunk: {
       order: 'post',
-      sequential: true,
-      async handler() {
-        for (const path of outDir) {
-          const files = (fs.readdirSync(path) as string[])
-            .filter((filename) => /\.(js|mjs|cjs )$/.test(filename));
-          for (const filename of files) {
-            const filePath = `${path}/${filename}`;
-            const code = fs.readFileSync(filePath, 'utf-8');
-            const result = await minify(code, mergedOption);
-            if (result.code) fs.writeFileSync(filePath, result.code, 'utf8');
-          }
-        }
+      async handler(code) {
+        const result = await minify(code, mergedOption);
+        return {
+          code: result.code!
+        };
       },
-    },
+    }
   } satisfies Plugin;
 };
 ```
@@ -152,6 +148,14 @@ const rgb = luv2rgb(luv);           // [ 0.9999171617417457, 100.00000667555592,
 // LCHuv
 const lchuv = rgb2lchuv([1, 100, 255]); // [ 47.41444304992909, 127.94565244099353, 260.1405639338026 ]
 const rgb   = lchuv2rgb(lchuv);         // [ 0.9999171617399168, 100.00000667555597, 254.99998841698252 ]
+
+// Oklab
+const oklab = rgb2oklab([1, 100, 255]); // [ 0.5597865171261192, -0.03749415892366231, -0.24017306119022924 ]
+const rgb   = oklab2rgb(oklab);         // [ 1.0000000000002303, 99.9999999999999, 254.99999999999997 ]
+
+// Oklch
+const oklch = rgb2oklch([1, 100, 255]); // [ 0.5597865171261192, 0.24308210809287967, 261.12699837778 ]
+const rgb   = oklch2rgb(oklch);         // [ 0.9999999999996816, 99.99999999999994, 254.99999999999997 ]
 ```
 
 <details>
@@ -217,35 +221,19 @@ rgb2xyz([176, 59, 79]);               // [ 20.88159899406145, 12.925309240980702
 </details>
 
 <details>
-<summary><code>getSpaceRange(space: ColorSpace | string): [number, number][]</code></summary>
-
-Turns the `ColorSpace.max_` property to an array of `[minimum, maximum]`
-
-```js
-getSpaceRange('RGB'); // [ [ 0, 255 ], [ 0, 255 ], [ 0, 255 ] ]
-getSpaceRange('HSB'); // [ [ 0, 360 ], [ 0, 100 ], [ 0, 100 ] ]
-getSpaceRange('xyz'); // [ [ 0, 95.047 ], [ 0, 100 ], [ 0, 108.883 ] ]
-getSpaceRange('lab'); // [ [ 0, 100 ], [ -125, 125 ], [ -125, 125 ] ]
-```
-
-</details>
-
-<details>
 <summary><code>getCssColor(color: readonly number[], space: ColorSpace | string, options?: CssColorOptions): string</code></summary>
 
 Convert the color to string.
 
 If `checkSupport` is `true`, then the function will set `sep = ' '` and change the color space to RGB when the browser does not support this color space.
 
-Currently the function does not support spaces that only support by CSS `color()` such as `xyz`.
-
 ```js
-getCssColor([140, 17, 243], 'RGB');                         // "RGB(54.9% 6.67% 95.29%)"
-getCssColor([140, 17, 243], 'RGB', { sep_: ',' });          // "RGB(54.9%,6.67%,95.29%)"
-getCssColor([140, 17, 243], 'RGB', { percent_: false });    // "RGB(140 17 243)"
-getCssColor([273, 90, 51], 'HSL',);                         // "HSL(273 90% 51%)"
-getCssColor([27, 12, 86], 'xyz');                           // "XYZ(28.41% 12% 78.98%)"
-getCssColor([27, 12, 86], 'xyz', { checkSupport_: true });  // "RGB(54.85% 0% 95.46%)"
+getCssColor([140, 17, 243], 'RGB');                        // "rgb(54.9% 6.67% 95.29%)"
+getCssColor([140, 17, 243], 'RGB', { sep_: "," });         // "rgb(54.9%,6.67%,95.29%)"
+getCssColor([140, 17, 243], 'RGB', { percent_: false });   // "rgb(140 17 243)"
+getCssColor([273, 90, 51], 'HSL');                         // "hsl(273 90% 51%)"
+getCssColor([27, 12, 86], 'xyz');                          // "xyz(28.41% 12% 78.98%)"
+getCssColor([27, 12, 86], 'xyz', { checkSupport_: true }); // "color(xyz-d65 28.41% 12% 78.98%)"
 ```
 
 ```ts
@@ -662,6 +650,21 @@ tetradic3 |  [0, 30, 150, 180]
 <h3>Mixing</h3>
 
 <details>
+<summary><code>mix(color1: readonly number[], color2: readonly number[], weight1: number = 0.5, weight2: number= 1 - weight1): number[]</code></summary>
+
+Mixing two colors by evaluate weighted sum `weight1 * color1 + weight2 * color2`.<br/>
+The weights will be normalized to 1 if their sum > 1.
+
+```js
+mix([42, 62, 206], [55, 202, 93], 0.5, 0.5);     // [ 48.5, 132, 149.5 ]
+mix([155, 122, 126], [211, 243, 242], 0.2);      // [ 199.8, 218.8, 218.8 ]
+mix([204, 248, 241], [149, 241, 118], 3, 2);     // [ 182, 245.2, 191.8 ]
+mix([204, 248, 241], [149, 241, 118], 0.6, 0.4); // [ 182, 245.2, 191.8 ]
+```
+
+</details>
+
+<details>
 <summary><code>meanMix(color1: readonly number[], color2: readonly number[]): number[]</code></summary>
 
 Return the elementwise mean of two colors.
@@ -760,7 +763,7 @@ The return space is the **same** as the input space.
 The inputs and output are in RGB space.
 
 ```ts
-type Mixing =  "additive" | "mean" | "brighter" | "deeper" | "soft light";
+type Mixing =  "additive" | "mean" | "brighter" | "deeper" | "soft light" | "weighted";
 ```
 
 </details>
@@ -907,7 +910,7 @@ The argument `rgbGetter` make this function can handle the object such as
 `{ color : number[], otherProperty: unknown }`.
 
 ```ts
-type Mixing =  "luminance" | "random" | "reversion" | "CIE76" | "CIE94" | "CIEDE2000";
+type Sort =  "luminance" | "random" | "reversion" | "CIE76" | "CIE94" | "CIEDE2000";
 ```
 
 method    | description
@@ -927,7 +930,7 @@ CIEDE2000 | `tspGreedy` with `diffOp = distE00`.
 Return a sorted and copied array of RGB colors. Similar to `sortColors` but input RGB colors directly.
 
 ```ts
-type Mixing =  "luminance" | "random" | "reversion" | "CIE76" | "CIE94" | "CIEDE2000";
+type Sort =  "luminance" | "random" | "reversion" | "CIE76" | "CIE94" | "CIEDE2000";
 ```
 
 method    | description
@@ -953,8 +956,9 @@ The input is a channel/value of RGB, not array.
 The full-scale value of linear-RGB is 1 due to the calculation of CIEXYZ and relative luminance.
 
 ```js
-srgb2linearRgb(127); // 0.21223075741405512
-linearRgb2srgb(0.5); // 187.5160306783746
+srgb2linearRgb(127);                 // 0.21223075741405512
+linearRgb2srgb(srgb2linearRgb(127)); // 127
+linearRgb2srgb(0.5);                 // 187.5160306783746
 ```
 
 </details>
@@ -969,6 +973,9 @@ This function is part of the conversion between CIEXYZ and CIELAB. I do not know
 ```ts
 const cieTrans = (val: number): number => {
   return val > (6/29)**3 ? Math.cbrt(val) : (903.3 * x + 16) / 116;
+};
+const cieTransInv = (val: number) => {
+  return val > (6/29) ? val**3 : (val - 16/116) / (903.3/116) ;
 };
 ```
 
@@ -1127,6 +1134,19 @@ return l2Norm3(color1[0] - color2[0], color1[1] - color2[1], color1[2] - color2[
 
 </details>
 
+<h2 id="tests">Tests</h2>
+
+All test files are in test folder. `test/utilsForTest` contains helpers for test.<br/>
+File name convention:
+
+- **`cmyk-formula-test.js`**: Test whether 3 different formulas are the same.
+
+- **End with `-test`**: test
+  1. The equivalence of result between this module and other modules.
+  2. The stability of conversions, for example, test whether `rgb` and `hsl2rgb(rgb2hsl(rgb))` are close enough.
+
+- **Others**: performance test.
+
 <h2 id="benchmark">Benchmark</h2>
 
 Run command `npm run benchmark`.
@@ -1250,5 +1270,61 @@ color-utils   | 216.23 ± 0.86% | 5104754 ± 0.03% | fastest
 colord        | 11034&thinsp; ± 5.59% | 99782 &ensp;± 0.10% | 98% slower
 color         | 9834.4 ± 0.42% | 103986 &ensp;± 0.05% | 98% slower
 color-convert | 558.28 ± 0.67% | 1908326 ± 0.02% | 63% slower
+
+</details>
+
+<details>
+<summary><code>getCSSColor</code></summary>
+
+Slower since handle more check.
+
+RGB string
+
+library | Latency avg (ns) | throughput avg (ops/s) | comparison
+--------|------------------|------------------------|------------
+color-utils   | 5520.3.8 ± 0.83%      | 187493 &ensp;± 0.08%      | 95% slower
+colord        | 271.32 ± 2.08%        | 3947510 ± 0.04%           | fastest
+color         | 25000 &thinsp;± 3.32% | 44691 &ensp;&ensp;± 0.31% | 99% slower
+
+HSL string
+
+library | Latency avg (ns) | throughput avg (ops/s) | comparison
+--------|------------------|------------------------|------------
+color-utils   | 7195.6 ± 1.00%        | 145698 &ensp;± 0.12%      | 91% slower
+colord        | 610.75 ± 0.28%        | 1669903 ± 0.03%           | fastest
+color         | 36477 &thinsp;± 0.95% | 28502 &ensp;&ensp;± 0.28% | 98% slower
+
+LAB string
+
+library | Latency avg (ns) | throughput avg (ops/s) | comparison
+--------|------------------|------------------------|------------
+color-utils   | 9401.9 &thinsp;± 0.82% | 109794 ± 0.10%      | fastest
+colord        | 9710.0 ± 0.68%         | 105149 ± 0.09%      | 4% slower
+color         | 48419 &thinsp;± 0.89%  | 21025 &ensp;± 0.17% | 81% slower
+
+</details>
+
+<details>
+<summary><code>rgb2hue</code></summary>
+
+Slower since handle more check.
+
+library | Latency avg (ns) | throughput avg (ops/s) | comparison
+--------|------------------|------------------------|------------
+color-utils   | 186.44 ± 0.33% | 6011580 ± 0.03% | fastest
+colord        | 208.50 ± 0.35% | 4923280 ± 0.01% | 18% slower
+color         | 6931.3 ± 7.03% | 156062 &ensp;± 0.04% | 97% slower
+
+</details>
+
+<details>
+<summary><code>isReadable</code></summary>
+
+Slower since handle more check.
+
+library | Latency avg (ns) | throughput avg (ops/s) | comparison
+--------|------------------|------------------------|------------
+color-utils   | 4500.8 ± 0.55% | 229408 ± 0.03% | fastest
+colord        | 5718.3 ± 0.28% | 176155 ± 0.03% | 23% slower
 
 </details>
