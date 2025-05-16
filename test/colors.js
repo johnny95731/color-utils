@@ -1,4 +1,4 @@
-import { random, extend } from 'colord';
+import { random, extend, Colord } from 'colord';
 import a11yPlugin from 'colord/plugins/a11y';
 import labPlugin from 'colord/plugins/lab';
 
@@ -87,7 +87,7 @@ function getColorSpace_() {
 function rgbString() {
   const custom_ = () => {
     for (let i = 0; i < length; i++) {
-      getCssColor(rgbs[i], COLOR_SPACES[0]);
+      getCssColor(rgbs[i]);
     }
   };
   const colord_ = () => {
@@ -115,7 +115,7 @@ function rgbString() {
 function hslString() {
   const custom_ = () => {
     for (let i = 0; i < length; i++) {
-      getCssColor(rgb2hsl(rgbs[i]), COLOR_SPACES[1]);
+      getCssColor(rgb2hsl(rgbs[i]), 'HSL');
     }
   };
   const colord_ = () => {
@@ -143,13 +143,16 @@ function hslString() {
 function labString() {
   const custom_ = () => {
     for (let i = 0; i < length; i++) {
-      getCssColor(rgb2lab(rgbs[i]), COLOR_SPACES[6]);
+      getCssColor(rgb2lab(rgbs[i]), 'LAB');
     }
+  };
+  Colord.prototype.toLabString = function() {
+    const { l, a, b } = this.toLab();
+    return `lab(${l} ${a} ${b})`;
   };
   const colord_ = () => {
     for (let i = 0; i < length; i++) {
-      const { l, a, b } = colords[i].toLab();
-      return `lab(${l} ${a} ${b})`;
+      colords[i].toLabString();
     }
   };
   const color_ = () => {
