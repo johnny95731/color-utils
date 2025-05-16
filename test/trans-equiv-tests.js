@@ -10,6 +10,7 @@
 
 await import('./colorModels/ciexyz-test.js');
 await import('./colorModels/cielab-test.js');
+await import('./colorModels/oklab-test.js');
 await import('./colorModels/cieluv-test.js');
 await import('./colorModels/cmyk-test.js');
 await import('./colorModels/hex-test.js');

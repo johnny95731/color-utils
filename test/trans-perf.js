@@ -8,6 +8,7 @@
 
 await import('./colorModels/ciexyz.js');
 await import('./colorModels/cielab.js');
+await import('./colorModels/oklab.js');
 await import('./colorModels/cieluv.js');
 await import('./colorModels/cmyk.js');
 await import('./colorModels/hex.js');
