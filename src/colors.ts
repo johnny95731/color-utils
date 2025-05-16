@@ -182,7 +182,20 @@ export const COLOR_SPACES: ColorSpace[] = (() => {
   return spaces as ColorSpace[];
 })();
 
-
+const SPACE_INDEX_MAP: Record<string, number> = {
+  RGB: 0,
+  HSL: 1,
+  HSB: 2,
+  HWB: 3,
+  CMYK: 4,
+  XYZ: 5,
+  LAB: 6,
+  LUV: 7,
+  LCHAB: 8,
+  LCHUV: 9,
+  OKLAB: 10,
+  OKLCH: 11,
+};
 
 /**
  * Return an item in `COLOR_SPACES`.
@@ -193,7 +206,7 @@ export const getColorSpace = (
 ): ColorSpace => {
   if (typeof space === 'string') {
     space = space.toUpperCase();
-    return COLOR_SPACES.find(item => item.name_.toUpperCase() === space) ?? COLOR_SPACES[0];
+    return COLOR_SPACES[SPACE_INDEX_MAP[space] ?? 0];
   }
   return space;
 };
