@@ -55,7 +55,7 @@ export type ColorSpace = {
   /**
    * White point. The property only exists in XYZ space.
    */
-  white_?: 'D65' | 'D50'
+  white_?: 'd65' | 'd50'
 }
 /**
  * Support color spaces.
@@ -305,7 +305,7 @@ export const getCssColor = (
   if (place_ === true) place_ = 2;
   const noRounding = place_ === false;
 
-  const vals = map(space.max_, (r, i) => {
+  const vals = space.max_.reduce((acc, r, i) => {
     max = r[1];
     temp = color[i];
     if (
@@ -315,14 +315,13 @@ export const getCssColor = (
       temp *= 100 / max;
       suffix = '%';
     } else {
-      suffix = 0;
+      suffix = '';
     }
-    // @ts-expect-error
-    return (noRounding ? temp : round(temp, place_ as number)) + suffix;
-  }).join(sep_);
-  const css = /^LCH/.test(space.name_) ? 'lch' : space.name_;
-  return checkSupport_ && css === 'XYZ' ?
-    `color(xyz-${(space.white_ ?? 'D65').toLowerCase()} ${vals})` :
+    return acc + sep_ + (noRounding ? temp : round(temp, place_ as number)) + suffix;
+  }, '');
+  const css = /^LCH/.test(space.name_) ? 'lch' : space.name_.toLowerCase();
+  return css === 'xyz' && checkSupport_ && space.isSupported_ ?
+    `color(xyz-${space.white_ ?? ''} ${vals})` :
     `${css}(${vals})`;
 };
 

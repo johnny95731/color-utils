@@ -88,7 +88,7 @@ export const setReferenceWhite = (() => {
       xyzMax.splice(0, 3, ...rowSum);
 
       xyzSpace.max_ = map(rowSum, val => [0, val]);
-      xyzSpace.white_ =  white === 'D50' ? white : 'D65';
+      xyzSpace.white_ =  white === 'D50' ? 'd50' : 'd65';
     };
   };
   setReferenceWhite('D65'); // Initialize
