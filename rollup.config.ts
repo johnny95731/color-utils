@@ -9,7 +9,7 @@ const config = [
   {
     input,
     plugins: [
-      terser([outDir], terserOption),
+      terser(terserOption),
       typescript(),
     ],
     treeshake: false,

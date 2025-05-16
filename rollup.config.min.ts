@@ -29,7 +29,7 @@ const config = [
   {
     input: 'index.min.ts',
     plugins: [
-      terser([outDir], terserMangleProps),
+      terser(terserMangleProps),
       typescript(),
     ],
     treeshake: false,
@@ -42,7 +42,7 @@ const config = [
   {
     input: 'conversions.min.ts',
     plugins: [
-      terser([outDir], terserNoMangleProps),
+      terser(terserNoMangleProps),
       typescript(),
     ],
     treeshake: false,
@@ -55,7 +55,7 @@ const config = [
   {
     input: 'index.min.ts',
     plugins: [
-      terser([outDir], terserNoMangleProps),
+      terser(terserNoMangleProps),
       typescript(),
     ],
     treeshake: false,
