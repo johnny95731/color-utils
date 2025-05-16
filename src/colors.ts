@@ -317,7 +317,7 @@ export const getCssColor = (
     } else {
       suffix = '';
     }
-    return acc + sep_ + (noRounding ? temp : round(temp, place_ as number)) + suffix;
+    return acc + (i ? sep_ : '') + (noRounding ? temp : round(temp, place_ as number)) + suffix;
   }, '');
   const css = /^LCH/.test(space.name_) ? 'lch' : space.name_.toLowerCase();
   return css === 'xyz' && checkSupport_ && space.isSupported_ ?
