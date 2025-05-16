@@ -5,7 +5,7 @@ import labPlugin from 'colord/plugins/lab';
 import { performanceTest } from './utilsForTest/perf.js';
 import { SampleGenerator } from './utilsForTest/sample.js';
 import {
-  dot3, randInt, getContrastRatio, isReadable, linearRgb2srgb, randRgbGen, rgb2hex, rgb2hue, getRelativeLuminance, srgb2linearRgb, getCssColor, COLOR_SPACES, rgb2hsl, rgb2lab
+  dot3, randInt, getContrastRatio, isReadable, linearRgb2srgb, randRgbGen, rgb2hex, rgb2hue, getRelativeLuminance, srgb2linearRgb, getCssColor, COLOR_SPACES, rgb2hsl, rgb2lab,
 } from '../dist/index.js';
 
 extend([a11yPlugin, labPlugin]);
@@ -41,6 +41,44 @@ function generation() {
       randRgb2hex,
       randRgbGen,
       colord_
+    ],
+    { time: 300 }
+  );
+}
+
+function getColorSpace_() {
+  const space = 'Lab';
+
+  const arrayFind_ = (space) => {
+    space = space.toUpperCase();
+    return COLOR_SPACES.find(item => item.name_.toUpperCase() === space) ?? COLOR_SPACES[0];
+  };
+  const arrayFind = () => arrayFind_(space);
+
+  const table_ = (space) => {
+    space = space.toUpperCase();
+    return COLOR_SPACES[{
+      RGB: 0,
+      HSL: 1,
+      HSB: 2,
+      HWB: 3,
+      CMYK: 4,
+      XYZ: 5,
+      LAB: 6,
+      LUV: 7,
+      LCHAB: 8,
+      LCHUV: 9,
+      OKLAB: 10,
+      OKLCH: 11,
+    }[space] ?? 0];
+  };
+  const table = () => table_(space);
+
+  return performanceTest(
+    'getColorSpace',
+    [
+      ['from array-find', arrayFind],
+      ['from object-literal', table],
     ],
     { time: 300 }
   );
@@ -290,6 +328,7 @@ function isReadable_() {
 
 const fns = [
   generation,
+  getColorSpace_,
   rgbString,
   hslString,
   labString,
