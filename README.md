@@ -2,7 +2,7 @@
 
 **color-utils** provides functions for color conversions, harmonies, mix, and sort.
 
-:speech_balloon: Newer README.md may push to github but not publish in npm.
+:speech_balloon: Newer README.md may push to github but not publish in npm. To see detail changes: [Changelog](https://github.com/johnny95731/color-utils/blob/main/CHANGELOG.md) (record since v1.2.0).
 
 <h2>Features</h2>
 
@@ -37,6 +37,7 @@ rgb2gray(rgb); // 97.34899999999999
 
 More infomations abous color spaces: [Color Space Ranges](#color-space-ranges)
 
+- RGB
 - HEX (including 3 and 6 digits.)
 - HSL
 - HSB (alias of HSV)
@@ -55,43 +56,6 @@ Absolute color space:
 - Oklch
 
 <h2>API</h2>
-
-<div id="mangle">
-
-Some properties of object has a underscore `_` after the name. If you are using minifier such as terser, you can set `mangle.properties.regex = /[^_]_$/` to mangle theese properties.
-
-:grey_exclamation: The `mangle.properties` may cause error when bundler generate multiple chuncks (files) because the mangled property names are different in different files.
-If this happened, you may need to set `nameCache: {}` (terser) or create a custom plugin for bundler (if `nameCache` in @rollup/plugin-terser or vite does not work).
-
-This may **not** work in SSR or SSG.
-</div>
-
-<details>
-<summary>my rollup plugin</summary>
-
-In this repository [github terser-plugin.ts](https://github.com/johnny95731/color-utils/blob/main/terser-plugin.ts)
-
-```ts
-export default (
-  options: MinifyOptions
-) => {
-  const mergedOption = merge({}, defaultOptions, options);
-  return {
-    name: 'terser',
-    renderChunk: {
-      order: 'post',
-      async handler(code) {
-        const result = await minify(code, mergedOption);
-        return {
-          code: result.code!
-        };
-      },
-    }
-  } satisfies Plugin;
-};
-```
-
-</details>
 
 <details>
 <summary><code>randRgbGen(): number[]</code></summary>
@@ -1328,3 +1292,95 @@ color-utils   | 4500.8 ± 0.55% | 229408 ± 0.03% | fastest
 colord        | 5718.3 ± 0.28% | 176155 ± 0.03% | 23% slower
 
 </details>
+
+<h2>Others</h2>
+
+<div id="mangle">
+
+:grey_question: Some properties with underscore `_` at the end of name.<br/>
+:speech_balloon: Theese properties can be mangled by minifier, such as `terser`, by setting `mangle.properties.regex = /[^_]_$/`.
+
+:grey_exclamation: The `mangle.properties` may cause error when minifying multiple files.<br/>
+:speech_balloon: Because the mangled names are different in different files.<br/>
+This can be solved by setting `nameCache: {}` (terser) or create a [custom plugin](#terser-plugin) for bundler (if `nameCache` in @rollup/plugin-terser or vite.config does not work).
+
+:exclamation: `nameCache` may **not** work in Nuxt.
+
+  <details id="terser-plugin">
+  <summary>custom rollup plugin</summary>
+
+  In this repository [github terser-plugin.ts](https://github.com/johnny95731/color-utils/blob/main/terser-plugin.ts)
+
+  ```ts
+  import { minify } from 'terser';
+
+  const defaultOptions = {
+    compress: {
+      toplevel: true,
+    },
+    mangle: {
+      toplevel: true,
+      properties: {
+        regex: /[^_]_$/
+      }
+    },
+    nameCache: undefined
+  };
+  ```
+
+  Plugin:
+
+  ```ts
+
+  export default (
+    options
+  ) => {
+    const mergedOption = mergeDeep({}, defaultOptions, options);
+    return {
+      name: 'terser',
+      renderChunk: {
+        order: 'post',
+        async handler(code) {
+          if (!/(m|c)?js$/.test(chunk.fileName)) return;
+          const result = await minify(code, mergedOption);
+          return {
+            code: result.code!
+          };
+        },
+      }
+    };
+  };
+  ```
+
+  or
+
+  ```ts
+  export default (
+    outDir = ['./dist'],
+    options
+  ) => {
+    const mergedOption = mergeDeep({}, defaultOptions, options);
+    return {
+      name: 'terser',
+      closeBundle: {
+        order: 'post',
+        sequential: true,
+        async handler() {
+          for (const path of outDir) {
+            const files = fs.readdirSync(path)
+              .filter((filename) => /\.(js|mjs|cjs)$/.test(filename));
+            for (const filename of files) {
+              const filePath = `${path}/${filename}`;
+              const code = fs.readFileSync(filePath, 'utf-8');
+              const result = await minify(code, mergedOption);
+              if (result.code) fs.writeFileSync(filePath, result.code, 'utf8');
+            }
+          }
+        },
+      },
+    }
+  }
+  ```
+
+  </details>
+</div>
