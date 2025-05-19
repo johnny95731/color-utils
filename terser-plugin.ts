@@ -44,7 +44,8 @@ export default (options: MinifyOptions) => {
     name: 'terser',
     renderChunk: {
       order: 'post',
-      async handler(code) {
+      async handler(code, chunk) {
+        if (!/(m|c)?js$/.test(chunk.fileName)) return;
         const result = await minify(code, mergedOption);
         return {
           code: result.code!
