@@ -230,7 +230,7 @@ export const tspGreedy: tspGreedy = <T>(
     result.push(items[indices[minIdx]]);
     indices.splice(minIdx, 1);
   }
-  return copy ? result : cloneDeep(result);
+  return copy ? cloneDeep(result) : result;
 };
 
 
