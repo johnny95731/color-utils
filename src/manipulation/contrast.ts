@@ -63,7 +63,7 @@ export const gammaCorrection = (
  * @param rgbs
  * @returns RGB arrays.
  */
-const autoEnhancement: ContrastFunction = (rgbs: readonly number[][]): number[][] => {
+export const autoEnhancement: ContrastFunction = (rgbs: readonly number[][]): number[][] => {
   let minL: number = Infinity, maxL: number = 0,
     i = 0, temp: number[];
 
@@ -89,6 +89,9 @@ const autoEnhancement: ContrastFunction = (rgbs: readonly number[][]): number[][
  * satisfies `((mean of luminance) / 100) ** gamma = coeff`
  *
  * Darker when coeff -> 0 and brighter when coeff -> 1
+ *
+ * Modify from the paper:
+ * BABAKHANI, Pedram; ZAREI, Parham. Automatic gamma correction based on average of brightness. Advances in Computer Science : an International Journal, [S.l.], p. 156-159, nov. 2015. ISSN 2322-5157. Available at: <https://www.acsij.org/index.php/acsij/article/view/390>. Date accessed: 22 May. 2025.
  * @param rgbs
  * @param coeff
  * @returns RGB arrays.
