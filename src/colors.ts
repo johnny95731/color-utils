@@ -309,8 +309,7 @@ export const getCssColor = (
     max = r[1];
     temp = color[i];
     if (
-      (percent_ && max !== 360) ||
-      max === 1
+      percent_ && max !== 360
     ) {
       temp *= 100 / max;
       suffix = '%';
