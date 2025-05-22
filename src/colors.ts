@@ -166,9 +166,8 @@ export const COLOR_SPACES: ColorSpace[] = (() => {
       { 'max_'?: ColorSpace['max_'] | number}
     )[];
 
-  const isInBrowser = typeof CSS !== 'undefined';
-  for (const obj of spaces) {
-    if (isInBrowser) {
+  if (typeof CSS !== 'undefined') {
+    for (const obj of spaces) {
       const css = /^LCH/.test(obj.name_) ? 'lch' : obj.name_;
       const vals = map(obj.labels_, () => 0).join(' ');
       obj.isSupported_ = CSS.supports(
