@@ -35,6 +35,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.22.0",
+    "@jest/globals": "^29.7.0",
     "@rollup/plugin-node-resolve": "^16.0.1",
     "@rollup/plugin-typescript": "^12.1.2",
     "@types/node": "^22.14.1",
@@ -42,7 +43,9 @@
     "color-convert": "^3.0.1",
     "colord": "^2.9.3",
     "eslint": "^9.22.0",
+    "eslint-plugin-jest": "^28.11.0",
     "globals": "^16.0.0",
+    "jest": "^29.7.0",
     "rollup": "^4.37.0",
     "rollup-plugin-dts": "^6.2.1",
     "terser": "^5.39.0",
@@ -67,6 +70,7 @@
     "pkg": "rollup -c rollup.config.pkg.ts --configPlugin @rollup/plugin-typescript",
     "watch": "rollup -c rollup.config.watch.ts --configPlugin @rollup/plugin-typescript -w",
     "benchmark": "node ./test/trans-perf.js",
-    "equiv": "node ./test/trans-equiv-tests.js"
+    "equiv": "node ./test/trans-equiv-tests.js",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage --watchAll"
   }
 }
