@@ -227,14 +227,14 @@ export const getSpaceRange = (
 export const toSpace = (
   color: readonly number[],
   space: ColorSpace | string,
-  toSpace: ColorSpace | string
+  to: ColorSpace | string
 ): number[] => {
   space = getColorSpace(space);
-  toSpace = getColorSpace(toSpace);
-  if (space === toSpace) return [...color];
-  if (space.name_ === 'RGB') return toSpace.fromRgb_(color);
-  if (toSpace.name_ === 'RGB') space.toRgb_(color);
-  return toSpace.fromRgb_(space.toRgb_(color));
+  to = getColorSpace(to);
+  if (space === to) return [...color];
+  if (space.name_ === 'RGB') return to.fromRgb_(color);
+  if (to.name_ === 'RGB') space.toRgb_(color);
+  return to.fromRgb_(space.toRgb_(color));
 
 };
 
