@@ -282,7 +282,7 @@ export const getCssColor = (
   space: ColorSpace | string = 'RGB',
   options: CssColorOptions = {},
 ): string => {
-  let temp: number;
+  let val: number;
   let suffix: string | number;
   let max: number;
   let {
@@ -297,28 +297,30 @@ export const getCssColor = (
     return getCssColor(
       space.toRgb_(color),
       COLOR_SPACES[0],
-      { checkSupport_, sep_, percent_, place_ }
+      options
     );
   }
-  if (checkSupport_) sep_ =' ';
+  if (checkSupport_) sep_ = ' ';
   if (place_ === true) place_ = 2;
   const noRounding = place_ === false;
 
+  const css = /^LCH/.test(space.name_) ? 'lch' : space.name_.toLowerCase();
+  const isXyz = css === 'xyz';
   const vals = space.max_.reduce((acc, r, i) => {
     max = r[1];
-    temp = color[i];
-    if (
-      percent_ && max !== 360
-    ) {
-      temp *= 100 / max;
-      suffix = '%';
-    } else {
-      suffix = '';
+    val = color[i];
+    suffix = (percent_ && max !== 360) || max === 100 ? '%' : '';
+    if (isXyz && !percent_ && checkSupport_) {
+      val /= 100;
+    } else if (!isXyz && percent_ && max !== 360) { // to percentage
+      val *= 100 / max;
     }
-    return acc + (i ? sep_ : '') + (noRounding ? temp : round(temp, place_ as number)) + suffix;
+    return acc + (i ? sep_ : '') + (noRounding ? val : round(val, place_ as number)) + suffix;
   }, '');
-  const css = /^LCH/.test(space.name_) ? 'lch' : space.name_.toLowerCase();
-  return css === 'xyz' && checkSupport_ && space.isSupported_ ?
+  // Ignore checking `space.isSupported_` here.
+  // Because `checkSupport_ && !space.isSupported_` will try RGB format
+  // by calling this function recursively (the first if condition).
+  return isXyz && checkSupport_ ?
     `color(xyz-${space.white_ ?? ''} ${vals})` :
     `${css}(${vals})`;
 };
