@@ -2,7 +2,7 @@ import { expect, test } from '@jest/globals';
 import convert from 'color-convert';
 
 import { SampleGenerator } from '../../../test-utils/sample.js';
-import { rgb2hwb, hwb2rgb } from '../../../dist/index.js';
+import { rgb2hwb, hwb2rgb, randInt } from '../../../dist/index.js';
 
 const { rgbs, length } = SampleGenerator.a();
 
@@ -15,6 +15,30 @@ test('HWB - comparison', () => {
     const custom_ = getCustom(i);
     for (let j = 0; j < getCustom.length; j++) {
       expect(custom_[j]).toBeCloseTo(convert_[j]);
+    }
+  }
+});
+
+test('hwb2rgb - normalize', () => {
+  const generator = () => {
+    const hwb = [randInt(360), 50+randInt(50), 50+randInt(50)];
+    const sum = hwb[1] + hwb[2];
+    return {
+      hwb,
+      normolized: [
+        hwb[0],
+        100 * hwb[1] / sum,
+        100 * hwb[2] / sum
+      ]
+    };
+  };
+
+  for (let i = 0; i < length; i++) {
+    const { hwb, normolized } = generator();
+    const rgb = hwb2rgb(hwb);
+    const expected = hwb2rgb(normolized);
+    for (let i = 0; i < rgb.length; i++) {
+      expect(rgb[i]).toBeCloseTo(expected[i]);
     }
   }
 });
