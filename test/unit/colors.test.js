@@ -1,6 +1,6 @@
 import { describe, expect, test } from '@jest/globals';
 
-import { COLOR_SPACES, getColorSpace, getSpaceRange, toSpace, getCssColor, round, rgb2hex, rgbArraylize, rgb2hue, srgb2linearRgb, linearRgb2srgb, rgb2gray, isLight, getRelativeLuminance, getContrastRatio, isReadable, randRgbGen } from '../../dist/index.js';
+import { COLOR_SPACES, getColorSpace, getSpaceRange, toSpace, getCssColor, rgb2hex, rgbArraylize, rgb2hue, srgb2linearRgb, linearRgb2srgb, rgb2gray, isLight, getRelativeLuminance, getContrastRatio, isReadable, randRgbGen } from '../../dist/index.js';
 
 const rgbs = [
   [0, 0, 0], // Black
@@ -49,74 +49,126 @@ test('toSpace', () => {
 
 describe('getCssColor', () => {
   const blackRgb = [0, 0, 0];
-  const valHandler = (color, space, option = {}) => {
-    let suffix, temp;
-    const {
-      sep_ = ' ',
-      percent_ = true,
-      place_ = 2
-    } = option;
 
-    return space.max_.reduce((acc, [,max], i) => {
-      temp = color[i];
-      if (
-        (percent_ && max !== 360)
-      ) {
-        temp *= 100 / max;
-        suffix = '%';
-      } else {
-        suffix = '';
-      }
-      return acc + (i ? sep_ : '') + round(temp, place_) + suffix;
-    }, '');
-  };
+  const defaultCases = [
+    {
+      space: 'RGB',
+      expected: 'rgb(0% 0% 0%)'
+    },
+    {
+      space: 'HSL',
+      expected: 'hsl(0 0% 0%)'
+    },
+    {
+      space: 'HSB',
+      expected: 'hsb(0 0% 0%)'
+    },
+    {
+      space: 'XYZ',
+      expected: 'xyz(0% 0% 0%)'
+    },
+    {
+      space: 'LAB',
+      expected: 'lab(0% 0% 0%)'
+    },
+    {
+      space: 'Lchab',
+      expected: 'lch(0% 0% 0)'
+    },
+    {
+      space: 'oklab',
+      expected: 'oklab(0% 0% 0%)'
+    },
+    {
+      space: 'oklch',
+      expected: 'oklch(0% 0% 0)'
+    },
+  ];
 
   test('Default option', () => {
-    expect(getCssColor(blackRgb)).toBe('rgb(0% 0% 0%)');
-    for (const space of COLOR_SPACES) {
-      const color = space.fromRgb_(blackRgb);
-
-      const name = /^LCH/.test(space.name_) ? 'lch' : space.name_.toLowerCase();
-      const vals = valHandler(color, space);
-      expect(getCssColor(color, space)).toBe(`${name}(${vals})`);
+    for (const { space, expected } of defaultCases) {
+      const color = getColorSpace(space).fromRgb_(blackRgb);
+      expect(getCssColor(color, space)).toBe(expected);
     }
   });
 
-  test('checkSupport_', () => {
+  test('checkSupport_: true', () => {
     const option = { checkSupport_: true };
-    for (let space of COLOR_SPACES) {
-      const ret = getCssColor(space.fromRgb_(blackRgb), space, option);
-      space = space.isSupported_ ? space : COLOR_SPACES[0];
-      const color = space.fromRgb_(blackRgb);
+    const cases = [
+      {
+        space: 'RGB',
+        expected: 'rgb(0% 0% 0%)'
+      },
+      {
+        space: 'HSL',
+        expected: 'hsl(0 0% 0%)'
+      },
+      {
+        space: 'HSB',
+        expected: 'rgb(0% 0% 0%)'
+      },
+      {
+        space: 'CMYK',
+        expected: 'rgb(0% 0% 0%)'
+      },
+      {
+        space: 'XYZ',
+        expected: 'color(xyz-d65 0% 0% 0%)'
+      },
+      {
+        space: 'LAB',
+        expected: 'lab(0% 0% 0%)'
+      },
+      {
+        space: 'Lchab',
+        expected: 'lch(0% 0% 0)'
+      },
+      {
+        space: 'oklab',
+        expected: 'oklab(0% 0% 0%)'
+      },
+      {
+        space: 'oklch',
+        expected: 'oklch(0% 0% 0)'
+      },
+    ];
 
-      const name = /^LCH/.test(space.name_) ? 'lch' : space.name_.toLowerCase();
-      const vals = valHandler(color, space, option);
-      if (space.name_.toUpperCase() === 'XYZ')
-        expect(ret).toBe(`color(xyz-d65 ${vals})`);
-      else
-        expect(ret).toBe(`${name}(${vals})`);
+    for (const { space, expected } of cases) {
+      const color = getColorSpace(space).fromRgb_(blackRgb);
+      expect(getCssColor(color, space, option)).toBe(expected);
     }
+
+    expect(
+      getCssColor([95, 100, 108], 'XYZ', { checkSupport_: true, percent_: false })
+    )
+      .toBe('color(xyz-d65 0.95 1 1.08)');
   });
 
   test('sep_', () => {
-    const option = { sep_: ',' };
-    for (const space of COLOR_SPACES) {
-      const color = space.fromRgb_(blackRgb);
+    const sep = ',';
+    const option = { sep_: sep };
 
-      const name = /^LCH/.test(space.name_) ? 'lch' : space.name_.toLowerCase();
-      const vals = valHandler(color, space, option);
-      expect(getCssColor(color, space, option)).toBe(`${name}(${vals})`);
+    for (const { space, expected } of defaultCases) {
+      const color = getColorSpace(space).fromRgb_(blackRgb);
+      expect(getCssColor(color, space, option))
+        .toBe(expected.replaceAll(' ', sep));
     }
   });
 
-  test('percent_', () => {
+  test('percent_: false', () => {
     const option = { percent_: false };
-    for (const space of COLOR_SPACES) {
-      const color = space.fromRgb_(blackRgb);
 
-      const name = /^LCH/.test(space.name_) ? 'lch' : space.name_.toLowerCase();
-      const vals = color.map(val => round(val, 0)).join(' ');
-      expect(getCssColor(color, space, option)).toBe(`${name}(${vals})`);
+    for (let { space, expected } of defaultCases) {
+      const sp = getColorSpace(space);
+      const color = sp.fromRgb_(blackRgb);
+
+      const vals = expected.split(' ');
+      sp.max_.forEach(([, max], i) => {
+        if (max !== 100) vals[i] = vals[i].replace('%', '');
+      });
+      expected = vals.join(' ');
+
+      expect(getCssColor(color, space, option)).toBe(expected);
     }
   });
 
@@ -129,12 +181,19 @@ describe('getCssColor', () => {
   });
 
   test('place_ === false', () => {
-    const option = { place_: false };
+    const rgb = [1.25, 41.54689, 66.99];
+    const option = { place_: false, percent_: false };
+    const valHandler = (acc, val, i, max) => {
+      if (max === 100) return acc + (i ? ' ' : '') + val + '%';
+      else return acc + (i ? ' ' : '') + val;
+    };
+
     for (const space of COLOR_SPACES) {
-      const color = space.fromRgb_(blackRgb);
+      const color = space.fromRgb_(rgb);
+      const range = space.max_;
 
       const name = /^LCH/.test(space.name_) ? 'lch' : space.name_.toLowerCase();
-      const vals = valHandler(color, space, option);
+      const vals = color.reduce((acc, val, i) => valHandler(acc, val, i, range[i][1]), '');
       expect(getCssColor(color, space, option)).toBe(`${name}(${vals})`);
     }
   });
