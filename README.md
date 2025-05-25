@@ -122,29 +122,30 @@ const oklch = rgb2oklch([1, 100, 255]); // [ 0.5597865171261192, 0.2430821080928
 const rgb   = oklch2rgb(oklch);         // [ 0.9999999999996816, 99.99999999999994, 254.99999999999997 ]
 ```
 
-<details>
-<summary><b>Error handling</b></summary>
+<div>
 
-`hex2rgb` and `named2rgb` return `[0, 0, 0]` when the input is incorrect.
-</details>
+***Error Handling***
+
+`hex2rgb` and `named2rgb` return `[0, 0, 0]` when the input is invalid.
+</div>
 
 <h3><code>ColorSpace</code>Type</h3>
 
-`COLOR_SPACES` array stores `ColorSpace` object, which has informations
+`COLOR_SPACES` array stores `ColorSpace` objects, which contains informations about spaces
 
 key   | info
 ------|------
 name_ | Name of color space
 isSupported_ | In browser environment, the value will be initialized by calling `CSS.supports('color', 'space(0 0 0)');`. In node environment, the value will be set to default value as below.
 labels_ | Labels of channels.
-max_ | Maximums or ranges.
+max_ | Ranges of channels.
 fromRgb_ | Converter from RGB to space.
 toRgb_ | Converter from space to RGB.
 
-Note: `COLOR_SPACES` does not have HEX and NAMED space object. And, both `LCHab` and `LCHuv` will check `CSS.supports('color', 'lch(0 0 0)');` though these two spaces are not equvalent.
+Note: `COLOR_SPACES` does not have HEX and NAMED space. And, both `LCHab` and `LCHuv` will check `CSS.supports('color', 'lch(0 0 0)');` though these two spaces are not equvalent.
 
 <details>
-<summary>Default values of <code>.isSupported_</code></summary>
+<summary>Default values of <code>ColorSpace.isSupported_</code></summary>
 
  space | value
 -------|-----------
@@ -153,29 +154,38 @@ HSL    | `true`
 HSB    | `false`
 HWB    | `true`
 CMYK   | `false`
-XYZ    | `false`
+XYZ    | `true`
 LAB    | `true`
 LCHab  | `true`
 LUV    | `false`
 LCHuv  | `true`
+Oklab  | `true`
+Oklch  | `true`
 
 </details>
+<br/>
+
+Argumemts with type `ColorSpace | string` can input `ColorSpace` object or **space name**:
+
+- The space name is case-insensitive.
+- `'HEX'` and `'NAMED'` are not valid names.
+- Invalid name will be regarded as RGB space.
 
 <details>
 <summary><code>getColorSpace(space: ColorSpace | string): ColorSpace</code></summary>
 
-Return an item in `COLOR_SPACES`. If input a string, find an item that `.name_` property equals the string (if find no item, return RGB space).
+Return an item in `COLOR_SPACES`. If `space` argument is a invalid string, that is, find the item that `ColorSpace.name_ === space` (if no such item, return RGB space).
 
 </details>
 
 <details>
 <summary><code>toSpace(color: readonly number[],
     space: ColorSpace | string,
-    toSpace: ColorSpace | string
+    to: ColorSpace | string
   ): number[]
 </code></summary>
 
-Conversion by specifying the origin space and target space. The space name does not support HEX and NAMED and is case-insensitive.
+Convert color from a space to target space.
 
 ```js
 toSpace([176, 59, 79], 'RGB', 'XYZ'); // [ 20.88159899406145, 12.925309240980702, 8.790857610353417 ]
@@ -238,13 +248,13 @@ See also
 <summary><code>setReferenceWhite(white: 'D65' | 'D50'): void</code></summary>
 
 Change the reference white of CIEXYZ space. This library only support sRGB for RGB model.
-This function will change `.max_`
+This function will change `.max_` property of XYZ space.
 
 </details>
 
-<h3 id="color-space-ranges">Color Space Ranges</h3>
+<h4 id="color-space-ranges">Color Space Ranges</h4>
 
-The `ColorSpace.max_` property gives maximums if its type is `number[]` and gives ranges if its type is `[number, number][]`.
+Most values are referred to CSS definition.
 
 <details>
 <summary>RGB</summary>
@@ -320,16 +330,13 @@ gray      | grey
 and other 6 groups of alias that containing `'gray'` (preserved) or `'grey'` (removed).
 </details>
 
-<br>
-Though some channel of CIE spaces is theoretically unbounded. But, in practice, we give a maximum value.
-
 <details>
 <summary>XYZ</summary>
 
 The maximum value is based on RGB model and reference white. y channel will be normalize to `100`.
 The library currently only supports `sRGB` as RGB model and `D65` (default) and `D50` as reference white.
 
-<h4>D65</h4>
+D65
 
 channel | description | min | max
 --------|-------------|-----|-----
@@ -337,7 +344,7 @@ x | | 0 | 95.047
 y | | 0 | 100
 z | | 0 | 108.883
 
-<h4>D50</h4>
+D50
 
 channel | description | min | max
 --------|-------------|-----|-----
@@ -1044,9 +1051,19 @@ return num;
 
 Scaling and shift to new range. If `place` is given, then round new value.
 
-```js
-ratio = (val - min) / (max - min)
-newVal = newMin + ratio * (newMax - newMin)
+```ts
+const rangeMapping = (
+  val: number,
+  min: number,
+  max: number,
+  newMin: number,
+  newMax: number,
+  place?: number,
+) => {
+  const ratio = clip((val - min) / (max - min), 0, 1); // avoid floating problem.
+  const newVal = newMin + ratio * (newMax - newMin);
+  return place == null ? newVal : round(newVal, place);
+};
 ```
 
 </details>
@@ -1054,7 +1071,7 @@ newVal = newMin + ratio * (newMax - newMin)
 <details>
 <summary><code>deg2rad(deg: number): number</code> and <code>rad2deg(rad: number): number</code></summary>
 
-Convert between degree and radian.
+Conversions between degree and radian.
 
 </details>
 
@@ -1071,7 +1088,12 @@ Notice that some function only deal with fixed length.
 <summary><code>dot3(arr1: readonly number[], arr2: readonly number[]): number</code></summary>
 
 Dot two arrays with length = 3.
-Return `arr1[0] * arr2[0] + arr1[1] * arr2[1] + arr1[2] * arr2[2]`.
+
+```ts
+const dot3 = (arr1: readonly number[], arr2: readonly number[]): number => {
+  return arr1[0] * arr2[0] + arr1[1] * arr2[1] + arr1[2] * arr2[2];
+};
+```
 
 </details>
 
@@ -1092,33 +1114,35 @@ Return `Math.sqrt(squareSum(a, b, c))`.
 <details>
 <summary><code>l2Dist3(a: number, b: number): number</code></summary>
 
-```js
-return l2Norm3(color1[0] - color2[0], color1[1] - color2[1], color1[2] - color2[2]);
+```ts
+const l2Dist3 = (color1: readonly number[], color2: readonly number[]): number => {
+  return l2Norm3(
+    color1[0] - color2[0],
+    color1[1] - color2[1],
+    color1[2] - color2[2]
+  );
+};
 ```
 
 </details>
 
 <h2 id="tests">Tests</h2>
 
-All test files are in test folder. `test/utilsForTest` contains helpers for test.<br/>
-File name convention:
+Run command `npm run test`.
 
-- **`cmyk-formula-test.js`**: Test whether 3 different formulas are the same.
-
-- **End with `-test`**: test
-  1. The equivalence of result between this module and other modules.
-  2. The stability of conversions, for example, test whether `rgb` and `hsl2rgb(rgb2hsl(rgb))` are close enough.
-
-- **Others**: performance test.
+- `test/benchmark/**.perf.js`: benchmark files.
+- `test/unit/**.test.js`: unit tests and comparison testing.
+- `test/unit/cmyk-formula-test.js`: test whether 3 different formulas have same results.
+- `test-utils/`: helpers for test.<br/>
 
 <h2 id="benchmark">Benchmark</h2>
 
-Run command `npm run benchmark`.
+Run command `npm run benchmark` (conversions only-).
 
 - Node version: v22.11.0.
 - CPU: Intel(R) Core(TM) i7-7700HQ CPU @ 2.80GHz
 - library: `tinybench` 3.1.1
-- Every test function convert 10 colors by default. For details, see `SampleGenerator.defaults` in `./test/utilsForTest/sample.js`.
+- Every test function convert ***10 colors*** by default. For details, see `SampleGenerator.defaults` in `test-utils/sample.js`.
 
 Only list some benchmaks since some conversions have similar formula and performance.
 

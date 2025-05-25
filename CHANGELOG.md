@@ -12,6 +12,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Plugins for spaces.
 - Handling alpha channel (transparency) in manipulating.
 
+## [1.2.1] - 2025-05-25
+
+### Build
+
+- Unit test with Jest. Replace non-benchmark test file by jest test. [b0df1d9](https://github.com/johnny95731/color-utils/commit/b0df1d94f39ee1e3de73ccd5f514c2a4403e0617) [f7af533](https://github.com/johnny95731/color-utils/commit/f7af533fd43712e11816d504ff92325abe2b213a) [b87a198](https://github.com/johnny95731/color-utils/commit/b87a198f03bdabae5c89309962431217aaaaba79)
+- More benchmark on `getCssColor`. [0e8b838](https://github.com/johnny95731/color-utils/commit/0e8b83832693c6432639225f39f3e4ed45bf4f9a)
+
+### Fixed
+
+- Incorrect value range in XYZ space when calling `getCssColor`.<br/>
+  *CSS color module level 4* specifying `100%` equals `1`. [f75620c](https://github.com/johnny95731/color-utils/commit/f75620c7458dbc00c0d4c6bc8cd930f453de070f)<br/>
+- L-channel of Oklab and Oklch will not use percentage when set `percent_: false`. [d74f5c2](https://github.com/johnny95731/color-utils/commit/d74f5c29c3172f2d572337f6e6e56ac55ef3ee3b)<br/>
+
+### Refactor
+
+- Renamed argument `toSpace` to `to` of function `toSpace`. [ddde9ea](https://github.com/johnny95731/color-utils/commit/ddde9ea8bfa6444c05c755e1710f6722e7388e21)
+
 ## [1.2.0] - 2025-05-16
 
 ### Added
