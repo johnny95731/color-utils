@@ -13,7 +13,7 @@ test('HWB - comparison', () => {
   for (let i = 0; i < length; i++) {
     const convert_ = getConvert(i);
     const custom_ = getCustom(i);
-    for (let j = 0; j < getCustom.length; j++) {
+    for (let j = 0; j < convert_.length; j++) {
       expect(custom_[j]).toBeCloseTo(convert_[j]);
     }
   }

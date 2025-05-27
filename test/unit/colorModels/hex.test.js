@@ -75,9 +75,7 @@ test('HEX - comparison', () => {
   for (let i = 0; i < length; i++) {
     const convert_ = getConvert(i);
     const custom_ = getCustom(i);
-    for (let j = 0; j < getCustom.length; j++) {
-      expect(custom_[j]).toBe(convert_[j]);
-    }
+    expect(custom_).toBe(convert_);
   }
 });
 
