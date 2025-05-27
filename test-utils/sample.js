@@ -96,7 +96,7 @@ export const SampleGenerator = {
    * Return RGBs with a given number of random RGB.
    * @returns {Sample}
    */
-  b(num = 10) {
+  b(num = 500) {
     const rgbs = (() => {
       const rgbs = [];
       while (rgbs.length < num) {
