@@ -47,6 +47,7 @@ export default (options: MinifyOptions) => {
       async handler(code, chunk) {
         if (!/(m|c)?js$/.test(chunk.fileName)) return;
         const result = await minify(code, mergedOption);
+        console.log(result.code!.length + 1);
         return {
           code: result.code!
         };
