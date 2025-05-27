@@ -52,31 +52,32 @@ type map = {
   /**
    * Similar to Array.prototype.map but this can control the length of output array .
    */
-  <R, T>(
-    arr: readonly T[],
-    callback: (val: T, i: number) => R,
+  <R, T extends readonly unknown[]>(
+    arr: T,
+    callback: (val: T[number], i: number) => R,
     len?: number,
   ): R[]
 }
-export const map: map = <R, T>(
-  arr: number | readonly T[],
+export const map: map = <R, T extends readonly unknown[]>(
+  arr: number | T,
   callback:
     typeof arr extends number ?
       ((i: number) => R) :
-      ((val: T, i: number) => R),
+      ((val: T[number], i: number) => R),
   len?: number,
 ): R[] => {
-  const result = [];
+  // @ts-expect-error
+  const result = Array(len ??= (arr.length ?? arr));
   let i = 0;
   if (typeof arr === 'number') {
     for (; i < arr;) {
       // @ts-expect-error
-      result.push(callback(i++));
+      result[i] = callback(i++);
     }
   } else {
-    len ??= arr.length;
-    for (; i < len;) {
-      result.push(callback(arr[i], i++));
+    for (; i < len!;) {
+      // @ts-expect-error
+      result[i] = callback(arr[i], i++);
     }
   }
   return result;
