@@ -2,7 +2,7 @@ import { extend } from 'colord';
 import mixPlugin from 'colord/plugins/mix';
 
 import { performanceTest } from '../../../test-utils/perf.js';
-import { SampleGenerator } from '../test-utils/sample.js';
+import { SampleGenerator } from '../../../test-utils/sample.js';
 import { mixColors, meanMix, MIXING_MODES } from '../../../dist/index.js';
 
 extend([mixPlugin]);
@@ -49,7 +49,6 @@ function overall() {
   return performanceTest(
     'Mix test',
     fns,
-    { time: 100 }
   );
 }
 

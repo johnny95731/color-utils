@@ -3,7 +3,7 @@ import harmoniesPlugin from 'colord/plugins/harmonies';
 import mixPlugin from 'colord/plugins/mix';
 
 import { performanceTest } from '../../../test-utils/perf.js';
-import { SampleGenerator } from '../test-utils/sample.js';
+import { SampleGenerator } from '../../../test-utils/sample.js';
 import { harmonize, rgb2hsb } from '../../../dist/index.js';
 
 extend([harmoniesPlugin]);
@@ -20,13 +20,16 @@ function analogous_() {
   };
   const custom = () => {
     for (let i = 0; i < length; i++) {
-      harmonize(rgbs[i], 'analogous');
+      harmonize(rgb2hsb(rgbs[i]), 'analogous');
     }
   };
 
   return performanceTest(
     'Analogous',
-    [colord, ['color-utils',  custom]]
+    [
+      ['color-utils',  custom],
+      colord,
+    ]
   );
 }
 
@@ -38,13 +41,16 @@ function complementary_() {
   };
   const custom = () => {
     for (let i = 0; i < length; i++) {
-      harmonize(rgbs[i], 'complementary');
+      harmonize(rgb2hsb(rgbs[i]), 'complementary');
     }
   };
 
   return performanceTest(
     'Complementary',
-    [colord, ['color-utils',  custom]]
+    [
+      ['color-utils',  custom],
+      colord,
+    ]
   );
 }
 
@@ -56,13 +62,16 @@ function split_() {
   };
   const custom = () => {
     for (let i = 0; i < length; i++) {
-      harmonize(rgbs[i], 'split complementary');
+      harmonize(rgb2hsb(rgbs[i]), 'split complementary');
     }
   };
 
   return performanceTest(
     'split complementary',
-    [colord, ['color-utils',  custom]]
+    [
+      ['color-utils',  custom],
+      colord,
+    ]
   );
 }
 
@@ -74,13 +83,16 @@ function triadic_() {
   };
   const custom = () => {
     for (let i = 0; i < length; i++) {
-      harmonize(rgbs[i], 'triadic');
+      harmonize(rgb2hsb(rgbs[i]), 'triadic');
     }
   };
 
   return performanceTest(
     'triadic',
-    [colord, ['color-utils',  custom]]
+    [
+      ['color-utils',  custom],
+      colord,
+    ]
   );
 }
 
@@ -92,13 +104,16 @@ function rectangle_() {
   };
   const custom = () => {
     for (let i = 0; i < length; i++) {
-      harmonize(rgbs[i], 'tetradic2');
+      harmonize(rgb2hsb(rgbs[i]), 'tetradic2');
     }
   };
 
   return performanceTest(
     'rectangle',
-    [colord, ['color-utils',  custom]]
+    [
+      ['color-utils',  custom],
+      colord,
+    ]
   );
 }
 
@@ -116,7 +131,10 @@ function shades_() {
 
   return performanceTest(
     'shades',
-    [colord, ['color-utils',  custom]]
+    [
+      ['color-utils',  custom],
+      colord,
+    ]
   );
 }
 
@@ -134,7 +152,10 @@ function tints_() {
 
   return performanceTest(
     'tints',
-    [colord, ['color-utils',  custom]]
+    [
+      ['color-utils',  custom],
+      colord,
+    ]
   );
 }
 
@@ -152,7 +173,10 @@ function tones_() {
 
   return performanceTest(
     'tones',
-    [colord, ['color-utils',  custom]]
+    [
+      ['color-utils',  custom],
+      colord,
+    ]
   );
 }
 
@@ -164,18 +188,22 @@ function others() {
   };
   const tetradic1 = () => {
     for (let i = 0; i < length; i++) {
-      harmonize(rgbs[i], 'tetradic1');
+      harmonize(rgb2hsb(rgbs[i]), 'tetradic1');
     }
   };
   const tetradic3 = () => {
     for (let i = 0; i < length; i++) {
-      harmonize(rgbs[i], 'tetradic3');
+      harmonize(rgb2hsb(rgbs[i]), 'tetradic3');
     }
   };
 
   return performanceTest(
     'Tetradic',
-    [colord, tetradic1, tetradic3]
+    [
+      tetradic1,
+      tetradic3,
+      colord,
+    ]
   );
 }
 

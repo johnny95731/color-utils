@@ -1,5 +1,5 @@
 import { performanceTest } from '../../../test-utils/perf.js';
-import { SampleGenerator } from '../test-utils/sample.js';
+import { SampleGenerator } from '../../../test-utils/sample.js';
 import { distE00, distE76, distE94, rgb2lab, sortColors, SORTING_ACTIONS } from '../../../dist/index.js';
 
 const { rgbs, length } = SampleGenerator.defaults;
@@ -34,7 +34,7 @@ function overall() {
     fns.push([
       name,
       function(){
-        for (let i = 5; i < length; i++) {
+        for (let i = 5; i <= length; i++) {
           sortColors(rgbs.slice(i-5, i), name, (color) => color);
         }
       }
