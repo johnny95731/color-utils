@@ -12,17 +12,16 @@ export const hsbHelper = (rgb: readonly number[]): number[] => {
   const max = Math.max(r, g, b);
   const min = Math.min(r, g, b);
   const delta = max - min;
-  // const delta = max - min;
   let hue;
-  if (!delta) hue = 0;
-  else if (max === r) {
-    hue = (g - b) / delta;
-    if (hue < 0) hue += 6;
+  if (max === b) {
+    hue = (r - g) / delta + 4;
   } else if (max === g)
     hue = (b - r) / delta + 2;
-  else // max === b:
-    hue = (r - g) / delta + 4;
-  return [60 * hue, min, max, delta];
+  else // max === r:
+    // Move from first condition to last since other two assignment is shorter
+    // and delta === 0 will excute first condition.
+    hue = (g - b) / delta + (g < b ? 6 : 0);
+  return [delta && 60 * hue, min, max, delta];
 };
 
 /**
@@ -35,8 +34,9 @@ export const rgb2hsb = (rgb: readonly number[]): number[] => {
   const sat = 100 * (delta / max);
   return [
     hue,
-    isNaN(sat) ? 0 : sat, // saturation
-    max * 20 / 51 // brightness
+    sat || 0, // saturation
+    // 2.55 = 255 / 100
+    max / 2.55, // brightness
   ];
 };
 
@@ -46,11 +46,14 @@ export const rgb2hsb = (rgb: readonly number[]): number[] => {
  * @return RGB color array.
  */
 export const hsb2rgb = (hsb: readonly number[]): number[] => {
-  let [hue, sat, bri] = hsb;
-  hue /= 60;
-  sat /= 100;
-  bri /= 100;
-  const f = (val: number, k = (val + hue) % 6) =>
-    255 * (bri - sat * bri * Math.max(Math.min(k, 4 - k, 1), 0));
+  const hue60 = hsb[0] / 60;
+  const sat = hsb[1] / 100;
+  const briC = hsb[2] * 2.55; // (hsb[2] / 100) * 255
+  const bs = briC * sat;
+  const f = (val: number) => (
+    val = ((val + hue60) % 6 + 6) % 6, // handle negative hue.
+    val = val < 2 ? val : 4 - val, // Shorter Math.min(val, 4-val)
+    briC - bs * (val < 1 ? val > 0 ? val : 0 : 1 ) // clip(val, 0, 1)
+  );
   return [f(5), f(3), f(1)];
 };

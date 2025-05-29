@@ -9,14 +9,11 @@ import { cieTrans, cieTransInv, xyzMax } from './cie-utils';
  */
 export const rgb2lab = (rgb: readonly number[]): number[] => {
   const xyz = rgb2xyz(rgb);
-  const x = xyz[0] / xyzMax[0];
-  const y = xyz[1] / xyzMax[1];
-  const z = xyz[2] / xyzMax[2];
-  const fy = cieTrans(y);
+  const fy = cieTrans(xyz[1] / xyzMax[1]);
   return [
     116 * fy - 16,
-    500 * (cieTrans(x) - fy),
-    200 * (fy - cieTrans(z))
+    500 * (cieTrans(xyz[0] / xyzMax[0]) - fy),
+    200 * (fy - cieTrans(xyz[2] / xyzMax[2]))
   ];
 };
 

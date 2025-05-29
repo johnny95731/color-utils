@@ -5,12 +5,15 @@
  * @return CMYK color array.
  */
 export const rgb2cmyk = (rgb: readonly number[]): number[] => {
-  const max = Math.max(rgb[0], rgb[1], rgb[2]);
+  const r = rgb[0];
+  const g = rgb[1];
+  const b = rgb[2];
+  const max = Math.max(r, g, b) * .01;
   return [
-    (1 - rgb[0] / max) * 100 || 0,
-    (1 - rgb[1] / max) * 100 || 0,
-    (1 - rgb[2] / max) * 100 || 0,
-    (1 - max / 255) * 100
+    100 - r / max || 0,
+    100 - g / max || 0,
+    100 - b / max || 0,
+    100 - max / .0255 // multiply 10000/255 = divide .0255
   ];
 };
 
@@ -20,13 +23,17 @@ export const rgb2cmyk = (rgb: readonly number[]): number[] => {
  * @return RGB color array.
  */
 export const cmyk2rgb = (cmyk: readonly number[]): number[] => {
-  const c = cmyk[0] / 100;
-  const m = cmyk[1] / 100;
-  const y = cmyk[2] / 100;
-  const k = cmyk[3] / 100;
-  return [
-    255 * (1 - Math.min(1, c * (1 - k) + k)),
-    255 * (1 - Math.min(1, m * (1 - k) + k)),
-    255 * (1 - Math.min(1, y * (1 - k) + k)),
-  ];
+  // eslint-disable-next-line
+  let white255 = 255 - cmyk[3] * 2.55; // cmyk[3] = black
+  let r = 1 - cmyk[0] / 100;
+  let g = 1 - cmyk[1] / 100;
+  let b = 1 - cmyk[2] / 100;
+  // Prevent minifying by terser. Because minifying make it slower:
+  // return [
+  //   white255 - * cmyk[0] / 100,
+  // ]
+  r *= white255;
+  g *= white255;
+  b *= white255;
+  return [r, g, b];
 };

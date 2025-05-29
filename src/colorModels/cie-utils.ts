@@ -113,7 +113,7 @@ type cieTransInv = (lab: number) => number;
 const [cieTrans, cieTransInv] = (() => {
   const threshInv = 6/29; // threshold for labFuncInv
   const thresh = threshInv**3; // threshold for labFunc
-  const scaling = 7.787; // = 1 / (3 * threshInv**2)
+  const scaling = 841/108; // = 1 / (3 * threshInv**2)
   const bias = 4 / 29; // = 16 / 116
 
   const cieTrans: cieTransInv = (val: number): number => {
