@@ -124,6 +124,7 @@ export type Array3<T = number> = [T, T, T]
 export type Mat3x3<T = number> = Array3<Array3<T>>
 
 /**
+ * @deprecated
  * Matrix-vector product.
  * Multiply a 3x3 matrix by a 3 vector
  */

@@ -211,7 +211,7 @@ export const getColorSpace = (
 };
 
 /**
- * Deprecated.
+ * @deprecated.
  * Return the range of a space.
  */
 export const getSpaceRange = (
