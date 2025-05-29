@@ -1,6 +1,6 @@
 import { performanceTest } from '../../../test-utils/perf.js';
 import { SampleGenerator } from '../../../test-utils/sample.js';
-import { oklab2rgb, rgb2oklab, rgb2oklch } from '../../../dist/index.js';
+import { oklab2rgb, oklch2rgb, rgb2oklab, rgb2oklch } from '../../../dist/index.js';
 
 
 const { rgbs, length } = SampleGenerator.defaults;
@@ -45,7 +45,7 @@ function toOklch() {
     }
   };
   return performanceTest(
-    'RGB to Oklab',
+    'RGB to Oklch',
     [
       ['color-utils',  custom_],
     ]
@@ -55,16 +55,16 @@ function toOklch() {
 function fromOklch() {
   const tempArr = [];
   for (let i = 0; i < length; i++) {
-    tempArr.push(rgb2oklab(rgbs[i]));
+    tempArr.push(rgb2oklch(rgbs[i]));
   }
 
   const custom_ = () => {
     for (let i = 0; i < length; i++) {
-      oklab2rgb(tempArr[i]);
+      oklch2rgb(tempArr[i]);
     }
   };
   return performanceTest(
-    'Oklab to RGB',
+    'Oklch to RGB',
     [
       ['color-utils',  custom_],
     ]
