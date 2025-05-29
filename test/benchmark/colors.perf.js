@@ -86,10 +86,15 @@ function getColorSpace_() {
   );
 }
 
-function rgbStringPercentage() {
+function rgbString() {
   const custom_ = () => {
     for (let i = 0; i < length; i++) {
       getCssColor(rgbs[i]);
+    }
+  };
+  const custom2_ = () => {
+    for (let i = 0; i < length; i++) {
+      getCssColor(rgbs[i], undefined, { percent_: false });
     }
   };
   const colord_ = () => {
@@ -107,6 +112,7 @@ function rgbStringPercentage() {
     'RGB string',
     [
       ['color-utils', custom_],
+      ['color-utils (number)', custom2_],
       ['colord', colord_],
       ['color', color_],
     ],
@@ -114,38 +120,15 @@ function rgbStringPercentage() {
   );
 }
 
-function rgbStringNumber() {
-  const custom_ = () => {
-    for (let i = 0; i < length; i++) {
-      getCssColor(rgbs[i], undefined, { percent_: false });
-    }
-  };
-  const colord_ = () => {
-    for (let i = 0; i < length; i++) {
-      colords[i].toRgbString();
-    }
-  };
-  const color_ = () => {
-    for (let i = 0; i < length; i++) {
-      colors[i].toString();
-    }
-  };
-
-  return performanceTest(
-    'RGB string - { percent_: false }',
-    [
-      ['color-utils', custom_],
-      ['colord', colord_],
-      ['color', color_],
-    ],
-    { time: 300 }
-  );
-}
-
-function hslStringPercentage() {
+function hslString() {
   const custom_ = () => {
     for (let i = 0; i < length; i++) {
       getCssColor(rgb2hsl(rgbs[i]), 'HSL');
+    }
+  };
+  const custom2_ = () => {
+    for (let i = 0; i < length; i++) {
+      getCssColor(rgb2hsl(rgbs[i]), 'HSL', { percent_: false });
     }
   };
   const colord_ = () => {
@@ -163,34 +146,7 @@ function hslStringPercentage() {
     'HSL string',
     [
       ['color-utils', custom_],
-      ['colord', colord_],
-      ['color', color_],
-    ],
-    { time: 300 }
-  );
-}
-
-function hslStringNumber() {
-  const custom_ = () => {
-    for (let i = 0; i < length; i++) {
-      getCssColor(rgb2hsl(rgbs[i]), 'HSL', { percent_: false });
-    }
-  };
-  const colord_ = () => {
-    for (let i = 0; i < length; i++) {
-      colords[i].toHslString();
-    }
-  };
-  const color_ = () => {
-    for (let i = 0; i < length; i++) {
-      colors[i].hsl().toString();
-    }
-  };
-
-  return performanceTest(
-    'HSL string - { percent_: false }',
-    [
-      ['color-utils', custom_],
+      ['color-utils (number)', custom2_],
       ['colord', colord_],
       ['color', color_],
     ],
@@ -202,10 +158,15 @@ Colord.prototype.toXyzString = function() {
   const { x, y, z } = this.toXyz();
   return `xyz(${x} ${y} ${z})`;
 };
-function xyzStringPercentage() {
+function xyzString() {
   const custom_ = () => {
     for (let i = 0; i < length; i++) {
       getCssColor(rgb2xyz(rgbs[i]), 'XYZ');
+    }
+  };
+  const custom2_ = () => {
+    for (let i = 0; i < length; i++) {
+      getCssColor(rgb2xyz(rgbs[i]), 'XYZ', { percent_: false });
     }
   };
   const colord_ = () => {
@@ -223,34 +184,7 @@ function xyzStringPercentage() {
     'XYZ string',
     [
       ['color-utils', custom_],
-      ['colord', colord_],
-      ['color', color_],
-    ],
-    { time: 300 }
-  );
-}
-
-function xyzStringNumber() {
-  const custom_ = () => {
-    for (let i = 0; i < length; i++) {
-      getCssColor(rgb2xyz(rgbs[i]), 'XYZ', { percent_: false });
-    }
-  };
-  const colord_ = () => {
-    for (let i = 0; i < length; i++) {
-      colords[i].toXyzString();
-    }
-  };
-  const color_ = () => {
-    for (let i = 0; i < length; i++) {
-      colors[i].xyz().toString();
-    }
-  };
-
-  return performanceTest(
-    'XYZ string - { percent_: false }',
-    [
-      ['color-utils', custom_],
+      ['color-utils (number)', custom2_],
       ['colord', colord_],
       ['color', color_],
     ],
@@ -262,10 +196,15 @@ Colord.prototype.toLabString = function() {
   const { l, a, b } = this.toLab();
   return `lab(${l} ${a} ${b})`;
 };
-function labStringPercentage() {
+function labString() {
   const custom_ = () => {
     for (let i = 0; i < length; i++) {
       getCssColor(rgb2lab(rgbs[i]), 'LAB');
+    }
+  };
+  const custom2_ = () => {
+    for (let i = 0; i < length; i++) {
+      getCssColor(rgb2xyz(rgbs[i]), 'LAB', { percent_: false });
     }
   };
   const colord_ = () => {
@@ -283,34 +222,7 @@ function labStringPercentage() {
     'LAB string',
     [
       ['color-utils', custom_],
-      ['colord', colord_],
-      ['color', color_],
-    ],
-    { time: 300 }
-  );
-}
-
-function labStringNumber() {
-  const custom_ = () => {
-    for (let i = 0; i < length; i++) {
-      getCssColor(rgb2lab(rgbs[i]), 'LAB', { percent_: false });
-    }
-  };
-  const colord_ = () => {
-    for (let i = 0; i < length; i++) {
-      colords[i].toLabString();
-    }
-  };
-  const color_ = () => {
-    for (let i = 0; i < length; i++) {
-      colors[i].lab().toString();
-    }
-  };
-
-  return performanceTest(
-    'LAB string - { percent_: false }',
-    [
-      ['color-utils', custom_],
+      ['color-utils (number)', custom2_],
       ['colord', colord_],
       ['color', color_],
     ],
@@ -478,14 +390,10 @@ function isReadable_() {
 const fns = [
   generation,
   getColorSpace_,
-  rgbStringPercentage,
-  rgbStringNumber,
-  hslStringPercentage,
-  hslStringNumber,
-  xyzStringPercentage,
-  xyzStringNumber,
-  labStringPercentage,
-  labStringNumber,
+  rgbString,
+  hslString,
+  xyzString,
+  labString,
   rgbLinearize,
   rgb2gray_,
   hue_,
