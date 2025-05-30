@@ -390,9 +390,11 @@ export const isLight = (rgb: readonly number[] | string): boolean => {
  * @returns Relative luminance, between [0, 1].
  */
 export const getRelativeLuminance = (rgb: string | readonly number[]): number => {
-  return dot3(
-    map(rgbArraylize(rgb), val => srgb2linearRgb(val)),
-    [0.2126, 0.7152, 0.0722]
+  rgb = rgbArraylize(rgb);
+  return (
+    0.2126 * srgb2linearRgb(rgb[0]) +
+    0.7152 * srgb2linearRgb(rgb[1]) +
+    0.0722 * srgb2linearRgb(rgb[2])
   );
 };
 
