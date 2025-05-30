@@ -1,5 +1,5 @@
 import { cloneDeep, map, type DeepWriteable } from '../helpers';
-import { deg2rad, squareSum4, randInt, pow, rad2deg, l2Dist3, l2Norm3 } from '../numeric';
+import { squareSum4, randInt, pow, l2Dist3, l2Norm3, deg2rad, rad2deg } from '../numeric';
 import { rgb2gray } from '../colors';
 import { rgb2lab } from '../colorModels/cielab';
 
@@ -76,88 +76,87 @@ export const distE94: CIEDifferenceFn = (lab1: readonly number[], lab2: readonly
  * @param lab2 CIELAB color 2
  */
 export const distE00: CIEDifferenceFn = (() => {
-  const f7 = (val: number) => (val = pow(val, 7), Math.sqrt(val / (val + pow(25, 7))));
-  const cos = (deg: number) => Math.cos(deg2rad(deg));
-  const sin = (deg: number) => Math.sin(deg2rad(deg));
-  // cos(3*H) = 4*cos(H)**3 - 3*cos(H)
-  const cos3H = (cosH: number) => 4*cosH*cosH*cosH - 3*cosH;
-
-  const cos30 = cos(30);
-  const sin30 = sin(30);
-  const cos6 = cos(6);
-  const sin6 = sin(6);
-  const cos63 = cos(63);
-  const sin63 = sin(63);
+  const cos6 = Math.cos(deg2rad(6));
+  const sin6 = Math.sin(deg2rad(6));
+  const cos30 = Math.cos(deg2rad(30));
+  const cos63 = Math.cos(deg2rad(63));
+  const sin63 = Math.sin(deg2rad(63));
 
   return (lab1: readonly number[], lab2: readonly number[]) => {
-    let temp: number;
-
+    // const [l1, a1, b1] = lab1;
+    // const [l2, a2, b2] = lab2;
     const l1 = lab1[0];
     const a1 = lab1[1];
     const b1 = lab1[2];
     const l2 = lab2[0];
     const a2 = lab2[1];
     const b2 = lab2[2];
-
-    const cMean = (l2Norm3(a1, b1) + l2Norm3(a2, b2)) / 2;
-    const aconst = 1 - f7(cMean);
+    // FIXME: accurate~0.96 for some lab1 = [l1, a1, a2], lab2 = [l2, -a1, -b1]
+    const c1 = l2Norm3(a1, b1);
+    const c2 = l2Norm3(a2, b2);
+    const cMean7 = pow((c1 + c2) / 2, 7);
+    const aconst = 1.5 - Math.sqrt(cMean7 / (cMean7 + 6103515625)) / 2;
     // 'P' for prime.
-    const a1P = a1 + a1 / 2 * aconst;
-    const a2P = a2 + a2 / 2 * aconst;
+
+    // Compute C' and h'
+    const a1P = a1 * aconst;
+    const a2P = a2 * aconst;
 
     const c1P = l2Norm3(a1P, b1);
     const c2P = l2Norm3(a2P, b2);
     const h1P = (rad2deg(Math.atan2(b1, a1P)) + 360) % 360;
     const h2P = (rad2deg(Math.atan2(b2, a2P)) + 360) % 360;
 
-    const hDist = Math.abs(h1P - h2P);
-
-    const hasGray = !c1P || !c2P;
-
-    // // Original formula has 2 conditions to decide to rotate +360 deg or -360 deg.
-    // // But +360 deg and -360 deg are the same for `sin(hP / 2)`.
-    const hP = hasGray ? 0 : (h2P - h1P + (hDist > 180 ? 360 : 0));
-
+    let hP = h2P - h1P;
     let hMeanP = (h1P + h2P) / 2;
-    hMeanP += (
-      hasGray ? hMeanP :
-        hDist <= 180 ? 0 :
-          hMeanP < 180 ? 180 : -180
-    );
+    if (!c1P || !c2P) {
+      hP = 0;
+      hMeanP *= 2;
+    } else if (hP > 180 || hP < -180) {
+      hP += 360;
+      hMeanP += hMeanP < 180 ? 180 : -180;
+    }
 
-    // # Coefficients
-    const cosH = cos(hMeanP);
-    const sinH = sin(hMeanP);
-    const cos2H = 2 * cosH * cosH - 1;
-    const sin2H = 2*sinH*cosH;
-    const T = 1
-      - 0.17 * (cosH * cos30 + sinH * sin30)
-      + 0.24 * cos2H
-      + 0.32 * (cos3H(cosH) * cos6 + cos3H(sinH) * sin6)
-      - 0.2  * ((2*cos2H*cos2H - 1)*cos63 + 2*sin2H*cos2H*sin63);
     // Original formula:
     // const T = 1
-    //   - 0.17 * cos(    hMeanP - 30)
-    //   + 0.24 * cos(2 * hMeanP)
-    //   + 0.32 * cos(3 * hMeanP + 6)
-    //   - 0.2  * cos(4 * hMeanP - 63);
+    //   - 0.17 * Math.cos(deg2rad(    hMeanP - 30))
+    //   + 0.24 * Math.cos(deg2rad(2 * hMeanP))
+    //   + 0.32 * Math.cos(deg2rad(3 * hMeanP + 6))
+    //   - 0.2  * Math.cos(deg2rad(4 * hMeanP - 63));
+    // Transform by trigonometric identities:
+    const cosH = Math.cos(deg2rad(hMeanP));
+    const sinH = Math.sin(deg2rad(hMeanP));
+    const cos2H = 2 * cosH * cosH - 1;
+    // const T = 1 + 0.2 * cos63
+    // - 0.17 * (cosH * cos30 + sinH / 2)
+    // + 0.24 * cos2H
+    // + 0.32 * ((4*cosH*cosH*cosH - 3*cosH) * cos6 + (4*sinH*sinH*sinH - 3*sinH) * sin6)
+    // - 0.4  * cos2H * (cos2H * cos63 + sin2H * sin63);
+    // Reduced:
+    const T = 1 + 0.2 * cos63
+      - 0.17 * (cosH * cos30 + sinH / 2)
+      + 0.32 * ((4*cosH*cosH - 3) * cosH * cos6 + (4*sinH*sinH - 3) * sinH * sin6)
+      + 0.4 * cos2H * (0.6 - cos2H * cos63 - 2 * cosH * sinH * sin63);
+
+    const lMeanP2 = ((l1 + l2) / 2 - 50)**2;
     const cMeanP = (c1P + c2P) / 2;
-    const SH = 1 + 0.015 * cMeanP * T;
+    const cMeanP7 = pow(cMeanP, 7);
+
+    const SL = 1 + 0.015 * lMeanP2 / Math.sqrt(20 + lMeanP2);
     const SC = 1 + 0.045 * cMeanP;
+    const SH = 1 + 0.015 * cMeanP * T;
+    const RT = (
+      2 * Math.sqrt(cMeanP7 / (cMeanP7 + 6103515625))
+      * Math.sin(deg2rad(60 / Math.exp((hMeanP/25 - 11)**2)))
+    );
 
-    // const lMeanM50 = ((l1 + l2) / 2 - 50)**2;
-    const lMeanM50 = (temp = (l1 + l2) / 2 - 50, temp * temp);
-    const SL = 1 + 0.015 * lMeanM50 / Math.sqrt(20 + lMeanM50);
-    const RT = 2 * f7(cMeanP) *
-      sin(60 / Math.exp((temp = hMeanP/25 - 11, temp*temp)));
-
-    // # Delta L
+    // Final terms
     const deltaLTerm = (l2 - l1) / SL;
-    // # Delta C
     const deltaCTerm = (c2P - c1P) / SC;
-    // # Delta H
-    const deltaHTerm = 2 * Math.sqrt(c1P * c2P) * sin(hP / 2) / SH;
-    return (
+    const deltaHTerm = (
+      2 * Math.sqrt(c1P * c2P) * Math.sin(deg2rad(hP / 2)) / SH
+    );
+    return Math.sqrt(
       squareSum4(deltaLTerm, deltaCTerm, deltaHTerm)
       - RT * deltaCTerm * deltaHTerm
     );
