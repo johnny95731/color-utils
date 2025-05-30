@@ -6,7 +6,7 @@
 
 <h2>Features</h2>
 
-- **Small**: 10.4KB for conversions only. 14.3KB size after minified (12.8KB with [mangle.properties.regex](#mangle))
+- ***Small***: 10.7KB for **conversions only**. 14.6KB in total (13.1KB with [mangle.properties.regex](#mangle)). (with minifying)
 - High performance. [Benchmark](#benchmark)
 - Detect browser [`<color>`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value) support when getting string.
 - Functions instead of object. Tree-shaking and minifying are more simpler.
@@ -241,6 +241,13 @@ See also
 
 - [`<color>`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value)
 - [`color()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/color)
+
+</details>
+
+<details>
+<summary><code>rgbArraylize(rgb: readonly number[] | string): readonly number[]</code></summary>
+
+Normalize RGB or HEX to array type.
 
 </details>
 
@@ -848,9 +855,7 @@ CIE94 formula will take square root. This function is present for comparing the 
 <details>
 <summary><code>distE00(lab1: readonly number[], lab2: readonly number[]): number</code></summary>
 
-Return the square of CIEDE2000 color difference (CIEDE2000 or E00).
-
-The reason for square is the same as in `distE94`.
+Return CIEDE2000 color difference (CIEDE2000 or E00).
 
 </details>
 
@@ -898,7 +903,7 @@ CIEDE2000 | `tspGreedy` with `diffOp = distE00`.
 <details>
 <summary><code>sortRgbs(rgbs: readonly number[][], method: Sort | number): number[][]</code></summary>
 
-Return a sorted and copied array of RGB colors. Similar to `sortColors` but input RGB colors directly.
+Return a sorted and copied array of RGB colors. Similar to `sortColors` but input arrays directly.
 
 ```ts
 type Sort =  "luminance" | "random" | "reversion" | "CIE76" | "CIE94" | "CIEDE2000";
@@ -955,14 +960,14 @@ and `cieTransInv` is the inverse function of `cieTrans`.
 </details>
 
 <details id="clone-deep">
-<summary><code>cloneDeep&lt;T>(obj: T, cloneCustom: boolean = false): DeepWriteable&lt;T></code></summary>
+<summary><code>cloneDeep&lt;T>(obj: T): DeepWriteable&lt;T></code></summary>
 
 Deeply clone object.
 
 The following types will be handle:
 
 - primitive type
-- `Number`, `String`, `Boolean`
+- `Number`, `String`, `Boolean` (convert to primitive type)
 - `Date`
 - built-in object
 
@@ -1141,179 +1146,473 @@ Run command `npm run benchmark` (conversions only-).
 
 - Node version: v22.11.0.
 - CPU: Intel(R) Core(TM) i7-7700HQ CPU @ 2.80GHz
-- library: `tinybench` 3.1.1
-- Every test function convert ***10 colors*** by default. For details, see `SampleGenerator.defaults` in `test-utils/sample.js`.
+- `tinybench` 3.1.1
+- libraries:
+  - colord: 2.9.3
+  - color: 5.0.0
+  - color-convert: 3.1.0
 
 Only list some benchmaks since some conversions have similar formula and performance.
 
 <details>
 <summary>XYZ</summary>
 
+- 10 colors/sampling
+
 `rgb2xyz`
 
-library | Latency avg (ns) | throughput avg (ops/s) | comparison
---------|------------------|------------------------|------------
-color-utils   | 1821.1 ± 0.19% | 566821 &ensp;± 0.03% | 90% slower
-colord        | 5139.0 ± 5.52% | 211382 &ensp;± 0.05% | 96% slower
-color         | 8217.0 ± 5.29% | 133942 &ensp;± 0.09% | 98% slower
-color-convert | 228.57 ± 2.15% | 5418805 ± 0.03%      | fastest
+ Library | Latency avg (ns) | Throughput avg (ops/s) | Comparison
+---------|------------------|------------------------|------------
+color-utils   | 1865.8 ± 0.43% | 555434 ± 0.03% | fastest
+colord        | 4862.5 ± 4.41% | 218174 ± 0.04% | 61% slower
+color         | 7650.0 ± 1.64% | 137757 ± 0.06% | 75% slower
+color-convert | 2403.0 ± 0.60% | 433481 ± 0.03% | 22% slower
 
 `xyz2rgb`
 
-library | Latency avg (ns) | throughput avg (ops/s) | comparison
---------|------------------|------------------------|------------
-color-utils   | 1725.0 ± 0.40% | 609665 &ensp;± 0.04% | 87% slower
-colord        | 5375.2 ± 6.18% | 206343 &ensp;± 0.06% | 95% slower
-color         | 9078.4 ± 0.68% | 116323 &ensp;± 0.08% | 97% slower
-color-convert | 271.65 ± 1.68% | 4527525 ± 0.02% | fastest
+ Library | Latency avg (ns) | Throughput avg (ops/s) | Comparison
+---------|------------------|------------------------|------------
+color-utils   | 1695.1 ± 0.46% | 625703 &ensp;± 0.04% | 90% slower
+colord        | 5378.7 ± 0.74% | 198918 &ensp;± 0.07% | 97% slower
+color         | 9757.8 ± 0.66% | 110553 &ensp;± 0.10% | 98% slower
+color-convert | 236.55 ± 2.35% | 6090139 ± 0.04% | fastest
+
+- 500 colors/sampling
+
+`rgb2xyz`
+
+ Library | Latency avg (ns) | Throughput avg (ops/s) | Comparison
+---------|------------------|------------------------|------------
+color-utils   | 90272 &ensp;± 0.34% | 11258 ± 0.17% | fastest
+colord        | 274760 ± 1.66% | 3774 &ensp;± 0.40% | 66% slower
+color         | 409022 ± 1.10% | 2560 &ensp;± 0.68% | 77% slower
+color-convert | 125684 ± 0.74% | 8254 &ensp;± 0.30% | 27% slower
+
+`xyz2rgb`
+
+ Library | Latency avg (ns) | Throughput avg (ops/s) | Comparison
+---------|------------------|------------------------|------------
+color-utils   | 80871 &ensp;± 0.41% | 12657 &ensp;± 0.20% | 96% slower
+colord        | 255404 ± 0.55% | 3995 &ensp;&ensp;± 0.37% | 99% slower
+color         | 446865 ± 0.66% | 2278 &ensp;&ensp;± 0.46% | 99% slower
+color-convert | 4066.0 ± 0.98% | 305446 ± 0.09% | fastest
 
 </details>
 
 <details>
 <summary>CMYK</summary>
 
+- 10 colors/sampling
+
 `rgb2cmyk`
 
-library | Latency avg (ns) | throughput avg (ops/s) | comparison
---------|------------------|------------------------|------------
-color-utils   | 124.54 ± 0.41% | 9074605 ± 0.02% | fastest
-colord        | 1207.4 ± 0.18% | 852937 &ensp;± 0.03% | 91% slower
-color         | 6611.2 ± 8.00% | 171155 &ensp;± 0.07% | 98% slower
-color-convert | 187.30 ± 1.32% | 7109575 ± 0.03% | 22% slower
+ Library | Latency avg (ns) | Throughput avg (ops/s) | Comparison
+---------|------------------|------------------------|------------
+color-utils   | 126.29 ± 0.76% | 9012903 ± 0.02% | fastest
+colord        | 2473.6 ± 0.18% | 410141 &ensp;± 0.02% | 95% slower
+color         | 6013.0 ± 0.93% | 177287 &ensp;± 0.05% | 98% slower
+color-convert | 225.98 ± 1.75% | 6218964 ± 0.04% | 31% slower
 
 `cmyk2rgb`
 
-library | Latency avg (ns) | throughput avg (ops/s) | comparison
---------|------------------|------------------------|------------
-color-utils   | 111.24 ± 0.38% | 9546184 ± 0.01% | fastest
-colord        | 2159.8 ± 0.79% | 493868 &ensp;± 0.04% | 95% slower
-color         | 5433.1 ± 0.72% | 190225 &ensp;± 0.03% | 98% slower
-color-convert | 185.55 ± 1.17% | 7044702 ± 0.03% | 26% slower
+ Library | Latency avg (ns) | Throughput avg (ops/s) | Comparison
+---------|------------------|------------------------|------------
+color-utils   | 128.49 ± 0.53% | 8784196 ± 0.02% | fastest
+colord        | 1437.3 ± 1.26% | 781985 &ensp;± 0.04% | 91% slower
+color         | 5869.8 ± 5.64% | 188463 &ensp;± 0.06% | 98% slower
+color-convert | 217.06 ± 1.35% | 6173430 ± 0.04% | 30% slower
+
+- 500 colors/sampling
+
+`rgb2cmyk`
+
+ Library | Latency avg (ns) | Throughput avg (ops/s) | Comparison
+---------|------------------|------------------------|------------
+color-utils   | 1099.7 ± 0.18% | 937169 ± 0.02% | fastest
+colord        | 73538 &ensp;± 6.12% | 14877 &ensp;± 0.26% | 98% slower
+color         | 323961 ± 2.75% | 3353 &ensp;&ensp;± 0.69% | 100% slower
+color-convert | 4624.0 ± 2.04% | 273031 ± 0.10% | 71% slower
+
+`rgb2cmyk`
+
+ Library | Latency avg (ns) | Throughput avg (ops/s) | Comparison
+---------|------------------|------------------------|------------
+color-utils   | 1217.4 ± 0.17% | 852300 ± 0.03% | fastest
+colord        | 94172 &ensp;± 3.22% | 12522 &ensp;± 0.48% | 99% slower
+color         | 278511 ± 0.85% | 3735 &ensp;&ensp;± 0.51% | 100% slower
+color-convert | 4609.3 ± 1.09% | 269688 ± 0.10% | 68% slower
 
 </details>
 
 <details>
 <summary>HEX</summary>
 
+- 10 colors/sampling
+
 `rgb2hex`
 
-library | Latency avg (ns) | throughput avg (ops/s) | comparison
---------|------------------|------------------------|------------
-color-utils   | 1260.0 ± 0.30% | 804682 ± 0.01% | fastest
-colord        | 1504.9 ± 7.80% | 726625 ± 0.02% | 10% slower
-color         | 25645&thinsp; ± 0.59% | 39933 &ensp;± 0.09% | 95% slower
-color-convert | 1734.6 ± 0.64% | 594626 ± 0.02% | 26% slower
+ Library | Latency avg (ns) | Throughput avg (ops/s) | Comparison
+---------|------------------|------------------------|------------
+color-utils   | 1275.0 ± 0.31% | 801221 ± 0.02% | fastest
+colord        | 1470.2 ± 0.47% | 700975 ± 0.02% | 13% slower
+color         | 27621 &ensp;± 3.08% | 37596 &ensp;± 0.09% | 95% slower
+color-convert | 1772.4 ± 0.71% | 584987 ± 0.02% | 27% slower
 
 `hex2rgb`
 
-library | Latency avg (ns) | throughput avg (ops/s) | comparison
---------|------------------|------------------------|------------
-color-utils   | 1893.9 ± 0.67% | 544611 ± 0.01% | fastest
-colord        | 4055.7 ± 0.81% | 257520 ± 0.03% | 53% slower
-color         | 10063&thinsp; ± 0.69% | 102302 ± 0.05% | 81% slower
-color-convert | 2052.2 ± 0.90% | 514284 ± 0.02% | 6% slower
+ Library | Latency avg (ns) | Throughput avg (ops/s) | Comparison
+---------|------------------|------------------------|------------
+color-utils   | 1931.1 ± 0.73% | 537991 ± 0.02% | fastest
+colord        | 4074.2 ± 0.90% | 257410 ± 0.03% | 52% slower
+color         | 10505 &ensp;± 0.75% | 98832 &ensp;± 0.06% | 82% slower
+color-convert | 2049.8 ± 1.30% | 523147 ± 0.03% | 3% slower
+
+- 500 colors/sampling
+
+`rgb2hex`
+
+ Library | Latency avg (ns) | Throughput avg (ops/s) | Comparison
+---------|------------------|------------------------|------------
+color-utils   | 82675 &ensp;&ensp;± 0.44% | 12431 ± 0.23% | fastest
+colord        | 90544 &ensp;&ensp;± 0.47% | 11341 ± 0.22% | 9% slower
+color         | 1431425 ± 1.11% | 710 &ensp;&ensp;± 0.80% | 94% slower
+color-convert | 101622 &ensp;± 0.39% | 10007 ± 0.19% | 19% slower
+
+`hex2rgb`
+
+ Library | Latency avg (ns) | Throughput avg (ops/s) | Comparison
+---------|------------------|------------------------|------------
+color-utils   | 107295 ± 0.56% | 9649 ± 0.27% | fastest
+colord        | 216812 ± 0.64% | 4746 ± 0.38% | 51% slower
+color         | 542092 ± 0.81% | 1885 ± 0.56% | 80% slower
+color-convert | 109129 ± 0.61% | 9515 ± 0.28% | 1% slower
 
 </details>
 
 <details>
 <summary>HSB</summary>
 
+- 10 colors/sampling
+
 `rgb2hsb`
 
-library | Latency avg (ns) | throughput avg (ops/s) | comparison
---------|------------------|------------------------|------------
-color-utils   | 193.43 ± 0.35% | 5511814 ± 0.03% | fastest
-colord        | 478.54 ± 2.38% | 2271904 ± 0.03% | 59% slower
-color         | 10462&thinsp; ± 5.43% | 118337 &ensp;± 0.20% | 98% slower
-color-convert | 506.35 ± 0.80% | 2304598 ± 0.04% | 58% slower
+ Library | Latency avg (ns) | Throughput avg (ops/s) | Comparison
+---------|------------------|------------------------|------------
+color-utils   | 198.26 ± 0.23% | 5567865 ± 0.03% | fastest
+colord        | 435.80 ± 1.37% | 2360374 ± 0.01% | 58% slower
+color         | 6764.2 ± 3.26% | 157642 &ensp;± 0.06% | 97% slower
+color-convert | 441.37 ± 1.36% | 2475841 ± 0.02% | 56% slower
 
 `hsb2rgb`
 
-library | Latency avg (ns) | throughput avg (ops/s) | comparison
---------|------------------|------------------------|------------
-color-utils   | 257.93 ± &ensp;0.13% | 4286701 ± 0.02% | fastest
-colord        | 3552.7 ± 10.13% | 350989 &ensp;± 0.07% | 92% slower
-color         | 6898.6 ± &ensp;2.49% | 153517 &ensp;± 0.06% | 96% slower
-color-convert | 284.37 ± &ensp;5.50% | 4270099 ± 0.02% | 0.39% slower
+ Library | Latency avg (ns) | Throughput avg (ops/s) | Comparison
+---------|------------------|------------------------|------------
+color-utils   | 146.86 ± 0.28% | 7786961 ± 0.02% | fastest
+colord        | 1822.4 ± 17.07% | 675545 &ensp;± 0.04% | 91% slower
+color         | 6597.1 ± 0.58% | 155684 &ensp;± 0.04% | 98% slower
+color-convert | 385.37 ± 0.86% | 2974037 ± 0.04% | 62% slower
+
+- 500 colors/sampling
+
+`rgb2hsb`
+
+ Library | Latency avg (ns) | Throughput avg (ops/s) | Comparison
+---------|------------------|------------------------|------------
+color-utils   | 3755.2 ± 0.18% | 276840 ± 0.05% | fastest
+colord        | 19889 &ensp;± 7.88% | 55989 &ensp;± 0.13% | 80% slower
+color         | 338564 ± 0.88% | 3059 &ensp;&ensp;± 0.53% | 99% slower
+color-convert | 17136 &ensp;± 0.78% | 63809 &ensp;± 0.13% | 77% slower
+
+`hsb2rgb`
+
+ Library | Latency avg (ns) | Throughput avg (ops/s) | Comparison
+---------|------------------|------------------------|------------
+color-utils   | 2292.9 ± 0.15% | 444420 ± 0.02% | fastest
+colord        | 70170 &ensp;± 0.62% | 14935 &ensp;± 0.23% | 97% slower
+color         | 316699 ± 0.50% | 3198 &ensp;&ensp;± 0.31% | 99% slower
+color-convert | 20431 &ensp;± 0.53% | 50821 &ensp;± 0.08% | 89% slower
 
 </details>
 
 <details>
 <summary>NAMED</summary>
 
+- 10 colors/sampling
+
 `rgb2named`
 
-library | Latency avg (ns) | throughput avg (ops/s) | comparison
---------|------------------|------------------------|------------
-color-utils   | 31319 &ensp;± 4.58% | 36141 ± 0.17% | fastest
-colord        | 724427 ± 0.87% | 1402 &ensp;± 0.53% | 96% slower
-color         | 75252 &ensp;± 0.35% | 13445 ± 0.12% | 63% slower
-color-convert | 76712 &ensp;± 0.39% | 13260 ± 0.15% | 63% slower
+ Library | Latency avg (ns) | Throughput avg (ops/s) | Comparison
+---------|------------------|------------------------|------------
+color-utils   | 26811 &ensp;± 0.90% | 40043 ± 0.11% | fastest
+colord        | 766550 ± 1.30% | 1353 &ensp;± 0.83% | 97% slower
+color         | 73089 &ensp;± 0.37% | 13866 ± 0.12% | 65% slower
+color-convert | 80482 &ensp;± 0.68% | 13180 ± 0.30% | 67% slower
 
 `named2rgb`
 
-library | Latency avg (ns) | throughput avg (ops/s) | comparison
---------|------------------|------------------------|------------
-color-utils   | 216.23 ± 0.86% | 5104754 ± 0.03% | fastest
-colord        | 11034&thinsp; ± 5.59% | 99782 &ensp;± 0.10% | 98% slower
-color         | 9834.4 ± 0.42% | 103986 &ensp;± 0.05% | 98% slower
-color-convert | 558.28 ± 0.67% | 1908326 ± 0.02% | 63% slower
+ Library | Latency avg (ns) | Throughput avg (ops/s) | Comparison
+---------|------------------|------------------------|------------
+color-utils   | 219.39 ± 0.41% | 4905299 ± 0.02% | fastest
+colord        | 8576.5 ± 0.64% | 119825 &ensp;± 0.04% | 98% slower
+color         | 10620 &ensp;± 1.01% | 96772 &ensp;&ensp;± 0.05% | 98% slower
+color-convert | 605.31 ± 1.01% | 1783149 ± 0.02% | 64% slower
+
+- 500 colors/sampling
+
+`rgb2named`
+
+ Library | Latency avg (ns) | Throughput avg (ops/s) | Comparison
+---------|------------------|------------------------|------------
+color-utils   | 1297776 &ensp;± 0.61% | 775 ± 0.53% | fastest
+colord        | 41900763 ± 6.92% | 25 &ensp;± 4.62% | 97% slower
+color         | 3933145 &ensp;± 1.51% | 257 ± 1.09% | 67% slower
+color-convert | 3835206 &ensp;± 1.12% | 262 ± 0.84% | 66% slower
+
+`named2rgb`
+
+ Library | Latency avg (ns) | Throughput avg (ops/s) | Comparison
+---------|------------------|------------------------|------------
+color-utils   | 7554.5 ± 0.11% | 133815 ± 0.04% | fastest
+colord        | 487750 ± 1.01% | 2092 &ensp;&ensp;± 0.52% | 98% slower
+color         | 529307 ± 0.40% | 1900 &ensp;&ensp;± 0.30% | 99% slower
+color-convert | 38757 &ensp;± 0.38% | 26293 &ensp;± 0.10% | 80% slower
+
+</details>
+
+<details>
+<summary>Oklab</summary>
+
+- 10 colors/sampling
+
+`rgb2oklab`
+
+ Library | Latency avg (ns) | Throughput avg (ops/s) | Comparison
+---------|------------------|------------------------|------------
+color-utils | 1993.7 ± 1.83% | 548656 ± 0.04% | fastest
+
+`oklab2rgb`
+
+ Library | Latency avg (ns) | Throughput avg (ops/s) | Comparison
+---------|------------------|------------------------|------------
+color-utils | 1778.0 ± 0.37% | 585905 ± 0.03% | fastest
+
+- 500 colors/sampling
+
+`rgb2oklab`
+
+ Library | Latency avg (ns) | Throughput avg (ops/s) | Comparison
+---------|------------------|------------------------|------------
+color-utils | 93955 ± 0.54% | 11009 ± 0.25% | fastest
+
+`oklab2rgb`
+
+ Library | Latency avg (ns) | Throughput avg (ops/s) | Comparison
+---------|------------------|------------------------|------------
+color-utils | 92657 ± 0.53% | 11166 ± 0.25% | fastest
 
 </details>
 
 <details>
 <summary><code>getCSSColor</code></summary>
 
-Slower since handle more check.
+Our function handle more checks.<br/>
 
-RGB string
+`'color-utils'`: Default option.<br/>
+`'color-utils (number)'`: Pass `{ percent_: false }`.
 
-library | Latency avg (ns) | throughput avg (ops/s) | comparison
---------|------------------|------------------------|------------
-color-utils   | 5520.3.8 ± 0.83%      | 187493 &ensp;± 0.08%      | 95% slower
-colord        | 271.32 ± 2.08%        | 3947510 ± 0.04%           | fastest
-color         | 25000 &thinsp;± 3.32% | 44691 &ensp;&ensp;± 0.31% | 99% slower
+- 10 colors/sampling
 
-HSL string
+To RGB string
 
-library | Latency avg (ns) | throughput avg (ops/s) | comparison
---------|------------------|------------------------|------------
-color-utils   | 7195.6 ± 1.00%        | 145698 &ensp;± 0.12%      | 91% slower
-colord        | 610.75 ± 0.28%        | 1669903 ± 0.03%           | fastest
-color         | 36477 &thinsp;± 0.95% | 28502 &ensp;&ensp;± 0.28% | 98% slower
+ Library | Latency avg (ns) | Throughput avg (ops/s) | Comparison
+---------|------------------|------------------------|------------
+color-utils          | 6178.9 ± 2.55% | 169818 &ensp;± 0.10% | 95% slower
+color-utils (number) | 3045.7 ± 1.81% | 342768 &ensp;± 0.06% | 91% slower
+colord               | 296.15 ± 3.08% | 3696381 ± 0.04% | fastest
+color                | 28068 &ensp;± 24.30% | 43753 &ensp;&ensp;± 0.31% | 99% slower
 
-LAB string
+`rgb2hsl` + to HSL string
 
-library | Latency avg (ns) | throughput avg (ops/s) | comparison
---------|------------------|------------------------|------------
-color-utils   | 9401.9 &thinsp;± 0.82% | 109794 ± 0.10%      | fastest
-colord        | 9710.0 ± 0.68%         | 105149 ± 0.09%      | 4% slower
-color         | 48419 &thinsp;± 0.89%  | 21025 &ensp;± 0.17% | 81% slower
+ Library | Latency avg (ns) | Throughput avg (ops/s) | Comparison
+---------|------------------|------------------------|------------
+color-utils          | 6926.5 ± 0.96% | 151278 &ensp;± 0.11% | 91% slower
+color-utils (number) | 6941.6 ± 1.25% | 152162 &ensp;± 0.12% | 91% slower
+colord               | 631.89 ± 0.38% | 1635387 ± 0.03% | fastest
+color                | 35209 &ensp;± 0.68% | 29101 &ensp;&ensp;± 0.21% | 98% slower
+
+`rgb2xyz` + to XYZ string
+
+ Library | Latency avg (ns) | Throughput avg (ops/s) | Comparison
+---------|------------------|------------------------|------------
+color-utils          | 11611 &ensp;± 1.50% | 96342 &ensp;± 0.23% | 23% slower
+color-utils (number) | 10034 &ensp;± 2.05% | 110280 ± 0.19% | 12% slower
+colord               | 8633.8 ± 1.91% | 124808 ± 0.17% | fastest
+color                | 44340 &ensp;± 1.23% | 24215 &ensp;± 0.42% | 81% slower
+
+`rgb2lab` + to LAB string
+
+ Library | Latency avg (ns) | Throughput avg (ops/s) | Comparison
+---------|------------------|------------------------|------------
+color-utils          | 13500 &ensp;± 1.38% | 84932 &ensp;± 0.32% | 19% slower
+color-utils (number) | 9923.1 ± 1.81% | 105303 ± 0.13% | fastest
+colord               | 9811.5 ± 1.66% | 105048 ± 0.10% | 0.24% slower
+color                | 46989 &ensp;± 0.67% | 21661 &ensp;± 0.21% | 79% slower
+
+- 500 colors/sampling
+
+To RGB string
+
+ Library | Latency avg (ns) | Throughput avg (ops/s) | Comparison
+---------|------------------|------------------------|------------
+color-utils          | 685076 &ensp;± 4.51% | 1651 &ensp;&ensp;± 2.89% | 99% slower
+color-utils (number) | 196111 &ensp;± 2.67% | 5750 &ensp;&ensp;± 1.31% | 95% slower
+colord               | 9353.7 &ensp;± 0.39% | 112593 ± 0.19% | fastest
+color                | 1482556 ± 5.14% | 728 &ensp;&ensp;&ensp;± 3.15% | 99% slower
+
+`rgb2hsl` + to HSL string
+
+ Library | Latency avg (ns) | Throughput avg (ops/s) | Comparison
+---------|------------------|------------------------|------------
+color-utils          | 631669 &ensp;± 2.82% | 1697 &ensp;± 1.99% | 95% slower
+color-utils (number) | 541312 &ensp;± 2.21% | 1895 &ensp;± 0.96% | 94% slower
+colord               | 31134 &ensp;&ensp;± 0.27% | 32290 ± 0.11% | fastest
+color                | 1896772 ± 2.91% | 540 &ensp;&ensp;± 2.01% | 98% slower
+
+`rgb2xyz` + to XYZ string
+
+ Library | Latency avg (ns) | Throughput avg (ops/s) | Comparison
+---------|------------------|------------------------|------------
+color-utils          | 700293 &ensp;± 2.18% | 1465 ± 1.17% | 16% slower
+color-utils (number) | 637217 &ensp;± 0.89% | 1581 ± 0.69% | 9% slower
+colord               | 582477 &ensp;± 1.28% | 1734 ± 0.65% | fastest
+color                | 2258110 ± 0.91% | 444 &ensp;± 0.91% | 74% slower
+
+`rgb2lab` + to LAB string
+
+ Library | Latency avg (ns) | Throughput avg (ops/s) | Comparison
+---------|------------------|------------------------|------------
+color-utils          | 701411 &ensp;± 0.85% | 1435 ± 0.67% | 11% slower
+color-utils (number) | 630627 &ensp;± 1.46% | 1604 ± 0.71% | fastest
+colord               | 648329 &ensp;± 1.84% | 1578 ± 1.07% | 2% slower
+color                | 2948231 ± 4.91% | 355 &ensp;± 3.67% | 78% slower
 
 </details>
 
 <details>
-<summary><code>rgb2hue</code></summary>
+<summary>manipulation</summary>
 
-Slower since handle more check.
+- 10 times/sampling
 
-library | Latency avg (ns) | throughput avg (ops/s) | comparison
+Adjust 5 colors for 6 times
+
+ Contrast | Latency avg (ns) | Throughput avg (ops/s) | Comparison
+----------|------------------|------------------------|------------
+linear           | 1934.4 ± 1.08% | 595019 ± 0.05% | fastest
+gamma            | 7444.0 ± 0.90% | 141709 ± 0.07% | 76% slower
+auto enhancement | 16445 &ensp;± 1.12% | 65080 &ensp;± 0.13% | 89% slower
+auto brightness  | 18115 &ensp;± 0.43% | 57247 &ensp;± 0.11% | 90% slower
+
+Harmony: analogous. Generate 3 colors for 10 times
+
+ Library | Latency avg (ns) | Throughput avg (ops/s) | Comparison
+---------|------------------|------------------------|------------
+color-utils | 4547.9 ± 3.11% | 262059 ± 0.10% | fastest
+colord      | 6457.8 ± 0.77% | 179107 ± 0.12% | 32% slower
+
+Harmony: shades. Generate 6 colors for 10 times
+
+ Library | Latency avg (ns) | Throughput avg (ops/s) | Comparison
+---------|------------------|------------------------|------------
+color-utils | 7883.7 ± 0.67% | 136970 ± 0.09% | fastest
+colord      | 134593 ± 1.51% | 7718 &ensp;&ensp;± 0.30% | 94% slower
+
+Mix 2 colors for 499 times
+
+ Mixing | Latency avg (ns) | Throughput avg (ops/s) | Comparison
 --------|------------------|------------------------|------------
-color-utils   | 186.44 ± 0.33% | 6011580 ± 0.03% | fastest
-colord        | 208.50 ± 0.35% | 4923280 ± 0.01% | 18% slower
-color         | 6931.3 ± 7.03% | 156062 &ensp;± 0.04% | 97% slower
+mean       | 3014.5 ± 0.88% | 384460 ± 0.09% | 6% slower
+brighter   | 5030.1 ± 0.48% | 207832 ± 0.05% | 49% slower
+deeper     | 5067.8 ± 0.49% | 205364 ± 0.05% | 50% slower
+soft light | 7449.1 ± 5.43% | 144906 ± 0.07% | 64% slower
+additive   | 3203.7 ± 0.83% | 328805 ± 0.05% | 19% slower
+weighted   | 2543.4 ± 0.51% | 407623 ± 0.03% | fastest
+
+Sort 5 colors for 6 times
+
+ Sorting | Latency avg (ns) | Throughput avg (ops/s) | Comparison
+---------|------------------|------------------------|------------
+luminance | 24254 ± 0.52% | 43674 ± 0.12% | 13% slower
+random    | 20884 ± 0.51% | 50126 ± 0.10% | fastest
+reversion | 21663 ± 1.23% | 49685 ± 0.15% | 0.88% slower
+CIE76     | 36281 ± 0.51% | 28604 ± 0.14% | 43% slower
+CIE94     | 36974 ± 0.47% | 27938 ± 0.13% | 44% slower
+CIEDE2000 | 74629 ± 0.41% | 13667 ± 0.16% | 73% slower
+
+- 500 times/sampling
+
+Harmony: analogous. Generate 3 colors for 500 times
+
+ Library | Latency avg (ns) | Throughput avg (ops/s) | Comparison
+---------|------------------|------------------------|------------
+color-utils | 217506 ± 1.35% | 5063 ± 0.70% | fastest
+colord      | 468879 ± 5.61% | 2666 ± 1.51% | 47% slower
+
+Harmony: shades. Generate 6 colors for 500 times
+
+ Library | Latency avg (ns) | Throughput avg (ops/s) | Comparison
+---------|------------------|------------------------|------------
+color-utils | 375691 &ensp;± 0.70% | 2728 ± 0.52% | fastest
+colord      | 6056219 ± 1.33% | 166 &ensp;± 1.05% | 94% slower
+
+Mix 2 colors for 499 times
+
+ Mixing | Latency avg (ns) | Throughput avg (ops/s) | Comparison
+--------|------------------|------------------------|------------
+mean       | 118136 ± 0.63% | 8877 ± 0.35% | fastest
+brighter   | 230521 ± 0.54% | 4430 ± 0.35% | 50% slower
+deeper     | 306693 ± 0.61% | 3333 ± 0.43% | 62% slower
+soft light | 353260 ± 1.24% | 2988 ± 0.67% | 66% slower
+additive   | 138872 ± 0.78% | 7648 ± 0.42% | 14% slower
+weighted   | 148091 ± 2.27% | 7575 ± 0.57% | 15% slower
 
 </details>
 
 <details>
-<summary><code>isReadable</code></summary>
+<summary>some other fcuntions</summary>
 
-Slower since handle more check.
+- 10 colors/sampling
 
-library | Latency avg (ns) | throughput avg (ops/s) | comparison
---------|------------------|------------------------|------------
-color-utils   | 4500.8 ± 0.55% | 229408 ± 0.03% | fastest
-colord        | 5718.3 ± 0.28% | 176155 ± 0.03% | 23% slower
+`rgb2hue`
+
+ Library | Latency avg (ns) | Throughput avg (ops/s) | Comparison
+---------|------------------|------------------------|------------
+color-utils | 186.71 ± 0.31% | 6422953 ± 0.03% | fastest
+colord      | 234.73 ± 0.28% | 4488302 ± 0.02% | 30% slower
+color       | 6431.5 ± 12.29% | 193392 &ensp;± 0.10% | 97% slower
+
+`isReadable`
+
+ Library | Latency avg (ns) | Throughput avg (ops/s) | Comparison
+---------|------------------|------------------------|------------
+color-utils | 3213.7 ± 0.26% | 317981 &ensp;± 0.03% | 81% slower
+colord      | 638.20 ± 0.31% | 1691278 ± 0.03% | fastest
+
+- 500 colors/sampling
+
+`rgb2hue`
+
+ Library | Latency avg (ns) | Throughput avg (ops/s) | Comparison
+---------|------------------|------------------------|------------
+color-utils | 4122.0 ± 0.17% | 249077 ± 0.04% | fastest
+colord      | 6461.1 ± 0.43% | 169177 ± 0.09% | 32% slower
+color       | 268715 ± 0.94% | 3906 &ensp;&ensp;± 0.55% | 98% slower
+
+`isReadable`
+
+ Library | Latency avg (ns) | Throughput avg (ops/s) | Comparison
+---------|------------------|------------------------|------------
+color-utils | 168171 ± 0.32% | 6003 &ensp;± 0.20% | 80% slower
+colord      | 42168 &ensp;± 3.51% | 30471 ± 0.43% | fastest
 
 </details>
 
