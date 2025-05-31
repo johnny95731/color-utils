@@ -91,25 +91,33 @@ export const distE00: CIEDifferenceFn = (() => {
     const l2 = lab2[0];
     const a2 = lab2[1];
     const b2 = lab2[2];
-    // FIXME: accurate~0.96 for some lab1 = [l1, a1, a2], lab2 = [l2, -a1, -b1]
     const c1 = l2Norm3(a1, b1);
     const c2 = l2Norm3(a2, b2);
     const cMean7 = pow((c1 + c2) / 2, 7);
-    const aconst = 1.5 - Math.sqrt(cMean7 / (cMean7 + 6103515625)) / 2;
+    // XXX: Reduce formulas to
+    // `const aconst = 1.5 - Math.sqrt(omit) / 2;`
+    // `const a1P = a1 * aconst;`
+    // may make result ±0.5 for some lab1 = [l1, a1, a2], lab2 = [l2, -a1, -b1].
+    // Because a small accurate issue (<=1e-14) of `h1P` and `h2P` such that
+    // `Math.abs(h2P - h1P) > 180` to be true or false.
+    // Currently, the result is more closer to Bruce Lindbloom's Web Site.
+    const aconst = (1 - Math.sqrt(cMean7 / (cMean7 + 6103515625))) / 2;
     // 'P' for prime.
 
     // Compute C' and h'
-    const a1P = a1 * aconst;
-    const a2P = a2 * aconst;
+    const a1P = a1 * (1 + aconst);
+    const a2P = a2 * (1 + aconst);
 
     const c1P = l2Norm3(a1P, b1);
     const c2P = l2Norm3(a2P, b2);
-    const h1P = (rad2deg(Math.atan2(b1, a1P)) + 360) % 360;
-    const h2P = (rad2deg(Math.atan2(b2, a2P)) + 360) % 360;
-
+    // Floating issue.
+    let h1P = rad2deg(Math.atan2(b1, a1P));
+    let h2P = rad2deg(Math.atan2(b2, a2P));
+    if (h1P < 0) h1P += 360;
+    if (h2P < 0) h2P += 360;
     let hP = h2P - h1P;
     let hMeanP = (h1P + h2P) / 2;
-    if (!c1P || !c2P) {
+    if (c1P * c2P === 0) {
       hP = 0;
       hMeanP *= 2;
     } else if (hP > 180 || hP < -180) {
