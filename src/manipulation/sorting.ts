@@ -32,6 +32,7 @@ export const diffLuminance: SortOp = (
 
 /**
  * Color difference of two LAB colors with CIE 1976 formula.
+ * @see https://en.wikipedia.org/wiki/Color_difference
  */
 export const distE76: CIEDifferenceFn = (lab1: readonly number[], lab2: readonly number[]) => {
   return l2Dist3(lab1, lab2);
@@ -44,6 +45,7 @@ export const distE76: CIEDifferenceFn = (lab1: readonly number[], lab2: readonly
  * @param lab1 CIELAB color 1
  * @param lab2 CIELAB color 2
  * @returns
+ * @see https://en.wikipedia.org/wiki/Color_difference
  */
 export const distE94: CIEDifferenceFn = (lab1: readonly number[], lab2: readonly number[]) => {
   const l1 = lab1[0];
@@ -74,6 +76,7 @@ export const distE94: CIEDifferenceFn = (lab1: readonly number[], lab2: readonly
  * Color difference of two CIELAB colors with CIEDE2000 formula.
  * @param lab1 CIELAB color 1
  * @param lab2 CIELAB color 2
+ * @see https://en.wikipedia.org/wiki/Color_difference
  */
 export const distE00: CIEDifferenceFn = (() => {
   const cos6 = Math.cos(deg2rad(6));
