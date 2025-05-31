@@ -92,8 +92,7 @@ export const squareSum4 = (a: number, b: number, c: number = 0, d: number = 0): 
 export const l2Norm3 = (a: number, b: number, c: number = 0) => Math.sqrt(squareSum4(a, b, c));
 
 /**
- * Square of L2-distance (not take square root yet) of two array.
- * This function is present for comparing.
+ * L2-distance of two array.
  * @param color1 Array with length = 3.
  * @param color2 Array with length = 3.
  * @returns The mean value of arr1 and arr2.
