@@ -1,10 +1,7 @@
 import { diff } from 'color-diff';
 
 import { SampleGenerator } from '../../../test-utils/sample.js';
-import {
-  deg2rad,
-  distE00, rgb2lab
-} from '../../../dist/index.js';
+import { deg2rad, distE00, rgb2lab } from '../../../dist/index.js';
 import { performanceTest } from '../../../test-utils/perf.js';
 
 let { rgbs, length } = SampleGenerator.a(10);
@@ -24,7 +21,7 @@ for (let i = 0; i < length; i++) {
       max = err;
       base = [i, j];
     }
-    if (err > 0.8) {
+    if (err > 1e-7) {
       i = length;
       break;
     }

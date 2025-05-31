@@ -32,7 +32,12 @@ function distFn() {
   };
   return performanceTest(
     'CIE dist function',
-    [e76, e94, e00, colorDiff]
+    [
+      e76,
+      e94,
+      e00,
+      colorDiff
+    ]
   );
 }
 
