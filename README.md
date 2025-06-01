@@ -837,18 +837,15 @@ Return the difference of grayscales `rgb2gray(rgb1) - rgb2gray(rgb2)`.
 <details>
 <summary><code>distE76(lab1: readonly number[], lab2: readonly number[]): number</code></summary>
 
-Return the L2-distance of two LAB colors.
-This is the CIE 1976 color difference (CIE76 or E76).
+Return the CIE 1976 color difference (CIE76 or E76).
+Same as the L2-distance of two LAB colors.
 
 </details>
 
 <details>
 <summary><code>distE94(lab1: readonly number[], lab2: readonly number[]): number</code></summary>
 
-Return the square of CIE 1994 color difference (CIE94 or E94).
-
-The ***square***:
-CIE94 formula will take square root. This function is present for comparing the color difference between colors, e.g. `distE94(lab1, lab2) < distE94(lab1, lab3)`, thus the square root is unnecessary.
+Return the CIE 1994 color difference (CIE94 or E94).
 
 </details>
 
