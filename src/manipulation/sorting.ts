@@ -40,8 +40,6 @@ export const distE76: CIEDifferenceFn = (lab1: readonly number[], lab2: readonly
 
 /**
  * Color difference of two CIELAB colors with CIE 1994 formula.
- * Note that CIE 1976 formula is "not" symmetry, that is, `diffE94(hex1, hex2)`
- * and `diffE94(hex2, hex1)` may be different.
  * @param lab1 CIELAB color 1
  * @param lab2 CIELAB color 2
  * @returns
@@ -65,7 +63,7 @@ export const distE94: CIEDifferenceFn = (lab1: readonly number[], lab2: readonly
   // May be NaN. Due to floating problem.
   const deltaH = Math.sqrt(deltaA*deltaA + deltaB*deltaB - deltaC*deltaC) || 0;
 
-  return squareSum4(
+  return l2Norm3(
     deltaL,
     deltaC / (1 + 0.045 * c1Star),
     deltaH / (1 + 0.015 * c1Star)
