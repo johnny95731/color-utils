@@ -13,7 +13,7 @@ test('HWB - comparison', () => {
   for (let i = 0; i < length; i++) {
     const convert_ = getConvert(i);
     const custom_ = getCustom(i);
-    for (let j = 0; j < convert_.length; j++) {
+    for (let j = 0; j < 3; j++) {
       expect(custom_[j]).toBeCloseTo(convert_[j]);
     }
   }
@@ -37,7 +37,7 @@ test('hwb2rgb - normalize', () => {
     const { hwb, normolized } = generator();
     const rgb = hwb2rgb(hwb);
     const expected = hwb2rgb(normolized);
-    for (let i = 0; i < rgb.length; i++) {
+    for (let i = 0; i < 3; i++) {
       expect(rgb[i]).toBeCloseTo(expected[i]);
     }
   }
@@ -46,7 +46,7 @@ test('hwb2rgb - normalize', () => {
 test('HWB - stability', () => {
   for (const rgb of rgbs) {
     const ret = hwb2rgb(rgb2hwb(rgb));
-    for (let i = 0; i < rgb.length; i++) {
+    for (let i = 0; i < 3; i++) {
       expect(ret[i]).toBeCloseTo(rgb[i]);
     }
   }

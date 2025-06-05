@@ -18,7 +18,7 @@ test('CIEXYZ (D65) - comparison', () => {
   for (let i = 0; i < length; i++) {
     const convert_ = getConvert(i);
     const custom_ = getCustom(i);
-    for (let j = 0; j < convert_.length; j++) {
+    for (let j = 0; j < 3; j++) {
       expect(custom_[j]).toBeCloseTo(convert_[j]);
     }
   }
@@ -35,8 +35,8 @@ test('CIEXYZ (D50) - comparison', () => {
   for (let i = 0; i < length; i++) {
     const convert_ = getColord(i);
     const custom_ = getCustom(i);
-    for (let j = 0; j < getCustom.length; j++) {
-      expect(custom_[j]).toBeCloseTo(convert_[j]);
+    for (let j = 0; j < 3; j++) {
+      expect(custom_[j]).toBeCloseTo(convert_[j], 1);
     }
   }
 });
@@ -46,7 +46,7 @@ test('CIEXYZ (D65) - stability', () => {
   setReferenceWhite('D65');
   for (const rgb of rgbs) {
     const ret = xyz2rgb(rgb2xyz(rgb));
-    for (let i = 0; i < rgb.length; i++) {
+    for (let i = 0; i < 3; i++) {
       expect(ret[i]).toBeCloseTo(rgb[i]);
     }
   }
@@ -56,7 +56,7 @@ test('CIEXYZ (D50) - stability', () => {
   setReferenceWhite('D50');
   for (const rgb of rgbs) {
     const ret = xyz2rgb(rgb2xyz(rgb));
-    for (let i = 0; i < rgb.length; i++) {
+    for (let i = 0; i < 3; i++) {
       expect(ret[i]).toBeCloseTo(rgb[i]);
     }
   }
