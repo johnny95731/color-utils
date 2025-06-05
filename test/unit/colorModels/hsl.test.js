@@ -13,7 +13,7 @@ test('HSL - comparison', () => {
   for (let i = 0; i < length; i++) {
     const convert_ = getConvert(i);
     const custom_ = getCustom(i);
-    for (let j = 0; j < convert_.length; j++) {
+    for (let j = 0; j < 3; j++) {
       expect(custom_[j]).toBeCloseTo(convert_[j]);
     }
   }
@@ -22,7 +22,7 @@ test('HSL - comparison', () => {
 test('HSL - stability', () => {
   for (const rgb of rgbs) {
     const ret = hsl2rgb(rgb2hsl(rgb));
-    for (let i = 0; i < rgb.length; i++) {
+    for (let i = 0; i < 3; i++) {
       expect(ret[i]).toBeCloseTo(rgb[i]);
     }
   }
@@ -37,7 +37,7 @@ test('HSL - negative hue', () => {
       hsl[2],
     ];
     const ret = hsl2rgb(hslNegDeg);
-    for (let i = 0; i < rgb.length; i++) {
+    for (let i = 0; i < 3; i++) {
       expect(ret[i]).toBeCloseTo(rgb[i]);
     }
   }

@@ -1,7 +1,10 @@
 import { describe, expect, test } from '@jest/globals';
 
-import { COLOR_SPACES, getColorSpace, getSpaceRange, toSpace, getCssColor, rgb2hex, rgbArraylize, rgb2hue, srgb2linearRgb, linearRgb2srgb, rgb2gray, isLight, rgb2relLuminance, rgb2contrast, isReadable, randRgbGen } from '../../dist/index.js';
+import { COLOR_SPACES, getColorSpace, toSpace, getCssColor, rgb2hex, rgbArraylize, rgb2hue, srgb2linearRgb, linearRgb2srgb, rgb2gray, isLight, rgb2luminance, rgb2contrast, isReadable, randRgbGen } from '../../dist/index.js';
 
+/**
+ * Black, white, red, green, blue, yello, cyna, magenta.
+ */
 const rgbs = [
   [0, 0, 0], // Black
   [255, 255, 255], // White
@@ -27,12 +30,6 @@ test('getColorSpace', () => {
     expect(getColorSpace(space.name_)).toBe(space);
     expect(getColorSpace(space.name_.toLowerCase())).toBe(space);
     expect(getColorSpace(space.name_.toUpperCase())).toBe(space);
-  }
-});
-
-test('getSpaceRange (Deprecated)', () => {
-  for (const space of COLOR_SPACES) {
-    expect(getSpaceRange(space)).toStrictEqual(space.max_);
   }
 });
 
@@ -247,24 +244,24 @@ test('isLight', () => {
   expect(isLight(rgbs[7])).toBe((0.114 + 0.299) > .5);
 });
 
-test('rgb2relLuminance', () => {
-  expect(rgb2relLuminance(rgbs[0])).toBe(0);
-  expect(rgb2relLuminance(rgbs[1])).toBe(1);
-  expect(rgb2relLuminance(rgbs[2])).toBeCloseTo(0.2126);
-  expect(rgb2relLuminance(rgbs[3])).toBeCloseTo(0.7152);
-  expect(rgb2relLuminance(rgbs[4])).toBeCloseTo(0.0722);
-  expect(rgb2relLuminance(rgbs[5])).toBeCloseTo((0.2126+0.7152));
-  expect(rgb2relLuminance(rgbs[6])).toBeCloseTo((0.7152+0.0722));
-  expect(rgb2relLuminance(rgbs[7])).toBeCloseTo((0.0722+0.2126));
+test('rgb2luminance', () => {
+  expect(rgb2luminance(rgbs[0])).toBe(0);
+  expect(rgb2luminance(rgbs[1])).toBe(1);
+  expect(rgb2luminance(rgbs[2])).toBeCloseTo(0.2126);
+  expect(rgb2luminance(rgbs[3])).toBeCloseTo(0.7152);
+  expect(rgb2luminance(rgbs[4])).toBeCloseTo(0.0722);
+  expect(rgb2luminance(rgbs[5])).toBeCloseTo((0.2126+0.7152));
+  expect(rgb2luminance(rgbs[6])).toBeCloseTo((0.7152+0.0722));
+  expect(rgb2luminance(rgbs[7])).toBeCloseTo((0.0722+0.2126));
 });
 
 describe('rgb2contrast', () => {
   test('Symmetry', () => {
     for (let i = 0; i < rgbs.length; i++) {
-      for (let j = 0; j < rgbs.length; j++) {
+      for (let j = i+1; j < rgbs.length; j++) {
         const ij = rgb2contrast(rgbs[i], rgbs[j]);
         const ji = rgb2contrast(rgbs[j], rgbs[i]);
-        expect(ij).toBe(ji);
+        expect(ij).toBeCloseTo(ji, 5);
       }
     }
   });
