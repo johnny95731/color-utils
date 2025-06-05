@@ -18,7 +18,7 @@ test('CMYK - comparison', () => {
   for (let i = 0; i < length; i++) {
     const convert_ = getConvert(i);
     const custom_ = getCustom(i);
-    for (let j = 0; j < convert_.length; j++) {
+    for (let j = 0; j < 4; j++) {
       expect(custom_[j]).toBeCloseTo(convert_[j]);
     }
   }
@@ -27,7 +27,7 @@ test('CMYK - comparison', () => {
 test('CMYK - stability', () => {
   for (const rgb of rgbs) {
     const ret = cmyk2rgb(rgb2cmyk(rgb));
-    for (let i = 0; i < rgb.length; i++) {
+    for (let i = 0; i < 3; i++) {
       expect(ret[i]).toBeCloseTo(rgb[i]);
     }
   }

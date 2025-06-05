@@ -15,7 +15,7 @@ test('HSB - comparison', () => {
   for (let i = 0; i < length; i++) {
     const convert_ = getConvert(i);
     const custom_ = getCustom(i);
-    for (let j = 0; j < convert_.length; j++) {
+    for (let j = 0; j < 3; j++) {
       expect(custom_[j]).toBeCloseTo(convert_[j]);
     }
   }
@@ -24,7 +24,7 @@ test('HSB - comparison', () => {
 test('HSB - stability', () => {
   for (const rgb of rgbs) {
     const ret = hsb2rgb(rgb2hsb(rgb));
-    for (let i = 0; i < rgb.length; i++) {
+    for (let i = 0; i < 3; i++) {
       expect(ret[i]).toBeCloseTo(rgb[i]);
     }
   }
@@ -39,7 +39,7 @@ test('HSB - negative hue', () => {
       hsb[2],
     ];
     const ret = hsb2rgb(hsbNegDeg);
-    for (let i = 0; i < rgb.length; i++) {
+    for (let i = 0; i < 3; i++) {
       expect(ret[i]).toBeCloseTo(rgb[i]);
     }
   }

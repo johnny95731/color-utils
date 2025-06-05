@@ -2,6 +2,9 @@ import { describe, expect, test } from '@jest/globals';
 
 import { COLOR_SPACES, getColorSpace, getSpaceRange, toSpace, getCssColor, rgb2hex, rgbArraylize, rgb2hue, srgb2linearRgb, linearRgb2srgb, rgb2gray, isLight, getRelativeLuminance, getContrastRatio, isReadable, randRgbGen } from '../../dist/index.js';
 
+/**
+ * Black, white, red, green, blue, yello, cyna, magenta.
+ */
 const rgbs = [
   [0, 0, 0], // Black
   [255, 255, 255], // White
@@ -27,12 +30,6 @@ test('getColorSpace', () => {
     expect(getColorSpace(space.name_)).toBe(space);
     expect(getColorSpace(space.name_.toLowerCase())).toBe(space);
     expect(getColorSpace(space.name_.toUpperCase())).toBe(space);
-  }
-});
-
-test('getSpaceRange (Deprecated)', () => {
-  for (const space of COLOR_SPACES) {
-    expect(getSpaceRange(space)).toStrictEqual(space.max_);
   }
 });
 

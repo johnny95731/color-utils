@@ -82,7 +82,7 @@ test('HEX - comparison', () => {
 test('HEX - stability', () => {
   for (const rgb of rgbs) {
     const ret = hex2rgb(rgb2hex(rgb));
-    for (let i = 0; i < rgb.length; i++) {
+    for (let i = 0; i < 3; i++) {
       expect(ret[i]).toBeCloseTo(rgb[i]);
     }
   }
