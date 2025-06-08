@@ -8,12 +8,14 @@ import { cieTrans, cieTransInv, xyzMax } from './cie-utils';
  * @return CIE Lab color array.
  */
 export const rgb2lab = (rgb: readonly number[]): number[] => {
+  const alpha = rgb[3];
   const xyz = rgb2xyz(rgb);
   const fy = cieTrans(xyz[1] / xyzMax[1]);
   return [
     116 * fy - 16,
     500 * (cieTrans(xyz[0] / xyzMax[0]) - fy),
-    200 * (fy - cieTrans(xyz[2] / xyzMax[2]))
+    200 * (fy - cieTrans(xyz[2] / xyzMax[2])),
+    alpha
   ];
 };
 
@@ -23,6 +25,7 @@ export const rgb2lab = (rgb: readonly number[]): number[] => {
  * @return RGB color array.
  */
 export const lab2rgb = (lab: readonly number[]): number[] => {
+  const alpha = lab[3];
   const c1 = (lab[0] + 16) / 116,
     c2 = c1 + lab[1] / 500,
     c3 = c1 - lab[2] / 200;
@@ -30,6 +33,7 @@ export const lab2rgb = (lab: readonly number[]): number[] => {
     cieTransInv(c2) * xyzMax[0],
     cieTransInv(c1) * xyzMax[1],
     cieTransInv(c3) * xyzMax[2],
+    alpha
   ]);
 };
 

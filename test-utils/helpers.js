@@ -17,10 +17,11 @@ export const randInt = (max) => {
   return Math.random() * (max+1) | 0;
 };
 
-export const randRgbGen = () => [
+export const randRgbGen = (randAlpha) => [
   randInt(255),
   randInt(255),
   randInt(255),
+  randAlpha ? Math.random() : 1
 ];
 
 export const rgb2hex = (rgb) => {

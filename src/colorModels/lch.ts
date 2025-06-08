@@ -22,6 +22,7 @@ export const lcc2lch: lcc2lch = (lcc: readonly number[]): number[] => {
     lcc[0],
     l2Norm3(c1, c2),
     deg < 0 ? deg + 360 : deg,
+    lcc[3]
   ];
 };
 export const lch2lcc: lch2lcc = (lch: readonly number[]): number[] => {
@@ -30,5 +31,6 @@ export const lch2lcc: lch2lcc = (lch: readonly number[]): number[] => {
     lch[0],
     lch[1] * Math.cos(rad),
     lch[1] * Math.sin(rad),
+    lch[3]
   ];
 };

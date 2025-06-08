@@ -38,7 +38,7 @@ rgb2gray(rgb); // 97.34899999999999
 More infomations abous color spaces: [Color Space Ranges](#color-space-ranges)
 
 - RGB
-- HEX (including 3 and 6 digits.)
+- HEX (3/4/6/8 digit)
 - HSL
 - HSB (alias of HSV)
 - HWB
@@ -58,9 +58,15 @@ Absolute color space:
 <h2>API</h2>
 
 <details>
-<summary><code>randRgbGen(): number[]</code></summary>
+<summary><code>randRgbGen(randAlpha: boolean = false): number[]</code></summary>
 
-Return a random RGB array.
+Generates a random RGB color. If set the parameter `randAlpha` to `true`, the alpha
+channel is random.
+
+```js
+randRgbGen();     // [48, 189, 131, 1]
+randRgbGen(true); // [15, 4, 86, 0.487]
+```
 
 </details>
 
@@ -121,6 +127,13 @@ const rgb   = oklab2rgb(oklab);         // [ 1.0000000000002303, 99.999999999999
 const oklch = rgb2oklch([1, 100, 255]); // [ 0.5597865171261192, 0.24308210809287967, 261.12699837778 ]
 const rgb   = oklch2rgb(oklch);         // [ 0.9999999999996816, 99.99999999999994, 254.99999999999997 ]
 ```
+
+- **Alpha Channel / Opacity**<br/>
+  The 4th value (5th in CMYK) is the alpha channel. Its value should be between 0 and 1.<br/>
+  - **conversions except HEX**: Pass through the alpha value without any validation.<br/>
+  - **`rgb2hex`**: Outputs a 6-digit hex code (omitting the alpha channel) if the alpha value > 1 or is `undefined`. If the alpha < 1, function will output a 8-digit hex code.<br/>
+  - **`hex2rgb`**: Computes the alpha value if the input is a 4- or 8-digit hex code; for 3- or 6-digit codes, the alpha channel defaults to 1.
+  - **`named2rgb`**: The output does not include the alpha channel.
 
 <div>
 
@@ -248,6 +261,13 @@ See also
 <summary><code>rgbArraylize(rgb: readonly number[] | string): readonly number[]</code></summary>
 
 Normalize RGB or HEX to array type.
+
+</details>
+
+<details>
+<summary><code>alphaNormalize(alpha: number | undefined): number</code></summary>
+
+Normalize alpha channel to interval [0, 1].
 
 </details>
 

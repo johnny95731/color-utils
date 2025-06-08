@@ -26,6 +26,7 @@ const [rgb2luv, luv2rgb] = (() => {
   };
 
   const rgb2luv: rgb2luv = (rgb: readonly number[]): number[] => {
+    const alpha = rgb[3];
     const xyz = rgb2xyz(rgb);
     const wSumMax = weightedSum(xyzMax);
     const u0 = 4 * xyzMax[0] / wSumMax;
@@ -39,11 +40,13 @@ const [rgb2luv, luv2rgb] = (() => {
       L,
       13 * L * (u_ - u0) || 0,
       13 * L * (v_ - v0) || 0,
+      alpha,
     ];
   };
 
   const luv2rgb: luv2rgb = (luv: readonly number[]): number[] => {
-    if (!luv[0]) return [0, 0, 0];
+    if (!luv[0]) return [0, 0, 0, luv[3]];
+    const alpha = luv[3];
     const lum = luv[0];
     const u = luv[1];
     const v = luv[2];
@@ -61,7 +64,8 @@ const [rgb2luv, luv2rgb] = (() => {
     const xyz = [
       3 * d / a,
       Y, // X and Z does not be divided by maximums
-      lum * d - X - 5 * Y
+      lum * d - X - 5 * Y,
+      alpha,
     ];
     return xyz2rgb(xyz);
   };
