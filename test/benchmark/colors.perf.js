@@ -6,8 +6,7 @@ import xyzPlugin from 'colord/plugins/xyz';
 import { performanceTest } from '../../test-utils/perf.js';
 import { SampleGenerator } from '../../test-utils/sample.js';
 import {
-  dot3, randInt, getContrastRatio, isReadable, linearRgb2srgb, randRgbGen, rgb2hex, rgb2hue, getRelativeLuminance, srgb2linearRgb, getCssColor, COLOR_SPACES, rgb2hsl, rgb2lab,
-  rgb2xyz,
+  dot3, randInt, rgb2contrast, isReadable, linearRgb2srgb, randRgbGen, rgb2hex, rgb2hue, rgb2luminance, srgb2linearRgb, getCssColor, COLOR_SPACES, rgb2hsl, rgb2lab, rgb2xyz,
 } from '../../dist/index.js';
 
 extend([a11yPlugin, labPlugin, xyzPlugin]);
@@ -324,7 +323,8 @@ function relativeLuminance_() {
   };
   const custom_ = () => {
     for (let i = 0; i < length; i++) {
-      getRelativeLuminance(rgbs[i]);
+      rgb2luminance(rgbs[i]);
+      rgb2luminance(rgbs[i]);
     }
   };
 
@@ -351,7 +351,7 @@ function contrastRatio_() {
   };
   const custom_ = () => {
     for (let i = 1; i < length; i++) {
-      getContrastRatio(rgbs[i], rgbs[i-1]);
+      rgb2contrast(rgbs[i], rgbs[i-1]);
     }
   };
 

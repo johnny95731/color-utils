@@ -1,6 +1,6 @@
 import { describe, expect, test } from '@jest/globals';
 
-import { COLOR_SPACES, getColorSpace, toSpace, alphaNormalize, rgb2hex, rgbArraylize, rgb2hue, srgb2linearRgb, linearRgb2srgb, rgb2gray, isLight, getRelativeLuminance, getContrastRatio, isReadable, randRgbGen } from '../../dist/index.js';
+import { COLOR_SPACES, getColorSpace, toSpace, alphaNormalize, rgb2hex, rgbArraylize, rgb2hue, srgb2linearRgb, linearRgb2srgb, rgb2gray, isLight, rgb2luminance, rgb2contrast, isReadable, randRgbGen } from '../../dist/index.js';
 
 /**
  * Black, white, red, green, blue, yello, cyna, magenta.
@@ -125,33 +125,33 @@ test('isLight', () => {
   expect(isLight(rgbs[7])).toBe((0.114 + 0.299) > .5);
 });
 
-test('getRelativeLuminance', () => {
-  expect(getRelativeLuminance(rgbs[0])).toBe(0);
-  expect(getRelativeLuminance(rgbs[1])).toBe(1);
-  expect(getRelativeLuminance(rgbs[2])).toBeCloseTo(0.2126);
-  expect(getRelativeLuminance(rgbs[3])).toBeCloseTo(0.7152);
-  expect(getRelativeLuminance(rgbs[4])).toBeCloseTo(0.0722);
-  expect(getRelativeLuminance(rgbs[5])).toBeCloseTo((0.2126+0.7152));
-  expect(getRelativeLuminance(rgbs[6])).toBeCloseTo((0.7152+0.0722));
-  expect(getRelativeLuminance(rgbs[7])).toBeCloseTo((0.0722+0.2126));
+test('rgb2luminance', () => {
+  expect(rgb2luminance(rgbs[0])).toBe(0);
+  expect(rgb2luminance(rgbs[1])).toBe(1);
+  expect(rgb2luminance(rgbs[2])).toBeCloseTo(0.2126);
+  expect(rgb2luminance(rgbs[3])).toBeCloseTo(0.7152);
+  expect(rgb2luminance(rgbs[4])).toBeCloseTo(0.0722);
+  expect(rgb2luminance(rgbs[5])).toBeCloseTo((0.2126+0.7152));
+  expect(rgb2luminance(rgbs[6])).toBeCloseTo((0.7152+0.0722));
+  expect(rgb2luminance(rgbs[7])).toBeCloseTo((0.0722+0.2126));
 });
 
-describe('getContrastRatio', () => {
+describe('rgb2contrast', () => {
   test('Symmetry', () => {
     for (let i = 0; i < rgbs.length; i++) {
       for (let j = 0; j < rgbs.length; j++) {
-        const ij = getContrastRatio(rgbs[i], rgbs[j]);
-        const ji = getContrastRatio(rgbs[j], rgbs[i]);
+        const ij = rgb2contrast(rgbs[i], rgbs[j]);
+        const ji = rgb2contrast(rgbs[j], rgbs[i]);
         expect(ij).toBe(ji);
       }
     }
   });
 
   test('Identity', () => {
-    expect(getContrastRatio(rgbs[0], rgbs[1])).toBe(21);
-    expect(getContrastRatio(rgbs[1], rgbs[0])).toBe(21);
+    expect(rgb2contrast(rgbs[0], rgbs[1])).toBe(21);
+    expect(rgb2contrast(rgbs[1], rgbs[0])).toBe(21);
     for (let i = 0; i < rgbs.length; i++) {
-      expect(getContrastRatio(rgbs[i], rgbs[i])).toBe(1);
+      expect(rgb2contrast(rgbs[i], rgbs[i])).toBe(1);
     }
   });
 });
@@ -192,7 +192,7 @@ describe('isReadable', () => {
       for (let i = 0; i < rgbs.length; i++) {
         for (let j = 0; j < rgbs.length; j++) {
           const ret = isReadable(rgbs[i], rgbs[j], option);
-          const contrastRatio = getContrastRatio(rgbs[i], rgbs[j]);
+          const contrastRatio = rgb2contrast(rgbs[i], rgbs[j]);
           expect(ret).toBe(contrastRatio >= threshold);
         }
       }
