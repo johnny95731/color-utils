@@ -398,10 +398,11 @@ export const isLight = (rgb: readonly number[] | string): boolean => {
 };
 
 /**
- * Evaluate relative luminance from RGB.
+ * Evaluate relative luminance from sRGB.
  * @returns Relative luminance, between [0, 1].
+ * @see https://www.w3.org/WAI/GL/wiki/Relative_luminance
  */
-export const getRelativeLuminance = (rgb: string | readonly number[]): number => {
+export const rgb2luminance = (rgb: string | readonly number[]): number => {
   rgb = rgbArraylize(rgb);
   return (
     0.2126 * srgb2linearRgb(rgb[0]) +
@@ -410,23 +411,44 @@ export const getRelativeLuminance = (rgb: string | readonly number[]): number =>
   );
 };
 
+/**
+ * @deprecated Use `rgb2luminance` instead.
+ *
+ * Evaluate relative luminance from RGB.
+ * @returns Relative luminance, between [0, 1].
+ * @see https://www.w3.org/WAI/GL/wiki/Relative_luminance
+ */
+export const getRelativeLuminance = rgb2luminance;
 
 /**
  * Returns the contrast ratio which is defined by WCAG 2.1.
  */
-export const getContrastRatio = (
+
+/**
+ * Returns the contrast ratio which is defined by WCAG 2.1.
+ * @see https://www.w3.org/WAI/GL/wiki/Contrast_ratio
+ */
+export const rgb2contrast = (
   rgb1: string | readonly number[],
   rgb2: string | readonly number[],
 ) => {
   const ratio =
-    (getRelativeLuminance(rgb1) + 0.05) /
-    (getRelativeLuminance(rgb2) + 0.05);
+    (rgb2luminance(rgb1) + 0.05) /
+    (rgb2luminance(rgb2) + 0.05);
   return round(ratio < 1 ? 1 / ratio : ratio, 2);
 };
 
 /**
+ * @deprecated Use `rgb2contrast` instead.
+ *
+ * Returns the contrast ratio which is defined by WCAG 2.1.
+ * @see https://www.w3.org/WAI/GL/wiki/Contrast_ratio
+ */
+export const getContrastRatio = rgb2contrast;
+
+/**
  * WCAG 2.2 requirements about contrast ratio of text.
- * https://www.w3.org/TR/WCAG/#contrast-minimum
+ * @see https://www.w3.org/TR/WCAG/#contrast-minimum
  */
 export type ReadbleOptions = {
   /**
@@ -466,7 +488,7 @@ export const isReadable = (
   // else if (!levelAAA && isLarge) threshold = 3;
   // else threshold = 4.5;
 
-  return getContrastRatio(rgb1, rgb2) >= threshold;
+  return rgb2contrast(rgb1, rgb2) >= threshold;
 };
 
 

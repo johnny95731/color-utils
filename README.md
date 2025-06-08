@@ -499,15 +499,36 @@ rgb2hue([1, 100, 255]); // 216.61417322834643
 </details>
 
 <details>
-<summary><code>getRelativeLuminance(rgb: readonly number[] | string): number</code></summary>
+<summary><code>rgb2luminance(rgb: readonly number[] | string): number</code></summary>
 
 Return the relative luminance (within `[0, 1]`) of an RGB array or a hex string.
 See: [WCAG2.0 relative luminance](https://www.w3.org/TR/WCAG20/#relativeluminancedef)
 
 ```js
-getRelativeLuminance([191, 123, 86]);   // 0.259141693330052
-getRelativeLuminance([0, 0, 0]);        // 0
-getRelativeLuminance([255, 255, 255]);  // 1
+rgb2luminance([191, 123, 86]);   // 0.259141693330052
+rgb2luminance([0, 0, 0]);        // 0
+rgb2luminance([255, 255, 255]);  // 1
+```
+
+</details>
+
+<details>
+<summary><code>getRelativeLuminance(rgb: readonly number[] | string): number</code></summary>
+
+`getRelativeLuminance` is deprecated. An alias of `rgb2luminance`.
+
+</details>
+
+<details>
+<summary><code>rgb2contrast(rgb1: readonly number[] | string, rgb2: readonly number[] | string): number</code></summary>
+
+Return the contrast ratio of two RGB colors.
+See: [WCAG2.0 contrast ratio](https://www.w3.org/TR/WCAG20/#contrast-ratiodef)
+
+```js
+rgb2contrast([191, 123, 86], [230, 236, 182]); // 2.759999999999999
+rgb2contrast([0, 0, 0], '#FFF');               // 20.99999999999999
+rgb2contrast('FFF', [0, 0, 0]);                // 20.99999999999999
 ```
 
 </details>
@@ -515,14 +536,7 @@ getRelativeLuminance([255, 255, 255]);  // 1
 <details>
 <summary><code>getContrastRatio(rgb1: readonly number[] | string, rgb2: readonly number[] | string): number</code></summary>
 
-Return the contrast ratio of two RGB colors.
-See: [WCAG2.0 contrast ratio](https://www.w3.org/TR/WCAG20/#contrast-ratiodef)
-
-```js
-getContrastRatio([191, 123, 86], [230, 236, 182]); // 2.759999999999999
-getContrastRatio([0, 0, 0], '#FFF');               // 20.99999999999999
-getContrastRatio('FFF', [0, 0, 0]);                // 20.99999999999999
-```
+`getContrastRatio` is deprecated. An alias of `rgb2contrast`.
 
 </details>
 
