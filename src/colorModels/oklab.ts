@@ -8,6 +8,7 @@ import { lcc2lch, lch2lcc } from './lch';
  */
 export const rgb2oklab = (rgb: readonly number[]) => {
   const xyz = rgb2xyz(rgb);
+  const alpha = xyz[3];
   const x = xyz[0];
   const y = xyz[1];
   const z = xyz[2];
@@ -19,7 +20,8 @@ export const rgb2oklab = (rgb: readonly number[]) => {
   return [
     0.2104542553 * l +  0.7936177850 * m + -0.0040720468 * s,
     1.9779984951 * l + -2.4285922050 * m +  0.4505937099 * s,
-    0.0259040371 * l +  0.7827717662 * m + -0.8086757660 * s
+    0.0259040371 * l +  0.7827717662 * m + -0.8086757660 * s,
+    alpha
   ];
 };
 /**
@@ -28,6 +30,7 @@ export const rgb2oklab = (rgb: readonly number[]) => {
  * @return RGB color array.
  */
 export const oklab2rgb = (oklab: readonly number[]) => {
+  const alpha = oklab[3];
   const l = oklab[0];
   const a = oklab[1];
   const b = oklab[2];
@@ -43,6 +46,7 @@ export const oklab2rgb = (oklab: readonly number[]) => {
     122.70138511035211 * l_ + -55.77999806518222 * m_ + 28.12561489664678  * s_,
     -4.058017842328059 * l_ +  111.225686961683  * m_ + -7.167667866560119 * s_,
     -7.63812845057069  * l_ + -42.14819784180127 * m_ + 158.6163220440795  * s_,
+    alpha
   ];
   return xyz2rgb(xyz);
 };

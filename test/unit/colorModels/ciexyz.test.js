@@ -46,6 +46,8 @@ test('CIEXYZ (D65) - stability', () => {
   setReferenceWhite('D65');
   for (const rgb of rgbs) {
     const ret = xyz2rgb(rgb2xyz(rgb));
+    expect(ret).toHaveLength(4);
+    expect(ret[3]).toBe(rgb[3]);
     for (let i = 0; i < 3; i++) {
       expect(ret[i]).toBeCloseTo(rgb[i]);
     }
@@ -56,6 +58,8 @@ test('CIEXYZ (D50) - stability', () => {
   setReferenceWhite('D50');
   for (const rgb of rgbs) {
     const ret = xyz2rgb(rgb2xyz(rgb));
+    expect(ret).toHaveLength(4);
+    expect(ret[3]).toBe(rgb[3]);
     for (let i = 0; i < 3; i++) {
       expect(ret[i]).toBeCloseTo(rgb[i]);
     }

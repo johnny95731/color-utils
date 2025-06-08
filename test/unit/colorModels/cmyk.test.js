@@ -27,6 +27,8 @@ test('CMYK - comparison', () => {
 test('CMYK - stability', () => {
   for (const rgb of rgbs) {
     const ret = cmyk2rgb(rgb2cmyk(rgb));
+    expect(ret).toHaveLength(4);
+    expect(ret[3]).toBe(rgb[3]);
     for (let i = 0; i < 3; i++) {
       expect(ret[i]).toBeCloseTo(rgb[i]);
     }

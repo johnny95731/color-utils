@@ -24,6 +24,8 @@ test('HSB - comparison', () => {
 test('HSB - stability', () => {
   for (const rgb of rgbs) {
     const ret = hsb2rgb(rgb2hsb(rgb));
+    expect(ret).toHaveLength(4);
+    expect(ret[3]).toBe(rgb[3]);
     for (let i = 0; i < 3; i++) {
       expect(ret[i]).toBeCloseTo(rgb[i]);
     }

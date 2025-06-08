@@ -1,5 +1,5 @@
 import { map } from './helpers';
-import { dot3, pow, randInt, round } from './numeric';
+import { clip, dot3, pow, randInt, round } from './numeric';
 import { hex2rgb } from './colorModels/hex';
 import { rgb2xyz, xyz2rgb } from './colorModels/ciexyz';
 import { hsl2rgb, rgb2hsl } from './colorModels/hsl';
@@ -292,7 +292,6 @@ export const getCssColor = (
     place_ = 2
   } = options;
   space = getColorSpace(space);
-
   if (checkSupport_ && !space.isSupported_) {
     return getCssColor(
       space.toRgb_(color),
@@ -317,12 +316,16 @@ export const getCssColor = (
     }
     return acc + (i ? sep_ : '') + (noRounding ? val : round(val, place_ as number)) + suffix;
   }, '');
+  const alpha = (
+    val = color[space.max_.length],
+    val < 1 ? ' / ' + (percent_ ? val * 100 + '%' : val) : ''
+  );
   // Ignore checking `space.isSupported_` here.
   // Because `checkSupport_ && !space.isSupported_` will try RGB format
   // by calling this function recursively (the first if condition).
   return isXyz && checkSupport_ ?
-    `color(xyz-${space.white_ ?? ''} ${vals})` :
-    `${css}(${vals})`;
+    `color(xyz-${space.white_ ?? ''} ${vals+alpha})` :
+    `${css}(${vals+alpha})`;
 };
 
 /**
@@ -333,6 +336,15 @@ export const rgbArraylize = (
   rgb: readonly number[] | string
 ): readonly number[] => {
   return typeof rgb === 'string' ? hex2rgb(rgb) : rgb;
+};
+
+/**
+ * Normalize alpha channel to interval [0, 1].
+ * @param alpha A number. undefined will be regarded as 1
+ */
+export const alphaNormalize = (alpha: number | undefined): number => {
+  if (alpha === undefined) return 1;
+  return clip(alpha, 0, 1);
 };
 
 
@@ -398,6 +410,7 @@ export const getRelativeLuminance = (rgb: string | readonly number[]): number =>
   );
 };
 
+
 /**
  * Returns the contrast ratio which is defined by WCAG 2.1.
  */
@@ -458,7 +471,14 @@ export const isReadable = (
 
 
 /**
- * Generate an RGB color.
- * @return [R, G, B]
+ * Generates a random RGB color.
+ * @param randAlpha Default: `false`. With a random value of alpha channel.
+ * If set to `false`, the alpha channel will be `1`
+ * @return [R, G, B, alpha]
  */
-export const randRgbGen = () => map(3, () => randInt(255));
+export const randRgbGen = (randAlpha: boolean = false) => [
+  randInt(255),
+  randInt(255),
+  randInt(255),
+  randAlpha ? Math.random() : 1
+];

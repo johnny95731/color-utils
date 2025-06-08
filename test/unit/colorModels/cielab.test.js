@@ -46,6 +46,8 @@ test('CIELAB (D65) - stability', () => {
   setReferenceWhite('D65');
   for (const rgb of rgbs) {
     const ret = lab2rgb(rgb2lab(rgb));
+    expect(ret).toHaveLength(4);
+    expect(ret[3]).toBe(rgb[3]);
     for (let i = 0; i < 3; i++) {
       expect(ret[i]).toBeCloseTo(rgb[i]);
     }
@@ -56,6 +58,8 @@ test('CIELAB (D50) - stability', () => {
   setReferenceWhite('D50');
   for (const rgb of rgbs) {
     const ret = lab2rgb(rgb2lab(rgb));
+    expect(ret).toHaveLength(4);
+    expect(ret[3]).toBe(rgb[3]);
     for (let i = 0; i < 3; i++) {
       expect(ret[i]).toBeCloseTo(rgb[i]);
     }
@@ -111,6 +115,8 @@ test('CIELCHab (D65) - stability', () => {
   setReferenceWhite('D65');
   for (const rgb of rgbs) {
     const ret = lchab2rgb(rgb2lchab(rgb));
+    expect(ret).toHaveLength(4);
+    expect(ret[3]).toBe(rgb[3]);
     for (let j = 0; j < 3; j++) {
       expect(ret[j]).toBeCloseTo(rgb[j]);
     }
@@ -121,6 +127,8 @@ test('CIELCHab (D50) - stability', () => {
   setReferenceWhite('D50');
   for (const rgb of rgbs) {
     const ret = lchab2rgb(rgb2lchab(rgb));
+    expect(ret).toHaveLength(4);
+    expect(ret[3]).toBe(rgb[3]);
     for (let j = 0; j < 3; j++) {
       expect(ret[j]).toBeCloseTo(rgb[j]);
     }

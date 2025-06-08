@@ -1,22 +1,20 @@
 import { colord } from 'colord';
-import Color from 'color';
 import convert from 'color-convert';
 
+import { randInt, randRgbGen } from '../../../test-utils/helpers.js';
 import { performanceTest } from '../../../test-utils/perf.js';
 import { SampleGenerator } from '../../../test-utils/sample.js';
-import { rgb2hex, hex2rgb } from '../../../dist/index.js';
+import { rgb2hex, hex2rgb, map } from '../../../dist/index.js';
 
-const { rgbs, hex, colors, colords, length } = SampleGenerator.defaults;
+const { rgbs, hex: hex6, colords, length } = SampleGenerator.b();
+
+const hexChar = '0123456789ABCDEF';
+const hexGenerator = (num) => map(num, () => hexChar[randInt(15)]).join('');
 
 function toHex() {
   const colord_ = () => {
     for (let i = 0; i < length; i++) {
       colords[i].toHex();
-    }
-  };
-  const color_ = () => {
-    for (let i = 0; i < length; i++) {
-      colors[i].hex();
     }
   };
   const fn = convert.rgb.hex.raw;
@@ -36,41 +34,133 @@ function toHex() {
     [
       ['color-utils',  custom_],
       ['colord', colord_],
-      ['color', color_],
       ['color-convert', convert_],
     ]
   );
 }
 
-function fromHex() {
+function toHexWithAlpha() {
+  const rgbas = map(length, () => randRgbGen(true));
+  const colords = map(rgbas, ([r,g,b,a]) => colord({ r,g,b,a }));
+
   const colord_ = () => {
     for (let i = 0; i < length; i++) {
-      colord(hex[i]);
+      colords[i].toHex();
     }
   };
-  const color_ = () => {
+  const custom_ = () => {
     for (let i = 0; i < length; i++) {
-      Color(hex[i]);
+      rgb2hex(rgbas[i]);
+    }
+  };
+
+  return performanceTest(
+    'RGB to HEX',
+    [
+      ['color-utils',  custom_],
+      ['colord', colord_],
+    ]
+  );
+}
+
+function fromHex8() {
+  const hex8 = map(length, () => hexGenerator(8));
+  const colord_ = () => {
+    for (let i = 0; i < length; i++) {
+      colord(hex8[i]);
+    }
+  };
+  const custom_ = () => {
+    for (let i = 0; i < length; i++) {
+      hex2rgb(hex8[i]);
+    }
+  };
+
+  return performanceTest(
+    '8-digit HEX to RGB',
+    [
+      ['color-utils',  custom_],
+      ['colord', colord_],
+    ]
+  );
+};
+
+function fromHex6() {
+  const colord_ = () => {
+    for (let i = 0; i < length; i++) {
+      colord(hex6[i]);
     }
   };
   const fn = convert.hex.rgb.raw;
   const convert_ = () => {
     for (let i = 0; i < length; i++) {
-      fn(hex[i]);
+      fn(hex6[i]);
     }
   };
   const custom_ = () => {
     for (let i = 0; i < length; i++) {
-      hex2rgb(hex[i]);
+      hex2rgb(hex6[i]);
     }
   };
 
   return performanceTest(
-    'HEX to RGB',
+    '6-digit HEX to RGB',
     [
       ['color-utils',  custom_],
       ['colord', colord_],
-      ['color', color_],
+      ['color-convert', convert_],
+    ]
+  );
+};
+
+function fromHex4() {
+  const hex4 = map(length, () => hexGenerator(4));
+
+  const colord_ = () => {
+    for (let i = 0; i < length; i++) {
+      colord(hex4[i]);
+    }
+  };
+  const custom_ = () => {
+    for (let i = 0; i < length; i++) {
+      hex2rgb(hex4[i]);
+    }
+  };
+
+  return performanceTest(
+    '4-digit HEX to RGB',
+    [
+      ['color-utils',  custom_],
+      ['colord', colord_],
+    ]
+  );
+};
+
+function fromHex3() {
+  const hex3 = map(length, () => hexGenerator(3));
+
+  const colord_ = () => {
+    for (let i = 0; i < length; i++) {
+      colord(hex3[i]);
+    }
+  };
+  const fn = convert.hex.rgb.raw;
+  const convert_ = () => {
+    for (let i = 0; i < length; i++) {
+      fn(hex3[i]);
+    }
+  };
+  const custom_ = () => {
+    for (let i = 0; i < length; i++) {
+      hex2rgb(hex3[i]);
+    }
+  };
+
+  return performanceTest(
+    '3-digit HEX to RGB',
+    [
+      ['color-utils',  custom_],
+      ['colord', colord_],
       ['color-convert', convert_],
     ]
   );
@@ -79,7 +169,11 @@ function fromHex() {
 
 const fns = [
   toHex,
-  fromHex,
+  toHexWithAlpha,
+  fromHex8,
+  fromHex6,
+  fromHex4,
+  fromHex3,
 ];
 for (const fn of fns) {
   await fn();
