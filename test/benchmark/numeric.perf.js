@@ -52,13 +52,22 @@ function rounding() {
 function clip() {
   const ifelse_ = (num, min, max) => {
     return (
-      num < +min ?
+      num < min ?
         num = min :
-        num > +max && (num = max),
+        num > max && (num = max),
       num);
   };
   const ifelse = () => {
     ifelse_(Math.random(), Math.random(), Math.random());
+  };
+
+  const ifelse2_ = (num, min, max) => {
+    return (
+      num < max ? num > min ? num : min : max
+    );
+  };
+  const ifelse2 = () => {
+    ifelse2_(Math.random(), Math.random(), Math.random());
   };
 
   const math_ = (num, min, max) => {
@@ -70,8 +79,7 @@ function clip() {
 
   return performanceTest(
     'clip',
-    [ifelse, math],
-    { time: 100 }
+    [ifelse, ifelse2, math],
   );
 }
 

@@ -35,8 +35,8 @@ export const round = (num: number, place: number = 0): number =>
  */
 export const clip = (num: number, min?: number, max?: number): number => {
   // +undifined = NaN. The comparison always get false
-  if (num < min!) num = min!; // max < min return min
-  else if (num > max!) num = max!;
+  if (num < min!) return min!; // (max < min && val < min) returns min
+  else if (num > max!) return max!;
   return num;
 };
 
