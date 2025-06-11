@@ -215,29 +215,44 @@ export const tspGreedy: tspGreedy = <T>(
   diffOp: CIEDifferenceFn,
   copy: boolean = false,
 ): T[] | DeepWriteable<T[]> => {
-  const result: T[] = [];
-  // remaining indices
-  const indices = map(items, (_, i) => i);
+  const len = items.length;
   const labs = map(items, (item) => rgb2lab(rgbGetter(item)));
 
+  // Ignore first index since first element is in the result.
+  const indices = map(len - 1, i => i + 1);
+  const result: T[] = [items[0]];
+
   let pivot: number[] = labs[0];
-  let temp: number;
-  let min: number;
+  let dist: number;
+  let minDist: number;
   let minIdx: number;
-  while (indices.length) {
-    min = Infinity;
+  let targetIdx: number;
+  // index of inner loop. For byte savings.
+  let i = len - 1;
+  let k: number;
+  // First element is in result. Last element does not need to compare.
+  // `i = len - 1` : Make `k < i` to reach every unselected indeces since
+  //   `indices.length === len - 1`
+  // `i > 1` : Pass last element.
+  for (; i > 1;) {
+    minDist = Infinity;
     minIdx = 0;
-    for (let k = 0; k < indices.length; k++) {
-      temp = diffOp(pivot, labs[indices[k]]);
-      if (temp < min) {
-        min = temp;
+    for (k = 0; k < i; k++) {
+      dist = diffOp(pivot, labs[indices[k]]);
+      if (dist < minDist) {
+        minDist = dist;
         minIdx = k;
       }
     }
-    pivot = labs[indices[minIdx]];
-    result.push(items[indices[minIdx]]);
-    indices.splice(minIdx, 1);
+    // Swap selected index to last position.
+    targetIdx = indices[minIdx];
+    indices[minIdx] = indices[--i];
+    indices[i] = targetIdx;
+
+    pivot = labs[targetIdx];
+    result.push(items[targetIdx]);
   }
+  result.push(items[indices[0]]);
   return copy ? cloneDeep(result) : result;
 };
 
