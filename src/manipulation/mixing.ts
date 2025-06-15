@@ -1,6 +1,7 @@
 import { map } from '../helpers';
-import { clip, elementwiseMean, pow } from '../numeric';
+import { clip, pow } from '../numeric';
 import { hsl2rgb, rgb2hsl } from '../colorModels/hsl';
+import { getAlpha } from '../colors';
 
 
 /**
@@ -22,10 +23,14 @@ export type MixOp =
 
 
 /**
- * Mixing two colors by evaluate their elementwise weighted sum.
- * @param color1 Color array.
- * @param color2 Color array.
+ * Mixing two colors in same color space by given weights.
+ *
+ * A JavaScript implementation of the CSS `color-mix()` function, excluding the
+ * `<color-interpolation-method>` parameter.
+ * @param color1 Color array 1.
+ * @param color2 Color array 2.
  * @param weight1 Default: `0.5`. Weight of `color1`. Should be in range [0, 1].
+ * @param weight2 Default: `1 - weight2`. Weight of `color1`. Should be in range [0, 1].
  */
 export const mix = (
   color1: readonly number[],
@@ -33,15 +38,26 @@ export const mix = (
   weight1: number = 0.5,
   weight2: number = 1 - weight1,
 ) => {
-  // Normalize to weight1 + weight2 = 1
-  if (weight1 + weight2 > 1) {
-    weight1 /= weight1 + weight2;
-    weight2 = 1 - weight1;
+  const len = Math.min(color1.length, color2.length);
+
+  let weightSum = weight1 + weight2;
+  let alphaMultipler = weightSum < 1 ? weightSum : 1; // eslint-disable-line
+  if (weightSum !== 1) { // Normalize to weight1 + weight2 = 1
+    weight1 /= weightSum;
+    weight2 /= weightSum;
   }
-  return map(
-    Math.min(color1.length, color2.length),
-    i => weight1 * color1[i] + weight2 * color2[i]
-  );
+  // Reduce formula
+  weight1 *= getAlpha(color1);
+  weight2 *= getAlpha(color2);
+  // Interpolated alpha
+  weightSum = weight1 + weight2;
+
+  return map(len, i => {
+    if (i < len-1)
+      return (weight1 * color1[i] + weight2 * color2[i]) / weightSum;
+    else
+      return weightSum * alphaMultipler;
+  });
 };
 
 /**
@@ -49,7 +65,12 @@ export const mix = (
  * @param color1 Color array.
  * @param color2 Color array.
  */
-export const meanMix = elementwiseMean;
+export const meanMix = (
+  color1: readonly number[],
+  color2: readonly number[],
+) => {
+  return mix(color1, color2);
+};
 
 
 // Simply mix and adjust it.
@@ -67,7 +88,7 @@ export const gammaMix = (
   rgb2: readonly number[],
   gamma: number = 0.3,
 ): number[] => {
-  const mean = elementwiseMean(rgb1, rgb2);
+  const mean = mix(rgb1, rgb2);
   const hsl = rgb2hsl(mean);
 
   hsl[1] = 100 * pow(hsl[1] / 100, gamma);
@@ -96,81 +117,117 @@ export const deeperMix = (
 
 // Blend-mode methods.
 /**
- * Blending two colors by soft light.
- * @param rgb1 Color 1.
- * @param rgb2 Color 2.
+ * A general blending function using a specified blend function with
+ * the "source over" Porter-Duff compositing operator.
+ *
+ * Note that the base layer before source layer follows the
+ * @param rgbDst Destination RGB color (base layer).
+ * @param rgbSrc Source RGB color (top layer).
+ * @param blendFn Blending function.
+ * @returns RGB color after blending.
+ */
+export const blend = (
+  rgbDst: readonly number[],
+  rgbSrc: readonly number[],
+  blendFn: (dst: number, src: number) => number
+): number[] => {
+  const alphaSrc = getAlpha(rgbSrc);
+  const alphaDst = getAlpha(rgbDst);
+
+  const factorBlend = alphaSrc * alphaDst;
+  const factorSrc   = alphaSrc - factorBlend;
+  const factorDst   = alphaDst - factorBlend;
+
+  const newAlpha = alphaSrc + alphaDst - factorBlend;
+
+  return map(4, i => {
+    if (i < 3) {
+      const oSrc = factorSrc * rgbSrc[i];
+      const oDst = factorDst * rgbDst[i];
+      return oSrc + oDst + factorBlend * 255 * blendFn(rgbDst[i] / 255, rgbSrc[i] / 255);
+    } else {
+      return newAlpha;
+    }
+  });
+};
+
+
+/**
+ * Blending two colors by soft light mode.
+ * @param rgbDst Destination RGB color (base layer).
+ * @param rgbSrc Source RGB color (top layer).
  * @param formula Default: 'w3c'. The softlight formula.
  * @returns RGB color.
  */
 export const softLightBlend = (
-  rgb1: readonly number[],
-  rgb2: readonly number[],
+  rgbDst: readonly number[],
+  rgbSrc: readonly number[],
   formula: 'photoshop' | 'pegtop' | 'illusions.hu' | 'w3c' = 'w3c'
 ) => {
-  rgb1 = map(rgb1, val => val / 255);
-  rgb2 = map(rgb2, val => val / 255);
-
   let fn: (a: number, i: number) => number;
-  // temp store color2[i].
-  // 'a' and 'b' to simply compare with formula
-  let b: number;
   let w3c: number;
+  // a: base layer
+  // b: top layer
   if (formula === 'photoshop') {
-    fn = (a, i) => {
-      b = rgb2[i];
-      return 255 * (
+    fn = (a, b) => {
+      return (
         b < 0.5 ?
           a * (2 * b + a * (1 - 2 * b)) :
           2 * a * (1 - b) + Math.sqrt(a) * (2 * b - 1)
       );
     };
   } else if (formula === 'pegtop') {
-    fn = (a, i) => {
-      b = rgb2[i];
-      return 255 * a * (2 * b + a * (1 - 2 * b));
+    fn = (a, b) => {
+      return a * (2 * b + a * (1 - 2 * b));
     };
   } else if (formula === 'illusions.hu') {
-    fn = (a, i) => {
-      b = rgb2[i];
-      return 255 * a**(2**(1 - 2 * b));
+    fn = (a, b) => {
+      return pow(a, pow(2, 1 - 2 * b));
     };
   } else { // w3c
-    fn = (a, i) => {
-      b = rgb2[i];
-      w3c = a <= 0.25 ? ((16 * a - 12) * a + 4) * a: Math.sqrt(a);
-      return 255 * (
-        b <= 0.5 ?
+    fn = (a, b) => {
+      return (
+        b <= 0.5 ? // a = 0, b = 1
           a - (1 - 2 * b) * a * (1 - a):
-          a + (2 * b - 1) * (w3c - a)
+          (
+            w3c = a <= 0.25 ? ((16 * a - 12) * a + 4) * a : Math.sqrt(a),
+            a + (2 * b - 1) * (w3c - a)
+          )
       );
     };
   }
-  return map(rgb1, fn);
+  return blend(rgbDst, rgbSrc, fn);
 };
 
 /**
- * Mixing two colors by evaluate their RGB sum.
- * @param rgb1 Color array.
- * @param rgb2 Color array.
+ * Mixing two RGB colors by evaluate their sums, including the alpha channel.
+ * @param rgb1 RGB color.
+ * @param rgb2 RGB color.
  * @returns RGB color.
  */
 export const additive = (
   rgb1: readonly number[],
   rgb2: readonly number[],
 ): number[] => {
+  const alpha1 = getAlpha(rgb1);
+  const alpha2 = getAlpha(rgb2);
+  const newAlpha = clip(alpha1 + alpha2, 0, 1);
   return map(
     rgb1,
-    (val, i) => clip(val + rgb2[i], 0, 255),
-    3
+    (val, i) =>
+      i < 3 ?
+        clip((alpha1 * val + alpha2 * rgb2[i]) / newAlpha, 0, 255) :
+        newAlpha,
+    4
   );
 };
 
 
 /**
- * Mix or blend array of RGB colors. Return a RGB color.
+ * Mix array of RGB colors.
  * @param rgbs Array of RGB colors.
- * @param method Mix method. If not spcified, incorrect string, or number is
- * out of range, default to use 'mean'.
+ * @param method Default: `'mean'`. Mix method. If not specified, invalid, or
+ * out of range, the default is 'mean'.
  * @returns RGB color.
  */
 export const mixColors = (

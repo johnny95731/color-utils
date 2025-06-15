@@ -50,8 +50,8 @@ test('softLightBlend', () => {
     'photoshop', 'pegtop', 'illusions.hu', 'w3c'
   ];
 
-  const black = [0, 0, 0];
-  const white = [255, 255, 255];
+  const black = [0, 0, 0, 1];
+  const white = [255, 255, 255, 1];
 
   keys.forEach(key => {
     expect(softLightBlend(black, white, key)).toStrictEqual(black);

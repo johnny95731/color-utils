@@ -347,6 +347,16 @@ export const alphaNormalize = (alpha: number | undefined): number => {
   return clip(alpha, 0, 1);
 };
 
+/**
+ * @deprecated Interim function. May be deprecated in future.
+ *
+ * Get the alpha value from a color. The value is the last element of array.
+ * @param color Color array.
+ */
+export const getAlpha = (color: readonly number[]): number => {
+  return alphaNormalize(color[color.length-1]);
+};
+
 
 /**
  * Calculate hue (H channel of HSL/HSB) from rgb. Also, returns minimum and
