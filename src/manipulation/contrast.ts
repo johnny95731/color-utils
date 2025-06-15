@@ -1,4 +1,4 @@
-import { map } from '../helpers';
+import { map, normalizeOption } from '../helpers';
 import { clip, pow, rangeMapping } from '../numeric';
 import { lab2rgb, rgb2lab } from '../colorModels/cielab';
 
@@ -147,8 +147,7 @@ export const adjContrast = (
   method: ContrastMethod | number,
   ...args: number[]
 ): number[][] => {
-  if (typeof method === 'number') method = CONTRAST_METHODS[method];
-  if (!method) method = 'linear';
+  method = normalizeOption(method, CONTRAST_METHODS);
 
   const op = getAdjuster(method);
 

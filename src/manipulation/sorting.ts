@@ -1,4 +1,4 @@
-import { cloneDeep, map, type DeepWriteable } from '../helpers';
+import { cloneDeep, map, normalizeOption, type DeepWriteable } from '../helpers';
 import { squareSum4, randInt, pow, l2Dist3, l2Norm3, deg2rad, rad2deg } from '../numeric';
 import { rgb2gray } from '../colors';
 import { rgb2lab } from '../colorModels/cielab';
@@ -269,7 +269,7 @@ export const sortColors = <T>(
   method: Sort | number,
   rgbGetter: (color: T | DeepWriteable<T>) => number[],
 ): DeepWriteable<T[]> => {
-  if (typeof method === 'number') method = SORTING_ACTIONS[method];
+  method = normalizeOption(method, SORTING_ACTIONS, 'CIEDE2000');
 
   let result = cloneDeep(colors);
   let op: undefined | CIEDifferenceFn;

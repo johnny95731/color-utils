@@ -1,4 +1,4 @@
-import { map } from '../helpers';
+import { map, normalizeOption } from '../helpers';
 import { clip, pow } from '../numeric';
 import { hsl2rgb, rgb2hsl } from '../colorModels/hsl';
 import { getAlpha } from '../colors';
@@ -235,7 +235,7 @@ export const mixColors = (
   method: Mixing | number = 'mean',
   ...args: unknown[]
 ): number[] => {
-  if (typeof method === 'number') method = MIXING_MODES[method];
+  method = normalizeOption(method, MIXING_MODES);
 
   const ops = {
     [MIXING_MODES[0]]: meanMix,
@@ -245,7 +245,7 @@ export const mixColors = (
     [MIXING_MODES[4]]: additive,
     [MIXING_MODES[5]]: mix,
   } as const satisfies Record<Mixing, MixOp>;
-  const op: MixOp = ops[method] ?? meanMix;
+  const op: MixOp = ops[method];
 
   let result = [...rgbs[0]];
   let i: number = 1;

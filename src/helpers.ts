@@ -82,3 +82,20 @@ export const map: map = <R, T extends readonly unknown[]>(
   }
   return result;
 };
+
+/**
+ * Normalize a option or an index to a option in list.
+ * @param value The input value to resolve. Can be a string or an index number.
+ * @param list Valid options.
+ * @param defaults Default value.
+ * @returns A value in list.
+ */
+export const normalizeOption = <T extends readonly string[]>(
+  value: T[number] | number,
+  list: T,
+  defaults: T[number] = list[0],
+): T[number] => {
+  if (typeof value === 'number') value = list[value];
+  if (!value) value = defaults;
+  return value;
+};

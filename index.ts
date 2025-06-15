@@ -1,5 +1,5 @@
 
-export * from 'src/helpers.ts';
+export { cloneDeep, map } from 'src/helpers.ts';
 export * from 'src/numeric';
 export * from 'src/colors';
 

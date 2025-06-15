@@ -1,4 +1,4 @@
-import { map } from '../helpers';
+import { map, normalizeOption } from '../helpers';
 import { hsb2rgb } from '../colorModels/hsb';
 
 
@@ -116,8 +116,7 @@ export const harmonize = (
   method: Harmony | number,
   args?: number
 ): number[][] => {
-  if (typeof method === 'number') method = HARMONY_METHODS[method];
-  if (!method) method = 'analogous';
+  method = normalizeOption(method, HARMONY_METHODS, 'analogous');
 
   const op = hueDegs[method];
   const result = Array.isArray(op) ?
