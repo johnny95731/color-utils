@@ -38,8 +38,8 @@ export type HarmonyOp = (
  * The hues of palette are [
  *   primary + degs[0], primary + degs[1], ...
  * ]
- * @param primary Primary color. Should be HSB, HSL, HWB color, or color
- * space that first channel represents hue.
+ * @param primary Primary color. Can be HSB, HSL, HWB color, or color space that
+ * first channel represents hue.
  * @param degs Shift degrees.
  * @returns HSL/HSB/HWB color (same as input).
  */
@@ -47,12 +47,9 @@ export const shiftHue = (
   primary: readonly number[],
   degs: number[]
 ): number[][] => {
-  // const [h, s, b] = primary;
-  const h = primary[0];
-  const s = primary[1];
-  const b = primary[2];
+  const [h, s, b, a] = primary;
   // start from 1 'cause first color is primary color.
-  return degs.map((deg) => [h + deg, s, b]);
+  return map(degs, (deg) => [h + deg, s, b, a]);
 };
 
 // ## Saturation/Brightness harmony
@@ -60,10 +57,10 @@ export const shiftHue = (
  * Generate gradient that decreasing in brightness.
  */
 export const shades = (hsb: readonly number[], num: number = 6) => {
-  const [h, s, b] = hsb;
+  const [h, s, b, a] = hsb;
   return map(
     num,
-    i => [h, s, b * (1 - i / num)],
+    i => [h, s, b * (1 - i / num), a],
   );
 };
 
@@ -71,10 +68,10 @@ export const shades = (hsb: readonly number[], num: number = 6) => {
  * Generate gradient that decreasing in saturation.
  */
 export const tints = (hsb: readonly number[], num: number = 6) => {
-  const [h, s, b] = hsb;
+  const [h, s, b, a] = hsb;
   return map(
     num,
-    i => [h, s * (1 - i / num), b],
+    i => [h, s * (1 - i / num), b, a],
   );
 };
 
@@ -82,10 +79,10 @@ export const tints = (hsb: readonly number[], num: number = 6) => {
  * Generate gradient that decreasing in both saturation and brightness.
  */
 export const tones = (hsb: readonly number[], num: number = 6) => {
-  const [h, s, b] = hsb;
+  const [h, s, b, a] = hsb;
   return map(
     num,
-    i => (i = (1 - i / num), [h, s * i, b * i]),
+    i => (i = (1 - i / num), [h, s * i, b * i, a]),
   );
 };
 

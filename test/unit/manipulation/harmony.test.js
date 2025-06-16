@@ -5,13 +5,13 @@ test('shiftHue', () => {
   for (let i = 0; i < 20; i++) {
     const basis = randInt(360);
     const deg = randInt(360);
-    expect(shiftHue([basis, 0, 0], [deg])).toStrictEqual([[basis + deg, 0, 0]]);
+    expect(shiftHue([basis, 0, 0, 1], [deg])).toStrictEqual([[basis + deg, 0, 0, 1]]);
   }
 });
 
 test('shades', () => {
   for (let i = 0; i < 20; i++) {
-    const hsb = [randInt(360), 100, 100];
+    const hsb = [randInt(360), 100, 100, 1];
     const ret = shades(hsb);
     expect(ret[0]).toStrictEqual(hsb);
     for (let j = 0; j < ret.length - 1; j++) {
@@ -24,7 +24,7 @@ test('shades', () => {
 
 test('tints', () => {
   for (let i = 0; i < 20; i++) {
-    const hsb = [randInt(360), 100, 100];
+    const hsb = [randInt(360), 100, 100, 1];
     const ret = tints(hsb);
     expect(ret[0]).toStrictEqual(hsb);
     for (let j = 0; j < ret.length - 1; j++) {
@@ -37,7 +37,7 @@ test('tints', () => {
 
 test('tones', () => {
   for (let i = 0; i < 20; i++) {
-    const hsb = [randInt(360), 100, 100];
+    const hsb = [randInt(360), 100, 100, 1];
     const ret = tones(hsb);
     expect(ret[0]).toStrictEqual(hsb);
     for (let j = 0; j < ret.length - 1; j++) {
