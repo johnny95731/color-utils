@@ -233,7 +233,7 @@ export const toSpace = (
   to = getColorSpace(to);
   if (space === to) return [...color];
   if (space.name_ === 'RGB') return to.fromRgb_(color);
-  if (to.name_ === 'RGB') space.toRgb_(color);
+  if (to.name_ === 'RGB') return space.toRgb_(color);
   return to.fromRgb_(space.toRgb_(color));
 
 };
