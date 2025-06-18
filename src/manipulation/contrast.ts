@@ -1,6 +1,7 @@
 import { map, normalizeOption } from '../helpers';
 import { clip, pow, rangeMapping } from '../numeric';
 import { lab2rgb, rgb2lab } from '../colorModels/cielab';
+import { mapNonAlpha } from '../colors';
 
 
 // # Constants
@@ -33,9 +34,9 @@ export const scaling = (rgbs: readonly number[][], c: number = 1): number[][] =>
   return map(
     rgbs,
     (rgb) => {
-      return map(
+      return mapNonAlpha(
         rgb,
-        val => clip(val * c, 0, 255)
+        (val) => clip(val * c, 0, 255)
       );
     }
   );
@@ -53,7 +54,7 @@ export const gammaCorrection = (
 ): number[][] => {
   return map(
     rgbs,
-    rgb => map(rgb, (val) => 255 * pow(val / 255, gamma))
+    rgb => mapNonAlpha(rgb, (val) => 255 * pow(val / 255, gamma))
   );
 };
 
@@ -63,11 +64,16 @@ export const gammaCorrection = (
  * @param rgbs
  * @returns RGB arrays.
  */
-export const autoEnhancement: ContrastFunction = (rgbs: readonly number[][]): number[][] => {
-  let minL: number = Infinity, maxL: number = 0,
-    i = 0, temp: number[];
+export const autoEnhancement: ContrastFunction = (
+  rgbs: readonly number[][]
+): number[][] => {
+  let minL = Infinity;
+  let maxL = 0;
 
-  const labs = map(rgbs, rgb => {
+  let i = 0;
+  let temp: number[];
+
+  const result = map(rgbs, rgb => {
     const lab = rgb2lab(rgb);
     const l = lab[0];
     if (l < minL) minL = l;
@@ -75,12 +81,12 @@ export const autoEnhancement: ContrastFunction = (rgbs: readonly number[][]): nu
     return lab;
   });
 
-  for (; i < labs.length;) {
-    temp = labs[i];
+  for (; i < result.length;) {
+    temp = result[i];
     temp[0] = rangeMapping(temp[0], minL, maxL, 0, 100);
-    labs[i++] = lab2rgb(temp);
+    result[i++] = lab2rgb(temp);
   }
-  return labs;
+  return result;
 };
 
 
@@ -90,7 +96,7 @@ export const autoEnhancement: ContrastFunction = (rgbs: readonly number[][]): nu
  *
  * Darker when coeff -> 0 and brighter when coeff -> 1
  *
- * Modify from the paper:
+ * Modified from the paper:
  * BABAKHANI, Pedram; ZAREI, Parham. Automatic gamma correction based on average of brightness. Advances in Computer Science : an International Journal, [S.l.], p. 156-159, nov. 2015. ISSN 2322-5157. Available at: <https://www.acsij.org/index.php/acsij/article/view/390>. Date accessed: 22 May. 2025.
  * @param rgbs
  * @param coeff
@@ -100,7 +106,7 @@ export const autoBrightness: ContrastFunction = (
   rgbs: readonly number[][],
   coeff: number = 0.7
 ): number[][] => {
-  let op: (val: number[], i: number) => number[];
+  let gamma: number;
 
   let sumL = 0;
   let lab: number[];
@@ -111,18 +117,17 @@ export const autoBrightness: ContrastFunction = (
   });
 
   if (coeff <= 1e-7) {
-    op = () => [0, 0, 0];
+    return map(labs, lab => mapNonAlpha(lab, _ => 0)); // eslint-disable-line
   } else if (sumL < 1e-5 || coeff === 1) {
-    op = () => [255, 255, 255];
+    return map(labs, lab => mapNonAlpha(lab, _ => 255)); // eslint-disable-line
   } else {
-    const gamma = Math.log(coeff) / Math.log(sumL / rgbs.length / 100);
-    op = lab => {
+    // sumL / rgbs.length = mean of luminance
+    gamma = Math.log(coeff) / Math.log(sumL / rgbs.length / 100);
+    return map(labs, lab => {
       lab[0] = 100 * pow(lab[0] / 100, gamma);
       return lab2rgb(lab);
-    };
+    });
   }
-
-  return map(labs, op);
 };
 
 export const getAdjuster = (method: ContrastMethod): ContrastFunction => {

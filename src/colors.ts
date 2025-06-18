@@ -357,6 +357,21 @@ export const getAlpha = (color: readonly number[]): number => {
   return alphaNormalize(color[color.length-1]);
 };
 
+/**
+ * Handle RGB channels of a color array, excluding the alpha channel.
+ * @param rgb A 3- or 4-element color array.
+ * @param fn Callback function that handle first 3 channels.
+ */
+export const mapNonAlpha = (
+  rgb: readonly number[],
+  fn: (val: number, i: number) => number
+): number[] => {
+  return map(
+    rgb,
+    (val, i) => i < 3 ? fn(val, i) : val
+  );
+};
+
 
 /**
  * Calculate hue (H channel of HSL/HSB) from rgb. Also, returns minimum and

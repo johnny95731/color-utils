@@ -13,13 +13,16 @@ test('scaling', () => {
     const res255 = scaling(rgbs, 255)[0];
     const resP5 = scaling(rgbs, factor)[0];
 
-    resZero.forEach((_, i) => {
+    for (let i = 0; i < 3; i++) {
       expect(resZero[i]).toBe(0);
       expect(resOne[i]).toBe(rgb[i]);
       expect(resN1[i]).toBeCloseTo(0);
       expect(res255[i]).toBe(rgb[i] ? 255 : 0);
       expect(resP5[i]).toBeCloseTo(rgb[i] * factor);
-    });
+    }
+    for (const res of [resZero, resOne, resN1, res255, resP5]) {
+      expect(res[3]).toBe(rgb[3]);
+    }
   }
 });
 
@@ -33,11 +36,14 @@ test('gammaCorrection', () => {
     const resOne = gammaCorrection(rgbs, 1)[0];
     const resP5 = gammaCorrection(rgbs, factor)[0];
 
-    resZero.forEach((_, i) => {
-      expect(resZero[i]).toBe(255);
+    for (let i = 0; i < 3; i++) {
+      expect(resZero[i]).toBeCloseTo(255);
       expect(resOne[i]).toBeCloseTo(rgb[i]);
-      expect(resP5[i]).toBeCloseTo(255 * (rgb[i]/255)**factor);
-    });
+      expect(resP5[i]).toBeCloseTo(255 * (rgb[i] / 255)**factor);
+    }
+    for (const res of [resZero, resOne, resP5]) {
+      expect(res[3]).toBe(rgb[3]);
+    }
   }
 });
 
@@ -49,10 +55,13 @@ test('autoBrightness', () => {
     const resZero = autoBrightness(rgbs, 0)[0];
     const resOne = autoBrightness(rgbs, 1)[0];
 
-    resZero.forEach((_, i) => {
-      expect(resZero[i]).toBe(0);
+    for (let i = 0; i < 3; i++) {
+      expect(resZero[i]).toBeCloseTo(0);
       expect(resOne[i]).toBeCloseTo(255);
-    });
+    }
+    for (const res of [resZero, resOne]) {
+      expect(res[3]).toBe(rgb[3]);
+    }
     expect(autoBrightness([[0, 0, 0]])).toEqual([[255, 255, 255]]);
   }
 });
