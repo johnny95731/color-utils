@@ -120,8 +120,8 @@ describe('getCssColor', () => {
       const color = sp.fromRgb_(blackRgb);
 
       const vals = expected.split(' ');
-      sp.max_.forEach(([, max], i) => {
-        if (max !== 100) vals[i] = vals[i].replace('%', '');
+      sp.max_.forEach((_, i) => {
+        vals[i] = vals[i].replace('%', '');
       });
       expected = vals.join(' ');
 
@@ -141,7 +141,7 @@ describe('getCssColor', () => {
     const rgb = [1.25, 41.54689, 66.99];
     const option = { place_: false, percent_: false };
     const valHandler = (acc, val, i, max) => {
-      if (max === 100) return acc + (i ? ' ' : '') + val + '%';
+      if (max === 100) return acc + (i ? ' ' : '') + val;
       else return acc + (i ? ' ' : '') + val;
     };
 
@@ -179,11 +179,11 @@ describe('getCssColor', () => {
       },
       {
         space: 'HSL',
-        expected: `hsl(0 0% 0% / ${alpha})`
+        expected: `hsl(0 0 0 / ${alpha})`
       },
       {
         space: 'HSB',
-        expected: `hsb(0 0% 0% / ${alpha})`
+        expected: `hsb(0 0 0 / ${alpha})`
       },
       {
         space: 'XYZ',
@@ -191,11 +191,11 @@ describe('getCssColor', () => {
       },
       {
         space: 'LAB',
-        expected: `lab(0% 0 0 / ${alpha})`
+        expected: `lab(0 0 0 / ${alpha})`
       },
       {
         space: 'Lchab',
-        expected: `lch(0% 0 0 / ${alpha})`
+        expected: `lch(0 0 0 / ${alpha})`
       },
       {
         space: 'oklab',

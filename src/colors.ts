@@ -241,39 +241,43 @@ export const toSpace = (
 
 export type CssColorOptions = {
   /**
-   * Check the browser support or not. If browser does not support the format,
-   * return string in RGB space.
+   * Check whether the browser supports the target color format. If not
+   * supported, return a fallback string in RGB format.
    * @default false
    */
   checkSupport_?: boolean,
   /**
-   * Seperator of values. If `checkSupport_` is `true`, the seperator will
-   * always be `' '`.
+   * Separator between values.
+   * If `checkSupport_` is `true`, the separator is always a space `' '`.
    * @default ' '
    */
   sep_?: string,
   /**
-   * Convert all values to percent except degree.
+   * Convert all values (except degrees) to percentages.
    * @default true
    */
   percent_?: boolean,
   /**
-   * Argument for rounding values. Set `false` to disable rounding. `true` equials
-   * default value.
+   * Number of decimal places for rounding values.
+   * Set to `false` to disable rounding, or `true` to use the default.
    * @default 2
    */
   place_?: number | boolean
 }
 
 /**
- * Return CSS `<color>` value format: `space(val val val)`.
- * If `checkSupport === true` and the brwoser does not support, then return
- * RGB format.
- * In node enviroment, the `ColorSpace.isSupport_` based on <color-function>
- * value (not include theese spaces that only support by`color()`)
- * MDN <color>: https://developer.mozilla.org/en-US/docs/Web/CSS/color_value
- * @param color Color.
- * @param space Color space of color.
+ * Return CSS `<color>` value format:
+ * - `'space(val val val)'`
+ * - `'color(space val val val)'`.
+ *
+ * If `checkSupport === true` and the brwoser does not support the space,
+ * the function convert the color to RGB space and return the RGB format.
+ *
+ * In Node enviroment, the `ColorSpace.isSupport_` is preset based on supported
+ * `<color-function>` values.
+ * @see https://developer.mozilla.org/en-US/docs/Web/CSS/color_value
+ * @param color Color array.
+ * @param space The space of color parameter.
  * @param options
  * @returns
  */
@@ -282,15 +286,20 @@ export const getCssColor = (
   space: ColorSpace | string = 'RGB',
   options: CssColorOptions = {},
 ): string => {
+  // Variables in loop
   let val: number;
   let suffix: string | number;
   let max: number;
+  let i = 0;
+  let strVal = '';
+
   let {
     checkSupport_ = false, // eslint-disable-line
     sep_ = ' ',
     percent_ = true, // eslint-disable-line
     place_ = 2
   } = options;
+
   space = getColorSpace(space);
   if (checkSupport_ && !space.isSupported_) {
     return getCssColor(
@@ -299,33 +308,46 @@ export const getCssColor = (
       options
     );
   }
-  if (checkSupport_) sep_ = ' ';
-  if (place_ === true) place_ = 2;
-  const noRounding = place_ === false;
+  sep_ = checkSupport_ ? ' ' : sep_;
+  place_ = place_ === true ? 2 : place_;
 
   const css = /^LCH/.test(space.name_) ? 'lch' : space.name_.toLowerCase();
   const isXyz = css === 'xyz';
-  const vals = space.max_.reduce((acc, r, i) => {
-    max = r[1];
-    val = color[i];
-    suffix = (percent_ && max !== 360) || max === 100 ? '%' : '';
+
+  const rounder = place_ === false ? (val: number) => val : round;
+
+  for ([, max] of space.max_) {
+    val = color[i++];
+    suffix = percent_ && max !== 360 ? '%' : '';
     if (isXyz && !percent_ && checkSupport_) {
       val /= 100;
-    } else if (!isXyz && percent_ && max !== 360) { // to percentage
+    } else if (!isXyz && suffix) { // to percentage
       val *= 100 / max;
     }
-    return acc + (i ? sep_ : '') + (noRounding ? val : round(val, place_ as number)) + suffix;
-  }, '');
-  const alpha = (
-    val = color[space.max_.length],
-    val < 1 ? ' / ' + (percent_ ? val * 100 + '%' : val) : ''
+    if (strVal) strVal += sep_; // Add a seprator before 2nd, 3rd, ..., values.
+    strVal += rounder(val, place_ as number) + suffix;
+  }
+
+  // Alpha
+  val = alphaNormalize(color[i]); // i = space.max_.length
+  strVal += (
+    val < 1 ?
+      ' / ' + (
+        percent_ ?
+          // @ts-expect-error
+          rounder(val * 100, place_) + '%' :
+          // @ts-expect-error
+          rounder(val, place_)
+      ) :
+      ''
   );
   // Ignore checking `space.isSupported_` here.
   // Because `checkSupport_ && !space.isSupported_` will try RGB format
   // by calling this function recursively (the first if condition).
   return isXyz && checkSupport_ ?
-    `color(xyz-${space.white_ ?? ''} ${vals+alpha})` :
-    `${css}(${vals+alpha})`;
+    `color(xyz-${space.white_ ?? 'd65'} ${strVal})` :
+    `${css}(${strVal})`;
+
 };
 
 /**
