@@ -372,7 +372,7 @@ export const alphaNormalize = (alpha: number | undefined): number => {
 /**
  * @deprecated Interim function. May be deprecated in future.
  *
- * Get the alpha value from a color. The value is the last element of array.
+ * Get and normalize the last element of array.
  * @param color Color array.
  */
 export const getAlpha = (color: readonly number[]): number => {
