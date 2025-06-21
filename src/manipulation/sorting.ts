@@ -9,7 +9,7 @@ import { rgb2lab } from '../colorModels/cielab';
  * Actions for sorting palette colors.
  */
 export const SORTING_ACTIONS = [
-  'luminance', 'random', 'reversion', 'CIE76', 'CIE94', 'CIEDE2000'
+  'brightness', 'random', 'reversion', 'CIE76', 'CIE94', 'CIEDE2000'
 ] as const;
 export type Sort = typeof SORTING_ACTIONS[number];
 
@@ -19,11 +19,11 @@ type CIEDifferenceFn = (lab1: readonly number[], lab2: readonly number[]) => num
 
 // # Distance functions.
 /**
- * Luminance difference of first and second colors.
+ * Brightness difference of two colors: `rgb2gray(rgb1) - rgb2gray(rgb2)`.
  * @param rgb1 First RGB color.
  * @param rgb2 Second RGB color.
  */
-export const diffLuminance: SortOp = (
+export const diffBrightness: SortOp = (
   rgb1: readonly number[],
   rgb2: readonly number[]
 ) => {
@@ -275,7 +275,7 @@ export const sortColors = <T>(
   let op: undefined | CIEDifferenceFn;
 
   if (method === SORTING_ACTIONS[0])
-    result = result.sort((a, b) => diffLuminance(rgbGetter(a), rgbGetter(b)));
+    result = result.sort((a, b) => diffBrightness(rgbGetter(a), rgbGetter(b)));
   else if (method === SORTING_ACTIONS[1]) result = shuffle(result);
   else if (method === SORTING_ACTIONS[2]) result.reverse();
   else if (method === SORTING_ACTIONS[3]) op = distE76;

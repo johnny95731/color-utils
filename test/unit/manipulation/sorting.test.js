@@ -1,12 +1,12 @@
 import { expect, test } from '@jest/globals';
-import { diffLuminance, distE00, distE76, distE94, randInt, randRgbGen, rgb2gray, rgb2lab, shuffle, SORTING_ACTIONS, sortRgbs, tspGreedy } from '../../../dist/index.js';
+import { diffBrightness, distE00, distE76, distE94, randInt, randRgbGen, rgb2gray, rgb2lab, shuffle, SORTING_ACTIONS, sortRgbs, tspGreedy } from '../../../dist/index.js';
 
-test('diffLuminance', () => {
+test('diffBrightness', () => {
   for (let i = 0; i < 20; i++) {
     const rgb1 = randRgbGen();
     const rgb2 = randRgbGen();
 
-    const ret = diffLuminance(rgb1, rgb2);
+    const ret = diffBrightness(rgb1, rgb2);
     expect(ret).toBeCloseTo(rgb2gray(rgb1) - rgb2gray(rgb2));
   }
 });
@@ -86,7 +86,7 @@ test('sortRgbs', () => {
       }
 
       expect(ret[0]).toStrictEqual(rgbs[0]);
-      if (key === 'luminance') {
+      if (key === 'brightness') {
         expect(ret[num-1]).toStrictEqual(rgbs[num-1]);
       } else {
         let op;
