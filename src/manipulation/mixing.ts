@@ -144,7 +144,8 @@ export const blend = (
     if (i < 3) {
       const oSrc = factorSrc * rgbSrc[i];
       const oDst = factorDst * rgbDst[i];
-      return oSrc + oDst + factorBlend * 255 * blendFn(rgbDst[i] / 255, rgbSrc[i] / 255);
+      const oBlend = factorBlend * 255 * blendFn(rgbDst[i] / 255, rgbSrc[i] / 255);
+      return (oSrc + oDst + oBlend) / newAlpha;
     } else {
       return newAlpha;
     }
