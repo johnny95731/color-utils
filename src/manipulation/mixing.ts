@@ -117,16 +117,17 @@ export const deeperMix = (
 
 // Blend-mode methods.
 /**
- * A general blending function using a specified blend function with
- * the "source over" Porter-Duff compositing operator.
+ * Blends and composites the RGBs by a given separable blend mode.
  *
- * Note that the base layer before source layer follows the
- * @param rgbDst Destination RGB color (base layer).
- * @param rgbSrc Source RGB color (top layer).
- * @param blendFn Blending function.
+ * The formula is described in Section 10 of the CSS Compositing and Blending Level 1.
+ * @see https://www.w3.org/TR/compositing-1/#blendingseparable
+ *
+ * @param rgbDst Destination RGB color (base layer). Values in [0, 255].
+ * @param rgbSrc Source RGB color (top layer). Values in [0, 255].
+ * @param blendFn Blending function. Receives values in [0, 1]
  * @returns RGB color after blending.
  */
-export const blend = (
+export const blendAndComposite = (
   rgbDst: readonly number[],
   rgbSrc: readonly number[],
   blendFn: (dst: number, src: number) => number
@@ -197,11 +198,12 @@ export const softLightBlend = (
       );
     };
   }
-  return blend(rgbDst, rgbSrc, fn);
+  return blendAndComposite(rgbDst, rgbSrc, fn);
 };
 
 /**
- * Mixing two RGB colors by evaluate their sums, including the alpha channel.
+ * Add colors in premultiplied form. Returns non-premultiplied color.
+ *
  * @param rgb1 RGB color.
  * @param rgb2 RGB color.
  * @returns RGB color.
