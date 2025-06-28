@@ -12,5 +12,5 @@ test('Named', () => {
       expect(retRgb[i]).toBeCloseTo(rgb[i]);
     }
   }
-  expect(named2rgb('not a name')).toEqual([0, 0, 0]);
+  expect(named2rgb('not a name')).toEqual([0, 0, 0, 1]);
 });
