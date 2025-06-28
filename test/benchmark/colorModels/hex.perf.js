@@ -6,7 +6,7 @@ import { performanceTest } from '../../../test-utils/perf.js';
 import { SampleGenerator } from '../../../test-utils/sample.js';
 import { rgb2hex, hex2rgb, map } from '../../../dist/index.js';
 
-const { rgbs, hex: hex6, colords, length } = SampleGenerator.b();
+const { rgbs, hex: hex6, colords, length } = SampleGenerator.defaults;
 
 const hexChar = '0123456789ABCDEF';
 const hexGenerator = (num) => map(num, () => hexChar[randInt(15)]).join('');
@@ -55,7 +55,7 @@ function toHexWithAlpha() {
   };
 
   return performanceTest(
-    'RGB to HEX',
+    'RGB to HEX with alpha',
     [
       ['color-utils',  custom_],
       ['colord', colord_],
