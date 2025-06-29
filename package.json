@@ -1,6 +1,6 @@
 {
   "name": "@johnny95731/color-utils",
-  "version": "1.2.2",
+  "version": "2.0.0",
   "author": "johnny95731 <johnny95731@gmail.com>",
   "license": "MIT",
   "description": "High-performance color utilities that including conversions, harmonies, mix, and sort.",
