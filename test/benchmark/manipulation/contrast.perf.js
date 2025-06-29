@@ -3,7 +3,7 @@ import { SampleGenerator } from '../../../test-utils/sample.js';
 import { adjContrast, CONTRAST_METHODS } from '../../../dist/index.js';
 
 
-const { rgbs, length } = SampleGenerator.defaults;
+const { rgbs } = SampleGenerator.defaults;
 
 
 function overall() {
@@ -12,9 +12,7 @@ function overall() {
     fns.push([
       name,
       function(){
-        for (let i = 5; i <= length; i++) {
-          adjContrast(rgbs.slice(i-5, i), name, );
-        }
+        adjContrast(rgbs, name, );
       }
     ]);
   });

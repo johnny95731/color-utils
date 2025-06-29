@@ -47,9 +47,7 @@ function overall() {
     fns.push([
       name,
       function(){
-        for (let i = 5; i <= length; i++) {
-          sortColors(rgbs.slice(i-5, i), name, (color) => color);
-        }
+        sortColors(rgbs, name, (color) => color);
       }
     ]);
   });
