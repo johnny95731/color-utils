@@ -1,5 +1,5 @@
+import { linearRgb2srgb, srgb2linearRgb } from '../colors';
 import { dot3 } from '../numeric';
-import { linearRgb2srgb, srgb2linearRgb, } from '../colors';
 import { rgb2xyzMat, xyz2rgbMat } from './cie-utils';
 
 
@@ -38,6 +38,6 @@ export const xyz2rgb = (xyz: readonly number[]): number[] => {
     linearRgb2srgb(r < 1 ? r > 0 ? r : 0 : 1),
     linearRgb2srgb(g < 1 ? g > 0 ? g : 0 : 1),
     linearRgb2srgb(b < 1 ? b > 0 ? b : 0 : 1),
-    alpha
+    alpha,
   ];
 };

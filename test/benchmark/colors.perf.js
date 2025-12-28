@@ -3,11 +3,14 @@ import a11yPlugin from 'colord/plugins/a11y';
 import labPlugin from 'colord/plugins/lab';
 import xyzPlugin from 'colord/plugins/xyz';
 
+import {
+  dot3, randInt, rgb2contrast, isReadable, linearRgb2srgb, randRgbGen, rgb2hex,
+  rgb2hue, rgb2luminance, srgb2linearRgb, getCssColor, COLOR_SPACES, rgb2hsl,
+  rgb2lab, rgb2xyz,
+} from '../../dist/index.js';
 import { performanceTest } from '../../test-utils/perf.js';
 import { SampleGenerator } from '../../test-utils/sample.js';
-import {
-  dot3, randInt, rgb2contrast, isReadable, linearRgb2srgb, randRgbGen, rgb2hex, rgb2hue, rgb2luminance, srgb2linearRgb, getCssColor, COLOR_SPACES, rgb2hsl, rgb2lab, rgb2xyz,
-} from '../../dist/index.js';
+
 
 extend([a11yPlugin, labPlugin, xyzPlugin]);
 
@@ -26,7 +29,7 @@ function generation() {
   const hexArr = hex.split('');
   const randomHexArr = () => {
     let s = '#';
-    for (let i = 0; i<6; i++) s += hexArr[randInt(16)];
+    for (let i = 0; i < 6; i++) s += hexArr[randInt(16)];
     return s;
   };
 
@@ -41,9 +44,9 @@ function generation() {
       randomHexArr,
       randRgb2hex,
       randRgbGen,
-      colord_
+      colord_,
     ],
-    { time: 300 }
+    { time: 300 },
   );
 }
 
@@ -52,7 +55,9 @@ function getColorSpace_() {
 
   const arrayFind_ = (space) => {
     space = space.toUpperCase();
-    return COLOR_SPACES.find(item => item.name_.toUpperCase() === space) ?? COLOR_SPACES[0];
+    return COLOR_SPACES.find(
+      item => item.name_.toUpperCase() === space,
+    ) ?? COLOR_SPACES[0];
   };
   const arrayFind = () => arrayFind_(space);
 
@@ -81,7 +86,7 @@ function getColorSpace_() {
       ['from array-find', arrayFind],
       ['from object-literal', table],
     ],
-    { time: 300 }
+    { time: 300 },
   );
 }
 
@@ -115,7 +120,7 @@ function rgbString() {
       ['colord', colord_],
       ['color', color_],
     ],
-    { time: 300 }
+    { time: 300 },
   );
 }
 
@@ -149,11 +154,11 @@ function hslString() {
       ['colord', colord_],
       ['color', color_],
     ],
-    { time: 300 }
+    { time: 300 },
   );
 }
 
-Colord.prototype.toXyzString = function() {
+Colord.prototype.toXyzString = function () {
   const { x, y, z } = this.toXyz();
   return `xyz(${x} ${y} ${z})`;
 };
@@ -187,11 +192,11 @@ function xyzString() {
       ['colord', colord_],
       ['color', color_],
     ],
-    { time: 300 }
+    { time: 300 },
   );
 }
 
-Colord.prototype.toLabString = function() {
+Colord.prototype.toLabString = function () {
   const { l, a, b } = this.toLab();
   return `lab(${l} ${a} ${b})`;
 };
@@ -225,7 +230,7 @@ function labString() {
       ['colord', colord_],
       ['color', color_],
     ],
-    { time: 300 }
+    { time: 300 },
   );
 }
 
@@ -255,13 +260,13 @@ function rgbLinearize() {
 }
 
 function rgb2gray_() {
-  const rgb2grayDot = (rgb) => dot3(rgb, [.299, .587, .114]);
+  const rgb2grayDot = rgb => dot3(rgb, [0.299, 0.587, 0.114]);
   const customDot_ = () => {
     for (let i = 0; i < length; i++) {
       rgb2grayDot(rgbs[i]);
     }
   };
-  const rgb2grayMul = (rgb)=>.299*rgb[0]+.587*rgb[1]+.114*rgb[2];
+  const rgb2grayMul = rgb => 0.299 * rgb[0] + 0.587 * rgb[1] + 0.114 * rgb[2];
   const customMul_ = () => {
     for (let i = 0; i < length; i++) {
       rgb2grayMul(rgbs[i]);
@@ -305,7 +310,7 @@ function hue_() {
     [
       ['color-utils', custom_],
       ['colord', colord_],
-      ['color', color_]
+      ['color', color_],
     ],
   );
 }
@@ -333,7 +338,7 @@ function relativeLuminance_() {
     [
       ['color-utils', custom_],
       ['colord', colord_],
-      ['color', color_]
+      ['color', color_],
     ],
   );
 }
@@ -341,17 +346,17 @@ function relativeLuminance_() {
 function contrastRatio_() {
   const colord_ = () => {
     for (let i = 1; i < length; i++) {
-      colords[i].contrast(colords[i-1]);
+      colords[i].contrast(colords[i - 1]);
     }
   };
   const color_ = () => {
     for (let i = 1; i < length; i++) {
-      colors[i].contrast(colors[i-1]);
+      colors[i].contrast(colors[i - 1]);
     }
   };
   const custom_ = () => {
     for (let i = 1; i < length; i++) {
-      rgb2contrast(rgbs[i], rgbs[i-1]);
+      rgb2contrast(rgbs[i], rgbs[i - 1]);
     }
   };
 
@@ -360,7 +365,7 @@ function contrastRatio_() {
     [
       ['color-utils', custom_],
       ['colord', colord_],
-      ['color', color_]
+      ['color', color_],
     ],
   );
 }
@@ -368,12 +373,12 @@ function contrastRatio_() {
 function isReadable_() {
   const colord_ = () => {
     for (let i = 1; i < length; i++) {
-      colords[i].isReadable(colords[i-1]);
+      colords[i].isReadable(colords[i - 1]);
     }
   };
   const custom_ = () => {
     for (let i = 1; i < length; i++) {
-      isReadable(rgbs[i], rgbs[i-1]);
+      isReadable(rgbs[i], rgbs[i - 1]);
     }
   };
 

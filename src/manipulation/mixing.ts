@@ -1,14 +1,14 @@
-import { map, normalizeOption } from '../helpers';
-import { clip, pow } from '../numeric';
 import { hsl2rgb, rgb2hsl } from '../colorModels/hsl';
 import { getAlpha } from '../colors';
+import { map, normalizeOption } from '../helpers';
+import { clip, pow } from '../numeric';
 
 
 /**
  * Support mix modes.
  */
 export const MIXING_MODES = [
-  'mean', 'brighter', 'deeper', 'soft light', 'additive', 'weighted'
+  'mean', 'brighter', 'deeper', 'soft light', 'additive', 'weighted',
 ] as const;
 
 /**
@@ -16,10 +16,17 @@ export const MIXING_MODES = [
  */
 export type Mixing = typeof MIXING_MODES[number];
 
-export type MixOp =
-  ((c1: readonly number[], c2: readonly number[]) => number[]) |
-  ((c1: readonly number[], c2: readonly number[], formula: string) => number[]) |
-  ((c1: readonly number[], c2: readonly number[], ...args: number[]) => number[]);
+export type MixOp = (
+    (c1: readonly number[], c2: readonly number[]) => number[]
+  ) | (
+    (
+      c1: readonly number[], c2: readonly number[], formula: string,
+    ) => number[]
+  ) | (
+    (
+      c1: readonly number[], c2: readonly number[], ...args: number[]
+    ) => number[]
+  );
 
 
 /**
@@ -52,8 +59,8 @@ export const mix = (
   // Interpolated alpha
   weightSum = weight1 + weight2;
 
-  return map(len, i => {
-    if (i < len-1)
+  return map(len, (i) => {
+    if (i < len - 1)
       return (weight1 * color1[i] + weight2 * color2[i]) / weightSum;
     else
       return weightSum * alphaMultipler;
@@ -130,24 +137,28 @@ export const deeperMix = (
 export const blendAndComposite = (
   rgbDst: readonly number[],
   rgbSrc: readonly number[],
-  blendFn: (dst: number, src: number) => number
+  blendFn: (dst: number, src: number) => number,
 ): number[] => {
   const alphaSrc = getAlpha(rgbSrc);
   const alphaDst = getAlpha(rgbDst);
 
   const factorBlend = alphaSrc * alphaDst;
-  const factorSrc   = alphaSrc - factorBlend;
-  const factorDst   = alphaDst - factorBlend;
+  const factorSrc = alphaSrc - factorBlend;
+  const factorDst = alphaDst - factorBlend;
 
   const newAlpha = alphaSrc + alphaDst - factorBlend;
 
-  return map(4, i => {
+  return map(4, (i) => {
     if (i < 3) {
       const oSrc = factorSrc * rgbSrc[i];
       const oDst = factorDst * rgbDst[i];
-      const oBlend = factorBlend * 255 * blendFn(rgbDst[i] / 255, rgbSrc[i] / 255);
+      const oBlend
+        = factorBlend
+          * 255
+          * blendFn(rgbDst[i] / 255, rgbSrc[i] / 255);
       return (oSrc + oDst + oBlend) / newAlpha;
-    } else {
+    }
+    else {
       return newAlpha;
     }
   });
@@ -164,7 +175,7 @@ export const blendAndComposite = (
 export const softLightBlend = (
   rgbDst: readonly number[],
   rgbSrc: readonly number[],
-  formula: 'photoshop' | 'pegtop' | 'illusions.hu' | 'w3c' = 'w3c'
+  formula: 'photoshop' | 'pegtop' | 'illusions.hu' | 'w3c' = 'w3c',
 ) => {
   let fn: (a: number, i: number) => number;
   let w3c: number;
@@ -173,25 +184,28 @@ export const softLightBlend = (
   if (formula === 'photoshop') {
     fn = (a, b) => {
       return (
-        b < 0.5 ?
-          a * (2 * b + a * (1 - 2 * b)) :
-          2 * a * (1 - b) + Math.sqrt(a) * (2 * b - 1)
+        b < 0.5
+          ? a * (2 * b + a * (1 - 2 * b))
+          : 2 * a * (1 - b) + Math.sqrt(a) * (2 * b - 1)
       );
     };
-  } else if (formula === 'pegtop') {
+  }
+  else if (formula === 'pegtop') {
     fn = (a, b) => {
       return a * (2 * b + a * (1 - 2 * b));
     };
-  } else if (formula === 'illusions.hu') {
+  }
+  else if (formula === 'illusions.hu') {
     fn = (a, b) => {
       return pow(a, pow(2, 1 - 2 * b));
     };
-  } else { // w3c
+  }
+  else { // w3c
     fn = (a, b) => {
       return (
-        b <= 0.5 ? // a = 0, b = 1
-          a - (1 - 2 * b) * a * (1 - a):
-          (
+        b <= 0.5 // a = 0, b = 1
+          ? a - (1 - 2 * b) * a * (1 - a)
+          : (
             w3c = a <= 0.25 ? ((16 * a - 12) * a + 4) * a : Math.sqrt(a),
             a + (2 * b - 1) * (w3c - a)
           )
@@ -218,10 +232,10 @@ export const additive = (
   return map(
     rgb1,
     (val, i) =>
-      i < 3 ?
-        clip((alpha1 * val + alpha2 * rgb2[i]) / newAlpha, 0, 255) :
-        newAlpha,
-    4
+      i < 3
+        ? clip((alpha1 * val + alpha2 * rgb2[i]) / newAlpha, 0, 255)
+        : newAlpha,
+    4,
   );
 };
 

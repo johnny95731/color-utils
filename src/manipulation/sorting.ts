@@ -1,21 +1,25 @@
-import { cloneDeep, map, normalizeOption, type DeepWriteable } from '../helpers';
-import { squareSum4, randInt, pow, l2Dist3, l2Norm3, deg2rad, rad2deg } from '../numeric';
-import { rgb2gray } from '../colors';
 import { rgb2lab } from '../colorModels/cielab';
+import { rgb2gray } from '../colors';
+import { cloneDeep, map, normalizeOption } from '../helpers';
+import {
+  squareSum4, randInt, pow, l2Dist3, l2Norm3, deg2rad, rad2deg,
+} from '../numeric';
 
+import type { DeepWriteable } from '../helpers';
 
 // # Constants
 /**
  * Actions for sorting palette colors.
  */
 export const SORTING_ACTIONS = [
-  'brightness', 'random', 'reversion', 'CIE76', 'CIE94', 'CIEDE2000'
+  'brightness', 'random', 'reversion', 'CIE76', 'CIE94', 'CIEDE2000',
 ] as const;
 export type Sort = typeof SORTING_ACTIONS[number];
 
-type SortOp = (rgb1: readonly number[], rgb2: readonly number[]) => number
+type SortOp = (rgb1: readonly number[], rgb2: readonly number[]) => number;
 
-type CIEDifferenceFn = (lab1: readonly number[], lab2: readonly number[]) => number
+type CIEDifferenceFn
+  = (lab1: readonly number[], lab2: readonly number[]) => number;
 
 // # Distance functions.
 /**
@@ -25,7 +29,7 @@ type CIEDifferenceFn = (lab1: readonly number[], lab2: readonly number[]) => num
  */
 export const diffBrightness: SortOp = (
   rgb1: readonly number[],
-  rgb2: readonly number[]
+  rgb2: readonly number[],
 ) => {
   return rgb2gray(rgb1) - rgb2gray(rgb2);
 };
@@ -34,7 +38,10 @@ export const diffBrightness: SortOp = (
  * Color difference of two LAB colors with CIE 1976 formula.
  * @see https://en.wikipedia.org/wiki/Color_difference
  */
-export const distE76: CIEDifferenceFn = (lab1: readonly number[], lab2: readonly number[]) => {
+export const distE76: CIEDifferenceFn = (
+  lab1: readonly number[],
+  lab2: readonly number[],
+) => {
   return l2Dist3(lab1, lab2);
 };
 
@@ -45,7 +52,10 @@ export const distE76: CIEDifferenceFn = (lab1: readonly number[], lab2: readonly
  * @returns
  * @see https://en.wikipedia.org/wiki/Color_difference
  */
-export const distE94: CIEDifferenceFn = (lab1: readonly number[], lab2: readonly number[]) => {
+export const distE94: CIEDifferenceFn = (
+  lab1: readonly number[],
+  lab2: readonly number[],
+) => {
   const l1 = lab1[0];
   const a1 = lab1[1];
   const b1 = lab1[2];
@@ -61,12 +71,14 @@ export const distE94: CIEDifferenceFn = (lab1: readonly number[], lab2: readonly
   const deltaL = l1 - l2;
   const deltaC = c1Star - c2Star;
   // May be NaN. Due to floating problem.
-  const deltaH = Math.sqrt(deltaA*deltaA + deltaB*deltaB - deltaC*deltaC) || 0;
+  const deltaH = Math.sqrt(
+    deltaA * deltaA + deltaB * deltaB - deltaC * deltaC,
+  ) || 0;
 
   return l2Norm3(
     deltaL,
     deltaC / (1 + 0.045 * c1Star),
-    deltaH / (1 + 0.015 * c1Star)
+    deltaH / (1 + 0.015 * c1Star),
   );
 };
 
@@ -121,7 +133,8 @@ export const distE00: CIEDifferenceFn = (() => {
     if (c1P * c2P === 0) {
       hP = 0;
       hMeanP *= 2;
-    } else if (hP > 180 || hP < -180) {
+    }
+    else if (hP > 180 || hP < -180) {
       hP += 360;
       hMeanP += hMeanP < 180 ? 180 : -180;
     }
@@ -144,10 +157,13 @@ export const distE00: CIEDifferenceFn = (() => {
     // Reduced:
     const T = 1 + 0.2 * cos63
       - 0.17 * (cosH * cos30 + sinH / 2)
-      + 0.32 * ((4*cosH*cosH - 3) * cosH * cos6 + (4*sinH*sinH - 3) * sinH * sin6)
+      + 0.32 * (
+        (4 * cosH * cosH - 3) * cosH * cos6
+        + (4 * sinH * sinH - 3) * sinH * sin6
+      )
       + 0.4 * cos2H * (0.6 - cos2H * cos63 - 2 * cosH * sinH * sin63);
 
-    const lMeanP2 = ((l1 + l2) / 2 - 50)**2;
+    const lMeanP2 = ((l1 + l2) / 2 - 50) ** 2;
     const cMeanP = (c1P + c2P) / 2;
     const cMeanP7 = pow(cMeanP, 7);
 
@@ -156,7 +172,7 @@ export const distE00: CIEDifferenceFn = (() => {
     const SH = 1 + 0.015 * cMeanP * T;
     const RT = (
       2 * Math.sqrt(cMeanP7 / (cMeanP7 + 6103515625))
-      * Math.sin(deg2rad(60 / Math.exp((hMeanP/25 - 11)**2)))
+      * Math.sin(deg2rad(60 / Math.exp((hMeanP / 25 - 11) ** 2)))
     );
 
     // Final terms
@@ -165,10 +181,8 @@ export const distE00: CIEDifferenceFn = (() => {
     const deltaHTerm = (
       2 * Math.sqrt(c1P * c2P) * Math.sin(deg2rad(hP / 2)) / SH
     );
-    return Math.sqrt(
-      squareSum4(deltaLTerm, deltaCTerm, deltaHTerm)
-      - RT * deltaCTerm * deltaHTerm
-    );
+    return Math.sqrt(squareSum4(deltaLTerm, deltaCTerm, deltaHTerm)
+      - RT * deltaCTerm * deltaHTerm);
   };
 })();
 
@@ -202,7 +216,7 @@ type tspGreedy = {
     diffOp: CIEDifferenceFn,
     copy?: false,
   ): T[]
-}
+};
 /**
  * Travelling salesman problem by greedy algorithm.
  * The first point is fixed.
@@ -216,7 +230,7 @@ export const tspGreedy: tspGreedy = <T>(
   copy: boolean = false,
 ): T[] | DeepWriteable<T[]> => {
   const len = items.length;
-  const labs = map(items, (item) => rgb2lab(rgbGetter(item)));
+  const labs = map(items, item => rgb2lab(rgbGetter(item)));
 
   // Ignore first index since first element is in the result.
   const indices = map(len - 1, i => i + 1);

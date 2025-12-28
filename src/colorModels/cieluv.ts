@@ -1,6 +1,6 @@
-import { lcc2lch, lch2lcc } from './lch';
+import { cieTrans, cieTransInv, xyzMax } from './cie-utils';
 import { rgb2xyz, xyz2rgb } from './ciexyz';
-import { cieTrans, cieTransInv, xyzMax,  } from './cie-utils';
+import { lcc2lch, lch2lcc } from './lch';
 
 
 /**
@@ -8,7 +8,7 @@ import { cieTrans, cieTransInv, xyzMax,  } from './cie-utils';
  * @param rgb RGB color array.
  * @return CIE LUV color array.
  */
-type rgb2luv = (xyz: readonly number[]) => number[]
+type rgb2luv = (xyz: readonly number[]) => number[];
 
 /**
  * Convert CIE LUV to RGB.
@@ -18,7 +18,7 @@ type rgb2luv = (xyz: readonly number[]) => number[]
  * @param luv CIE LUV color array.
  * @return RGB color array.
  */
-type luv2rgb = (luv: readonly number[]) => number[]
+type luv2rgb = (luv: readonly number[]) => number[];
 
 const [rgb2luv, luv2rgb] = (() => {
   const weightedSum = (xyz: readonly number[]) => {

@@ -1,10 +1,11 @@
+import convert from 'color-convert';
 import { colord, extend } from 'colord';
 import hwbPlugin from 'colord/plugins/hwb';
-import convert from 'color-convert';
 
+import { rgb2hwb, hwb2rgb } from '../../../dist/index.js';
 import { performanceTest } from '../../../test-utils/perf.js';
 import { SampleGenerator } from '../../../test-utils/sample.js';
-import { rgb2hwb, hwb2rgb } from '../../../dist/index.js';
+
 
 extend([hwbPlugin]);
 
@@ -36,11 +37,11 @@ function toHwb() {
   return performanceTest(
     'RGB to HWB',
     [
-      ['color-utils',  custom_],
+      ['color-utils', custom_],
       ['colord', colord_],
       ['color', color_],
       ['color-convert', convert_],
-    ]
+    ],
   );
 }
 
@@ -79,11 +80,11 @@ function fromHwb() {
   return performanceTest(
     'HWB to RGB',
     [
-      ['color-utils',  custom_],
+      ['color-utils', custom_],
       ['colord', colord_],
       ['color', color_],
       ['color-convert', convert_],
-    ]
+    ],
   );
 }
 

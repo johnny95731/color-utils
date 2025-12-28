@@ -1,11 +1,12 @@
-import { colord, extend } from 'colord';
-import namesPlugin from 'colord/plugins/names';
 import Color from 'color';
 import convert from 'color-convert';
+import { colord, extend } from 'colord';
+import namesPlugin from 'colord/plugins/names';
 
+import { rgb2hex, rgb2named } from '../../../dist/index.js';
 import { equivalenceTest } from '../../../test-utils/color-test.js';
 import { SampleGenerator } from '../../../test-utils/sample.js';
-import { rgb2hex, rgb2named } from '../../../dist/index.js';
+
 
 extend([namesPlugin]);
 
@@ -19,25 +20,25 @@ function namedEquiv() {
     (rgb) => {
       const name = colord(rgb2hex(rgb)).toName({ closest: true });
       return name;
-    }
+    },
   ];
   const color_ = [
     'color',
     (rgb) => {
       const name = Color(rgb2hex(rgb)).keyword();
       return name;
-    }
+    },
   ];
   const convert_ = [
     'color-convert',
     (rgb) => {
       const name = convert.rgb.keyword(rgb);
       return name;
-    }
+    },
   ];
   const custom = [
     'color-utils',
-    (rgb) => rgb2named(rgb).toLowerCase()
+    rgb => rgb2named(rgb).toLowerCase(),
   ];
 
   equivalenceTest(custom, colord_, rgbs, compFn);
@@ -45,5 +46,8 @@ function namedEquiv() {
   equivalenceTest(custom, convert_, rgbs, compFn);
 }
 
-console.log('Named equivalence: The order of name list may cause the results are different.');
+console.log(
+  'Named equivalence: The order of name list may cause the results'
+  + 'are different.',
+);
 namedEquiv();

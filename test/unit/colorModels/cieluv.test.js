@@ -1,6 +1,8 @@
 import { expect, test } from '@jest/globals';
-import { SampleGenerator } from '../../../test-utils/sample.js';
+
 import { rgb2luv, luv2rgb, rgb2lchuv, lchuv2rgb } from '../../../dist/index.js';
+import { SampleGenerator } from '../../../test-utils/sample.js';
+
 
 const { rgbs } = SampleGenerator.a();
 

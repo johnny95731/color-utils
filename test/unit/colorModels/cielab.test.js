@@ -1,19 +1,22 @@
 import { expect, test } from '@jest/globals';
+import convert from 'color-convert';
 import { extend } from 'colord';
 import labPlugin from 'colord/plugins/lab';
 import lchPlugin from 'colord/plugins/lch';
-import convert from 'color-convert';
 
+import {
+  rgb2lab, lab2rgb, rgb2lchab, lchab2rgb, setReferenceWhite,
+} from '../../../dist/index.js';
 import { SampleGenerator } from '../../../test-utils/sample.js';
-import { rgb2lab, lab2rgb, rgb2lchab, lchab2rgb, setReferenceWhite } from '../../../dist/index.js';
+
 
 extend([labPlugin, lchPlugin]);
 
 const { colords, rgbs, length } = SampleGenerator.a();
 
 test('CIELAB (D65) - comparison', () => {
-  const getFromLib = (idx) => convert.rgb.lab.raw(rgbs[idx]);
-  const getCustom = (idx) => rgb2lab(rgbs[idx]);
+  const getFromLib = idx => convert.rgb.lab.raw(rgbs[idx]);
+  const getCustom = idx => rgb2lab(rgbs[idx]);
 
   setReferenceWhite('D65');
   for (let i = 0; i < length; i++) {
@@ -30,7 +33,7 @@ test('CIELAB (D50) - comparison', () => {
     const { l, a, b } = colords[idx].toLab();
     return [l, a, b];
   };
-  const getCustom = (idx) => rgb2lab(rgbs[idx]);
+  const getCustom = idx => rgb2lab(rgbs[idx]);
 
   setReferenceWhite('D50');
   for (let i = 0; i < length; i++) {
@@ -68,8 +71,8 @@ test('CIELAB (D50) - stability', () => {
 
 
 test('CIELCHab (D65) - comparison', () => {
-  const getFromLib = (idx) => convert.rgb.lch.raw(rgbs[idx]);
-  const getCustom = (idx) => rgb2lchab(rgbs[idx]);
+  const getFromLib = idx => convert.rgb.lch.raw(rgbs[idx]);
+  const getCustom = idx => rgb2lchab(rgbs[idx]);
 
   setReferenceWhite('D65');
   for (let i = 0; i < length; i++) {
@@ -81,7 +84,8 @@ test('CIELCHab (D65) - comparison', () => {
     // Hue has floating issue on grayscale colors.
     if (Math.min(...rgb) === Math.max(...rgb)) {
       continue;
-    } else {
+    }
+    else {
       expect(custom[2]).toBeCloseTo(std[2]);
     }
   }
@@ -92,7 +96,7 @@ test('CIELCHab (D50) - comparison', () => {
     const { l, c, h } = colords[idx].toLch();
     return [l, c, h];
   };
-  const getCustom = (idx) => rgb2lchab(rgbs[idx]);
+  const getCustom = idx => rgb2lchab(rgbs[idx]);
 
   setReferenceWhite('D50');
   for (let i = 0; i < length; i++) {
@@ -105,7 +109,8 @@ test('CIELCHab (D50) - comparison', () => {
     // Hue has floating issue on grayscale colors.
     if (Math.min(...rgb) === Math.max(...rgb)) {
       continue;
-    } else {
+    }
+    else {
       expect(custom[2]).toBeCloseTo(std[2], 1);
     }
   }

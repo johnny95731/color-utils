@@ -1,16 +1,15 @@
 import { expect, test } from '@jest/globals';
-
 import convert from 'color-convert';
 
+import { rgb2hsb, hsb2rgb } from '../../../dist/index.js';
 import { SampleGenerator } from '../../../test-utils/sample.js';
 
-import { rgb2hsb, hsb2rgb } from '../../../dist/index.js';
 
 const { rgbs, length } = SampleGenerator.a();
 
 test('HSB - comparison', () => {
-  const getConvert = (idx) => convert.rgb.hsv.raw(rgbs[idx]);
-  const getCustom = (idx) => rgb2hsb(rgbs[idx]);
+  const getConvert = idx => convert.rgb.hsv.raw(rgbs[idx]);
+  const getCustom = idx => rgb2hsb(rgbs[idx]);
 
   for (let i = 0; i < length; i++) {
     const convert_ = getConvert(i);

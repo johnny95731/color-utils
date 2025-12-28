@@ -1,11 +1,12 @@
+import convert from 'color-convert';
 import { colord, extend } from 'colord';
 import labPlugin from 'colord/plugins/lab';
 import lchPlugin from 'colord/plugins/lch';
-import convert from 'color-convert';
 
+import { rgb2lab, lab2rgb, rgb2lchab, lchab2rgb } from '../../../dist/index.js';
 import { performanceTest } from '../../../test-utils/perf.js';
 import { SampleGenerator } from '../../../test-utils/sample.js';
-import { rgb2lab, lab2rgb, rgb2lchab, lchab2rgb } from '../../../dist/index.js';
+
 
 extend([labPlugin, lchPlugin]);
 
@@ -36,11 +37,11 @@ function toLab() {
   return performanceTest(
     'RGB to Lab',
     [
-      ['color-utils',  custom_],
+      ['color-utils', custom_],
       ['colord', colord_],
       ['color', color_],
       ['color-convert', convert_],
-    ]
+    ],
   );
 }
 
@@ -78,11 +79,11 @@ function fromLab() {
   return performanceTest(
     'Lab to RGB',
     [
-      ['color-utils',  custom_],
+      ['color-utils', custom_],
       ['colord', colord_],
       ['color', color_],
       ['color-convert', convert_],
-    ]
+    ],
   );
 }
 
@@ -111,11 +112,11 @@ function toLchab() {
   return performanceTest(
     'RGB to LCH(ab)',
     [
-      ['color-utils',  custom_],
+      ['color-utils', custom_],
       ['colord', colord_],
       ['color', color_],
       ['color-convert', convert_],
-    ]
+    ],
   );
 }
 
@@ -153,11 +154,11 @@ function fromLchab() {
   return performanceTest(
     'LCH(ab) to RGB',
     [
-      ['color-utils',  custom_],
+      ['color-utils', custom_],
       ['colord', colord_],
       ['color', color_],
       ['color-convert', convert_],
-    ]
+    ],
   );
 }
 

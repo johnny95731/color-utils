@@ -1,10 +1,11 @@
+import convert from 'color-convert';
 import { colord, extend } from 'colord';
 import xyzPlugin from 'colord/plugins/xyz';
-import convert from 'color-convert';
 
+import { rgb2xyz, xyz2rgb } from '../../../dist/index.js';
 import { performanceTest } from '../../../test-utils/perf.js';
 import { SampleGenerator } from '../../../test-utils/sample.js';
-import { rgb2xyz, xyz2rgb } from '../../../dist/index.js';
+
 
 extend([xyzPlugin]);
 
@@ -35,11 +36,11 @@ function toXyz() {
   return performanceTest(
     'RGB to XYZ',
     [
-      ['color-utils',  custom_],
+      ['color-utils', custom_],
       ['colord', colord_],
       ['color', color_],
       ['color-convert', convert_],
-    ]
+    ],
   );
 }
 
@@ -77,11 +78,11 @@ function fromXyz() {
   return performanceTest(
     'XYZ to RGB',
     [
-      ['color-utils',  custom_],
+      ['color-utils', custom_],
       ['colord', colord_],
       ['color', color_],
       ['color-convert', convert_],
-    ]
+    ],
   );
 }
 

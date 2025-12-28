@@ -1,6 +1,7 @@
-import type { ColorSpace } from 'src/colors';
 import { cloneDeep, map } from '../helpers';
+
 import type { Mat3x3 } from '../numeric';
+import type { ColorSpace } from 'src/colors';
 
 /**
  * Matrix factors for RGB to CIE XYZ.
@@ -32,7 +33,7 @@ export const xyzMax = [] as Array3;
 export const xyzSpace = {
   name_: 'XYZ',
   labels_: ['X', 'Y', 'Z'],
-  isSupported_: true
+  isSupported_: true,
   // Init max_ and white_ in setReferenceWhite
 } as ColorSpace;
 
@@ -48,8 +49,8 @@ export const setReferenceWhite = (() => {
    */
   const D65: Mat3x3 = [
     [41.24564, 35.75761, 18.04375],
-    [21.26729, 71.51522,  7.21750],
-    [ 1.93339, 11.9192 , 95.03041],
+    [21.26729, 71.51522, 7.21750],
+    [1.93339, 11.9192, 95.03041],
   ];
   /**
    * Matrix for RGB to CIEXYZ under D50 white
@@ -57,30 +58,32 @@ export const setReferenceWhite = (() => {
    */
   const D50: Mat3x3 = [
     [43.60747, 38.50649, 14.30804],
-    [22.25045, 71.68786,  6.06169],
-    [ 1.39322,  9.71045, 71.41733],
+    [22.25045, 71.68786, 6.06169],
+    [1.39322, 9.71045, 71.41733],
   ];
   const invertMat3x3 = (mat: Mat3x3): Mat3x3 | null => {
     const [
       [a, b, c],
       [d, e, f],
-      [g, h, i]
+      [g, h, i],
     ] = mat;
-    const x = e*i - h*f,
-      y = f*g - d*i,
-      z = d*h - g*e,
-      det = a*x + b*y + c*z;
+    const x = e * i - h * f,
+      y = f * g - d * i,
+      z = d * h - g * e,
+      det = a * x + b * y + c * z;
 
-    return det ? [
-      [x/det, (c*h - b*i)/det, (b*f - c*e)/det],
-      [y/det, (a*i - c*g)/det, (d*c - a*f)/det],
-      [z/det, (g*b - a*h)/det, (a*e - d*b)/det]
-    ] : null;
+    return det
+      ? [
+        [x / det, (c * h - b * i) / det, (b * f - c * e) / det],
+        [y / det, (a * i - c * g) / det, (d * c - a * f) / det],
+        [z / det, (g * b - a * h) / det, (a * e - d * b) / det],
+      ]
+      : null;
   };
 
   const setReferenceWhite = (white: 'D65' | 'D50') => {
     const mat = white === 'D50' ? D50 : D65;
-    const rowSum = map(mat, (row) => row[0] + row[1] + row[2]);
+    const rowSum = map(mat, row => row[0] + row[1] + row[2]);
     const invMat = invertMat3x3(mat as Mat3x3);
     if (invMat) {
       rgb2xyzMat.splice(0, 3, ...cloneDeep(mat));
@@ -88,13 +91,12 @@ export const setReferenceWhite = (() => {
       xyzMax.splice(0, 3, ...rowSum);
 
       xyzSpace.max_ = map(rowSum, val => [0, val]);
-      xyzSpace.white_ =  white === 'D50' ? 'd50' : 'd65';
+      xyzSpace.white_ = white === 'D50' ? 'd50' : 'd65';
     };
   };
   setReferenceWhite('D65'); // Initialize
   return setReferenceWhite;
 })();
-
 
 
 /**
@@ -111,9 +113,9 @@ type cieTrans = (xyz: number) => number;
 type cieTransInv = (lab: number) => number;
 
 const [cieTrans, cieTransInv] = (() => {
-  const threshInv = 6/29; // threshold for labFuncInv
-  const thresh = threshInv**3; // threshold for labFunc
-  const scaling = 841/108; // = 1 / (3 * threshInv**2)
+  const threshInv = 6 / 29; // threshold for labFuncInv
+  const thresh = threshInv ** 3; // threshold for labFunc
+  const scaling = 841 / 108; // = 1 / (3 * threshInv**2)
   const bias = 4 / 29; // = 16 / 116
 
   const cieTrans: cieTransInv = (val: number): number => {

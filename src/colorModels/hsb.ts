@@ -1,4 +1,3 @@
-
 /**
  * Calculate hue (H channel of HSL/HSB) from rgb. Also, returns minimum and
  * maximum of rgb.
@@ -16,7 +15,8 @@ export const hsbHelper = (rgb: readonly number[]): number[] => {
   let hue;
   if (max === b) {
     hue = (r - g) / delta + 4;
-  } else if (max === g)
+  }
+  else if (max === g)
     hue = (b - r) / delta + 2;
   else // max === r:
     // Move from first condition to last since other two assignment is shorter
@@ -38,7 +38,7 @@ export const rgb2hsb = (rgb: readonly number[]): number[] => {
     sat || 0, // saturation
     // 2.55 = 255 / 100
     max / 2.55, // brightness
-    alpha
+    alpha,
   ];
 };
 
@@ -56,7 +56,7 @@ export const hsb2rgb = (hsb: readonly number[]): number[] => {
   const f = (val: number) => (
     val = ((val + hue60) % 6 + 6) % 6, // handle negative hue.
     val = val < 2 ? val : 4 - val, // Shorter Math.min(val, 4-val)
-    briC - bs * (val < 1 ? val > 0 ? val : 0 : 1 ) // clip(val, 0, 1)
+    briC - bs * (val < 1 ? val > 0 ? val : 0 : 1) // clip(val, 0, 1)
   );
   return [f(5), f(3), f(1), alpha];
 };

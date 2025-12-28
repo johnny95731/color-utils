@@ -1,9 +1,9 @@
-import { colord } from 'colord';
 import convert from 'color-convert';
+import { colord } from 'colord';
 
+import { rgb2hsl, hsl2rgb } from '../../../dist/index.js';
 import { performanceTest } from '../../../test-utils/perf.js';
 import { SampleGenerator } from '../../../test-utils/sample.js';
-import { rgb2hsl, hsl2rgb } from '../../../dist/index.js';
 
 
 const { rgbs, colors, colords, length } = SampleGenerator.defaults;
@@ -34,11 +34,11 @@ function toHsl() {
   return performanceTest(
     'RGB to HSL',
     [
-      ['color-utils',  custom_],
+      ['color-utils', custom_],
       ['colord', colord_],
       ['color', color_],
       ['color-convert', convert_],
-    ]
+    ],
   );
 }
 
@@ -77,11 +77,11 @@ function fromHsl() {
   return performanceTest(
     'HSL to RGB',
     [
-      ['color-utils',  custom_],
+      ['color-utils', custom_],
       ['colord', colord_],
       ['color', color_],
       ['color-convert', convert_],
-    ]
+    ],
   );
 }
 

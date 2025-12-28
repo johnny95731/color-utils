@@ -1,5 +1,7 @@
 import { expect, test } from '@jest/globals';
+
 import { cloneDeep, map } from '../../dist/index.js';
+
 
 test('cloneDeep', () => {
   const primitive = [
@@ -9,7 +11,7 @@ test('cloneDeep', () => {
     null,
     undefined,
   ];
-  primitive.forEach(val => {
+  primitive.forEach((val) => {
     expect(cloneDeep(val)).toBe(val?.valueOf ? val.valueOf() : val);
   });
 
@@ -24,13 +26,14 @@ test('cloneDeep', () => {
     e: NaN,
   };
   expect(cloneDeep(obj)).toStrictEqual(obj);
-
 });
 
 
 test('map', () => {
-  expect(map(3, (i) => i)).toStrictEqual([...Array(3)].map((_, i) => i));
+  expect(map(3, i => i)).toStrictEqual([...Array(3)].map((_, i) => i));
 
   const arr = [4, 5, 9, 8];
-  expect(map(arr, (val, i) => val + i)).toStrictEqual(arr.map((val, i) => val + i));
+  expect(map(arr, (val, i) => val + i)).toStrictEqual(
+    arr.map((val, i) => val + i),
+  );
 });

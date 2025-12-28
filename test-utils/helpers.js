@@ -1,4 +1,3 @@
-
 /**
  * Return an array `arr` of increasing numbers in the range [`min`, `max`]
  * that `arr[i+1] - arr[i] = 1`.
@@ -7,27 +6,29 @@
  * @returns {number[]}
  */
 export const range = (min, max) => {
-  max ++;
+  max++;
   const values = [];
   for (let i = min; i < max; i++) values.push(i);
   return values;
 };
 
 export const randInt = (max) => {
-  return Math.random() * (max+1) | 0;
+  return Math.random() * (max + 1) | 0;
 };
 
-export const randRgbGen = (randAlpha) => [
+export const randRgbGen = randAlpha => [
   randInt(255),
   randInt(255),
   randInt(255),
-  randAlpha ? Math.random() : 1
+  randAlpha ? Math.random() : 1,
 ];
 
 export const rgb2hex = (rgb) => {
   // `a << n` equals a * 2**n.
   // (1<<24).toString(16) convert to '1000000'. This will pad 0.
-  const hex = '#' + (1 << 24 | rgb[0] << 16 | rgb[1] << 8 | rgb[2]).toString(16).slice(1);
+  const hex = '#' + (1 << 24 | rgb[0] << 16 | rgb[1] << 8 | rgb[2])
+    .toString(16)
+    .slice(1);
   return hex;
 };
 

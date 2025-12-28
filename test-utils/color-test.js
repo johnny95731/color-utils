@@ -12,7 +12,7 @@ export const equivalenceTest = (
   fn1,
   fn2,
   sample,
-  compFn = isSameColor
+  compFn = isSameColor,
 ) => {
   // Test function name
   let name1 = fn1.name;

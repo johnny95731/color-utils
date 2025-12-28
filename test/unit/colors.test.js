@@ -1,6 +1,10 @@
 import { describe, expect, test } from '@jest/globals';
 
-import { COLOR_SPACES, getColorSpace, toSpace, alphaNormalize, rgb2hex, rgbArraylize, rgb2hue, srgb2linearRgb, linearRgb2srgb, rgb2gray, isLight, rgb2luminance, rgb2contrast, isReadable, randRgbGen } from '../../dist/index.js';
+import {
+  COLOR_SPACES, getColorSpace, toSpace, alphaNormalize, rgb2hex, rgbArraylize,
+  rgb2hue, srgb2linearRgb, linearRgb2srgb, rgb2gray, isLight, rgb2luminance,
+  rgb2contrast, isReadable, randRgbGen,
+} from '../../dist/index.js';
 
 /**
  * Black, white, red, green, blue, yello, cyna, magenta.
@@ -19,7 +23,7 @@ const rgbs = [
 const hue = [
   0, 0, // black, white
   0, 120, 240, // r, g, b
-  60, 180, 300 // y, c, m
+  60, 180, 300, // y, c, m
 ];
 
 test('getColorSpace', () => {
@@ -97,7 +101,7 @@ test('RGB linearlize', () => {
   for (const rgb of rgbs) {
     for (const val of rgb) {
       expect(
-        linearRgb2srgb(srgb2linearRgb(val))
+        linearRgb2srgb(srgb2linearRgb(val)),
       ).toBeCloseTo(val);
     }
   }
@@ -109,20 +113,20 @@ test('rgb2gray', () => {
   expect(rgb2gray(rgbs[2])).toBeCloseTo(0.299 * 255);
   expect(rgb2gray(rgbs[3])).toBeCloseTo(0.587 * 255);
   expect(rgb2gray(rgbs[4])).toBeCloseTo(0.114 * 255);
-  expect(rgb2gray(rgbs[5])).toBeCloseTo((0.299+0.587) * 255);
-  expect(rgb2gray(rgbs[6])).toBeCloseTo((0.587+0.114) * 255);
-  expect(rgb2gray(rgbs[7])).toBeCloseTo((0.114+0.299) * 255);
+  expect(rgb2gray(rgbs[5])).toBeCloseTo((0.299 + 0.587) * 255);
+  expect(rgb2gray(rgbs[6])).toBeCloseTo((0.587 + 0.114) * 255);
+  expect(rgb2gray(rgbs[7])).toBeCloseTo((0.114 + 0.299) * 255);
 });
 
 test('isLight', () => {
   expect(isLight(rgbs[0])).toBeFalsy();
   expect(isLight(rgbs[1])).toBeTruthy();
-  expect(isLight(rgbs[2])).toBe(0.299 > .5);
-  expect(isLight(rgbs[3])).toBe(0.587 > .5);
-  expect(isLight(rgbs[4])).toBe(0.114 > .5);
-  expect(isLight(rgbs[5])).toBe((0.299 + 0.587) > .5);
-  expect(isLight(rgbs[6])).toBe((0.587 + 0.114) > .5);
-  expect(isLight(rgbs[7])).toBe((0.114 + 0.299) > .5);
+  expect(isLight(rgbs[2])).toBe(0.299 > 0.5);
+  expect(isLight(rgbs[3])).toBe(0.587 > 0.5);
+  expect(isLight(rgbs[4])).toBe(0.114 > 0.5);
+  expect(isLight(rgbs[5])).toBe((0.299 + 0.587) > 0.5);
+  expect(isLight(rgbs[6])).toBe((0.587 + 0.114) > 0.5);
+  expect(isLight(rgbs[7])).toBe((0.114 + 0.299) > 0.5);
 });
 
 test('rgb2luminance', () => {
@@ -131,9 +135,9 @@ test('rgb2luminance', () => {
   expect(rgb2luminance(rgbs[2])).toBeCloseTo(0.2126);
   expect(rgb2luminance(rgbs[3])).toBeCloseTo(0.7152);
   expect(rgb2luminance(rgbs[4])).toBeCloseTo(0.0722);
-  expect(rgb2luminance(rgbs[5])).toBeCloseTo((0.2126+0.7152));
-  expect(rgb2luminance(rgbs[6])).toBeCloseTo((0.7152+0.0722));
-  expect(rgb2luminance(rgbs[7])).toBeCloseTo((0.0722+0.2126));
+  expect(rgb2luminance(rgbs[5])).toBeCloseTo((0.2126 + 0.7152));
+  expect(rgb2luminance(rgbs[6])).toBeCloseTo((0.7152 + 0.0722));
+  expect(rgb2luminance(rgbs[7])).toBeCloseTo((0.0722 + 0.2126));
 });
 
 describe('rgb2contrast', () => {
@@ -166,22 +170,22 @@ describe('isReadable', () => {
     [
       'Default option: normal text and level AA',
       undefined,
-      4.5
+      4.5,
     ],
     [
       'Large text and level AA',
       { isLarge: true },
-      3
+      3,
     ],
     [
       'Large text and level AAA',
-      { isLarge: true, levelAAA: true, },
-      4.5
+      { isLarge: true, levelAAA: true },
+      4.5,
     ],
     [
       'Normal text and level AAA',
-      { levelAAA: true, },
-      7
+      { levelAAA: true },
+      7,
     ],
   ];
 

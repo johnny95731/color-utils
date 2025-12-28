@@ -1,6 +1,6 @@
+import { rgb2lchuv, lchuv2rgb, rgb2luv, luv2rgb } from '../../../dist/index.js';
 import { performanceTest } from '../../../test-utils/perf.js';
 import { SampleGenerator } from '../../../test-utils/sample.js';
-import { rgb2lchuv, lchuv2rgb, rgb2luv, luv2rgb } from '../../../dist/index.js';
 
 
 const { rgbs, length } = SampleGenerator.defaults;
@@ -13,7 +13,7 @@ function toLuv() {
   };
   return performanceTest(
     'RGB to Luv',
-    [['color-utils',  custom_]]
+    [['color-utils', custom_]],
   );
 }
 
@@ -30,7 +30,7 @@ function fromLuv() {
   };
   return performanceTest(
     'Luv to RGB',
-    [['color-utils',  custom_]]
+    [['color-utils', custom_]],
   );
 }
 
@@ -42,7 +42,7 @@ function toLchuv() {
   };
   return performanceTest(
     'RGB to LCH(uv)',
-    [['color-utils',  custom_]]
+    [['color-utils', custom_]],
   );
 }
 
@@ -59,7 +59,7 @@ function fromLchuv() {
   };
   return performanceTest(
     'LCH(uv) to RGB',
-    [['color-utils',  custom_]]
+    [['color-utils', custom_]],
   );
 }
 

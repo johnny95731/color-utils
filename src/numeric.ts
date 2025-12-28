@@ -23,7 +23,7 @@ export const randInt = (max: number) => {
  * and negative means whole number places.
  */
 export const round = (num: number, place: number = 0): number =>
-  Math.round(10**place * num) / 10**place;
+  Math.round(10 ** place * num) / 10 ** place;
 
 
 /**
@@ -79,17 +79,29 @@ export const [deg2rad, rad2deg] = (() => {
 /**
  * Dot product of two arrays with lenght=3.
  */
-export const dot3 = (arr1: readonly number[], arr2: readonly number[]): number => {
+export const dot3 = (
+  arr1: readonly number[],
+  arr2: readonly number[],
+): number => {
   return arr1[0] * arr2[0] + arr1[1] * arr2[1] + arr1[2] * arr2[2];
 };
 
 /**
  * Return the summation of square of numbers.
  */
-export const squareSum4 = (a: number, b: number, c: number = 0, d: number = 0): number => {
+export const squareSum4 = (
+  a: number,
+  b: number,
+  c: number = 0,
+  d: number = 0,
+): number => {
   return a * a + b * b + c * c + d * d;
 };
-export const l2Norm3 = (a: number, b: number, c: number = 0) => Math.sqrt(squareSum4(a, b, c));
+export const l2Norm3 = (
+  a: number,
+  b: number,
+  c: number = 0,
+) => Math.sqrt(squareSum4(a, b, c));
 
 /**
  * L2-distance of two array.
@@ -97,11 +109,14 @@ export const l2Norm3 = (a: number, b: number, c: number = 0) => Math.sqrt(square
  * @param color2 Array with length = 3.
  * @returns The mean value of arr1 and arr2.
  */
-export const l2Dist3 = (color1: readonly number[], color2: readonly number[]): number => {
+export const l2Dist3 = (
+  color1: readonly number[],
+  color2: readonly number[],
+): number => {
   return l2Norm3(
     color1[0] - color2[0],
     color1[1] - color2[1],
-    color1[2] - color2[2]
+    color1[2] - color2[2],
   );
 };
 
@@ -112,15 +127,18 @@ export const l2Dist3 = (color1: readonly number[], color2: readonly number[]): n
  * @param arr2 Array 2.
  * @returns The mean value of arr1 and arr2.
  */
-export const elementwiseMean = (arr1: readonly number[], arr2: readonly number[]): number[] => {
+export const elementwiseMean = (
+  arr1: readonly number[],
+  arr2: readonly number[],
+): number[] => {
   return map(
     Math.min(arr1.length, arr2.length),
     i => (arr1[i] + arr2[i]) / 2,
   );
 };
 
-export type Array3<T = number> = [T, T, T]
-export type Mat3x3<T = number> = Array3<Array3<T>>
+export type Array3<T = number> = [T, T, T];
+export type Mat3x3<T = number> = Array3<Array3<T>>;
 
 /**
  * @deprecated

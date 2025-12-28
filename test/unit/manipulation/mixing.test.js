@@ -1,12 +1,17 @@
 import { expect, test } from '@jest/globals';
-import { additive, brighterMix, deeperMix, elementwiseMean, meanMix, mix, mixColors, MIXING_MODES, randRgbGen, softLightBlend } from '../../../dist/index.js';
+
+import {
+  additive, brighterMix, deeperMix, elementwiseMean, meanMix, mix,
+  mixColors, MIXING_MODES, randRgbGen, softLightBlend,
+} from '../../../dist/index.js';
+
 
 test('mix', () => {
   for (let i = 0; i < 20; i++) {
     const rgb1 = randRgbGen();
     const rgb2 = randRgbGen();
 
-    const factor = Math.random()*10 + 1;
+    const factor = Math.random() * 10 + 1;
     const factor2 = Math.random();
 
     const mean = elementwiseMean(rgb1, rgb2);
@@ -47,13 +52,13 @@ test('meanMix', () => {
 
 test('softLightBlend', () => {
   const keys = [
-    'photoshop', 'pegtop', 'illusions.hu', 'w3c'
+    'photoshop', 'pegtop', 'illusions.hu', 'w3c',
   ];
 
   const black = [0, 0, 0, 1];
   const white = [255, 255, 255, 1];
 
-  keys.forEach(key => {
+  keys.forEach((key) => {
     expect(softLightBlend(black, white, key)).toStrictEqual(black);
     expect(softLightBlend(white, black, key)).toStrictEqual(white);
   });
@@ -82,6 +87,8 @@ test('mixColors', () => {
     // Default
     expect(mixColors([rgb1, rgb2])).toStrictEqual(mixColors([rgb1, rgb2], 0));
     // out of range
-    expect(mixColors([rgb1, rgb2], 99999)).toStrictEqual(mixColors([rgb1, rgb2], 0));
+    expect(mixColors([rgb1, rgb2], 99999)).toStrictEqual(
+      mixColors([rgb1, rgb2], 0),
+    );
   }
 });

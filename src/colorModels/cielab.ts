@@ -1,6 +1,6 @@
-import { lcc2lch, lch2lcc } from './lch';
-import { rgb2xyz, xyz2rgb } from './ciexyz';
 import { cieTrans, cieTransInv, xyzMax } from './cie-utils';
+import { rgb2xyz, xyz2rgb } from './ciexyz';
+import { lcc2lch, lch2lcc } from './lch';
 
 /**
  * Convert RGB to CIE Lab.
@@ -15,7 +15,7 @@ export const rgb2lab = (rgb: readonly number[]): number[] => {
     116 * fy - 16,
     500 * (cieTrans(xyz[0] / xyzMax[0]) - fy),
     200 * (fy - cieTrans(xyz[2] / xyzMax[2])),
-    alpha
+    alpha,
   ];
 };
 
@@ -33,7 +33,7 @@ export const lab2rgb = (lab: readonly number[]): number[] => {
     cieTransInv(c2) * xyzMax[0],
     cieTransInv(c1) * xyzMax[1],
     cieTransInv(c3) * xyzMax[2],
-    alpha
+    alpha,
   ]);
 };
 

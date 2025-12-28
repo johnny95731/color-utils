@@ -1,11 +1,17 @@
 import { expect, test } from '@jest/globals';
-import { harmonize, HARMONY_METHODS, hsb2rgb, randInt, shades, shiftHue, tints, tones } from '../../../dist/index.js';
+
+import {
+  harmonize, HARMONY_METHODS, hsb2rgb, randInt, shades, shiftHue, tints, tones,
+} from '../../../dist/index.js';
+
 
 test('shiftHue', () => {
   for (let i = 0; i < 20; i++) {
     const basis = randInt(360);
     const deg = randInt(360);
-    expect(shiftHue([basis, 0, 0, 1], [deg])).toStrictEqual([[basis + deg, 0, 0, 1]]);
+    expect(shiftHue([basis, 0, 0, 1], [deg])).toStrictEqual(
+      [[basis + deg, 0, 0, 1]],
+    );
   }
 });
 
@@ -15,9 +21,9 @@ test('shades', () => {
     const ret = shades(hsb);
     expect(ret[0]).toStrictEqual(hsb);
     for (let j = 0; j < ret.length - 1; j++) {
-      expect(ret[j][0]).toBe(ret[j+1][0]);
-      expect(ret[j][1]).toBe(ret[j+1][1]);
-      expect(ret[j][2]).toBeGreaterThan(ret[j+1][2]);
+      expect(ret[j][0]).toBe(ret[j + 1][0]);
+      expect(ret[j][1]).toBe(ret[j + 1][1]);
+      expect(ret[j][2]).toBeGreaterThan(ret[j + 1][2]);
     }
   }
 });
@@ -28,9 +34,9 @@ test('tints', () => {
     const ret = tints(hsb);
     expect(ret[0]).toStrictEqual(hsb);
     for (let j = 0; j < ret.length - 1; j++) {
-      expect(ret[j][0]).toBe(ret[j+1][0]);
-      expect(ret[j][1]).toBeGreaterThan(ret[j+1][1]);
-      expect(ret[j][2]).toBe(ret[j+1][2]);
+      expect(ret[j][0]).toBe(ret[j + 1][0]);
+      expect(ret[j][1]).toBeGreaterThan(ret[j + 1][1]);
+      expect(ret[j][2]).toBe(ret[j + 1][2]);
     }
   }
 });
@@ -41,9 +47,9 @@ test('tones', () => {
     const ret = tones(hsb);
     expect(ret[0]).toStrictEqual(hsb);
     for (let j = 0; j < ret.length - 1; j++) {
-      expect(ret[j][0]).toBe(ret[j+1][0]);
-      expect(ret[j][1]).toBeGreaterThan(ret[j+1][1]);
-      expect(ret[j][2]).toBeGreaterThan(ret[j+1][2]);
+      expect(ret[j][0]).toBe(ret[j + 1][0]);
+      expect(ret[j][1]).toBeGreaterThan(ret[j + 1][1]);
+      expect(ret[j][2]).toBeGreaterThan(ret[j + 1][2]);
     }
   }
 });

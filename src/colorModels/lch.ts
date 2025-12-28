@@ -6,13 +6,13 @@ import { deg2rad, rad2deg, l2Norm3 } from '../numeric';
  * @param lcc Color model that is [luminance, chroma1, chroma2]
  * @returns Corresponding Luminance-Chroma-Chroma model
  */
-type lcc2lch = (lcc: readonly number[]) => number[]
+type lcc2lch = (lcc: readonly number[]) => number[];
 /**
  * Convert LCh Luminance-Chroma-Hue model to Luminance-Chroma-Chroma model.
  * @param lch Luminance-Chroma-Chroma model.
  * @returns [luminance, chroma1, chroma2] color model.
  */
-type lch2lcc = (lch: readonly number[]) => number[]
+type lch2lcc = (lch: readonly number[]) => number[];
 
 export const lcc2lch: lcc2lch = (lcc: readonly number[]): number[] => {
   const c1 = lcc[1];
@@ -22,7 +22,7 @@ export const lcc2lch: lcc2lch = (lcc: readonly number[]): number[] => {
     lcc[0],
     l2Norm3(c1, c2),
     deg < 0 ? deg + 360 : deg,
-    lcc[3]
+    lcc[3],
   ];
 };
 export const lch2lcc: lch2lcc = (lch: readonly number[]): number[] => {
@@ -31,6 +31,6 @@ export const lch2lcc: lch2lcc = (lch: readonly number[]): number[] => {
     lch[0],
     lch[1] * Math.cos(rad),
     lch[1] * Math.sin(rad),
-    lch[3]
+    lch[3],
   ];
 };

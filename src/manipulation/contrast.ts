@@ -1,7 +1,7 @@
-import { map, normalizeOption } from '../helpers';
-import { clip, pow, rangeMapping } from '../numeric';
 import { lab2rgb, rgb2lab } from '../colorModels/cielab';
 import { mapNonAlpha } from '../colors';
+import { map, normalizeOption } from '../helpers';
+import { clip, pow, rangeMapping } from '../numeric';
 
 
 // # Constants
@@ -12,15 +12,16 @@ export const CONTRAST_METHODS = [
   'linear',
   'gamma',
   'auto enhancement',
-  'auto brightness'
+  'auto brightness',
 ] as const;
 /**
  * Support contrast adjusting methods.
  */
 export type ContrastMethod = typeof CONTRAST_METHODS[number];
 
-export type ContrastFunction = (rgbs: readonly number[][], ...arg: number[]) => number[][]
-
+export type ContrastFunction = (
+  rgbs: readonly number[][], ...arg: number[]
+) => number[][];
 
 
 // # Adjusts contrast.
@@ -30,15 +31,18 @@ export type ContrastFunction = (rgbs: readonly number[][], ...arg: number[]) => 
  * @param c Scaling coefficient.
  * @returns RGB arrays.
  */
-export const scaling = (rgbs: readonly number[][], c: number = 1): number[][] => {
+export const scaling = (
+  rgbs: readonly number[][],
+  c: number = 1,
+): number[][] => {
   return map(
     rgbs,
     (rgb) => {
       return mapNonAlpha(
         rgb,
-        (val) => clip(val * c, 0, 255)
+        val => clip(val * c, 0, 255),
       );
-    }
+    },
   );
 };
 
@@ -50,11 +54,11 @@ export const scaling = (rgbs: readonly number[][], c: number = 1): number[][] =>
  */
 export const gammaCorrection = (
   rgbs: readonly number[][],
-  gamma: number = 1
+  gamma: number = 1,
 ): number[][] => {
   return map(
     rgbs,
-    rgb => mapNonAlpha(rgb, (val) => 255 * pow(val / 255, gamma))
+    rgb => mapNonAlpha(rgb, val => 255 * pow(val / 255, gamma)),
   );
 };
 
@@ -65,7 +69,7 @@ export const gammaCorrection = (
  * @returns RGB arrays.
  */
 export const autoEnhancement: ContrastFunction = (
-  rgbs: readonly number[][]
+  rgbs: readonly number[][],
 ): number[][] => {
   let minL = Infinity;
   let maxL = 0;
@@ -73,7 +77,7 @@ export const autoEnhancement: ContrastFunction = (
   let i = 0;
   let temp: number[];
 
-  const result = map(rgbs, rgb => {
+  const result = map(rgbs, (rgb) => {
     const lab = rgb2lab(rgb);
     const l = lab[0];
     if (l < minL) minL = l;
@@ -104,13 +108,13 @@ export const autoEnhancement: ContrastFunction = (
  */
 export const autoBrightness: ContrastFunction = (
   rgbs: readonly number[][],
-  coeff: number = 0.7
+  coeff: number = 0.7,
 ): number[][] => {
   let gamma: number;
 
   let sumL = 0;
   let lab: number[];
-  const labs = map(rgbs, rgb => {
+  const labs = map(rgbs, (rgb) => {
     lab = rgb2lab(rgb);
     sumL += lab[0];
     return lab;
@@ -118,12 +122,14 @@ export const autoBrightness: ContrastFunction = (
 
   if (coeff <= 1e-7) {
     return map(labs, lab => mapNonAlpha(lab, _ => 0)); // eslint-disable-line
-  } else if (sumL < 1e-5 || coeff === 1) {
+  }
+  else if (sumL < 1e-5 || coeff === 1) {
     return map(labs, lab => mapNonAlpha(lab, _ => 255)); // eslint-disable-line
-  } else {
+  }
+  else {
     // sumL / rgbs.length = mean of luminance
     gamma = Math.log(coeff) / Math.log(sumL / rgbs.length / 100);
-    return map(labs, lab => {
+    return map(labs, (lab) => {
       lab[0] = 100 * pow(lab[0] / 100, gamma);
       return lab2rgb(lab);
     });
@@ -153,10 +159,7 @@ export const adjContrast = (
   ...args: number[]
 ): number[][] => {
   method = normalizeOption(method, CONTRAST_METHODS);
-
   const op = getAdjuster(method);
-
-  const result =  op(rgbs, ...args);
-
+  const result = op(rgbs, ...args);
   return result;
 };

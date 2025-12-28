@@ -1,18 +1,19 @@
-import { colord } from 'colord';
 import Color from 'color';
+import { colord } from 'colord';
+
 import { randRgbGen, rgb2hex } from './helpers.js';
 
 
 export class Sample {
-  /**@type {number[][]} */
+  /** @type {number[][]} */
   rgbs;
-  /**@type {string[]} */
+  /** @type {string[]} */
   hex;
-  /**@type {import('colord').Colord[]} */
+  /** @type {import('colord').Colord[]} */
   colords;
-  /**@type {import('color').ColorInstance[]} */
+  /** @type {import('color').ColorInstance[]} */
   colors;
-  /**@type {number} */
+  /** @type {number} */
   length;
 
   /**
@@ -63,7 +64,8 @@ export const SampleGenerator = {
     let sample;
     if (this.cacheA?.step === step) {
       sample = this.cacheA.sample;
-    } else {
+    }
+    else {
       const rgbs = (() => {
         let i = 0;
         const rgbValues = [];
@@ -84,7 +86,7 @@ export const SampleGenerator = {
 
       this.cacheA = {
         step,
-        sample
+        sample,
       };
     }
 
@@ -122,7 +124,7 @@ export const SampleGenerator = {
   get defaults() {
     if (this.cache) return this.cache;
     else return this.b();
-  }
+  },
 };
 
 /**
@@ -148,15 +150,15 @@ export const indexIterator = (max, dim = 1) => {
         next() {
           for (let i = indices.length - 1; i > 1; i--) {
             if (indices[i] > max_[i])
-              return indices[i] = 0, indices[i-1]++, this.next();
+              return indices[i] = 0, indices[i - 1]++, this.next();
           }
           if (indices[0] > max_[0]) return { done: true };
 
           const ret = [...indices];
           indices[dim - 1]++;
           return { value: ret, done: false };
-        }
+        },
       };
-    }
+    },
   };
 };

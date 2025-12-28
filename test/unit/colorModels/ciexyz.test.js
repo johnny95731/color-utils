@@ -1,18 +1,19 @@
 import { expect, test } from '@jest/globals';
+import convert from 'color-convert';
 import { extend } from 'colord';
 import xyzPlugin from 'colord/plugins/xyz';
-import convert from 'color-convert';
 
-import { SampleGenerator } from '../../../test-utils/sample.js';
 import { rgb2xyz, xyz2rgb, setReferenceWhite } from '../../../dist/index.js';
+import { SampleGenerator } from '../../../test-utils/sample.js';
+
 
 extend([xyzPlugin]);
 
 const { colords, rgbs, length } = SampleGenerator.a();
 
 test('CIEXYZ (D65) - comparison', () => {
-  const getConvert = (idx) => convert.rgb.xyz.raw(rgbs[idx]);
-  const getCustom = (idx) => rgb2xyz(rgbs[idx]);
+  const getConvert = idx => convert.rgb.xyz.raw(rgbs[idx]);
+  const getCustom = idx => rgb2xyz(rgbs[idx]);
 
   setReferenceWhite('D65');
   for (let i = 0; i < length; i++) {
@@ -29,7 +30,7 @@ test('CIEXYZ (D50) - comparison', () => {
     const { x, y, z } = colords[idx].toXyz();
     return [x, y, z];
   };
-  const getCustom = (idx) => rgb2xyz(rgbs[idx]);
+  const getCustom = idx => rgb2xyz(rgbs[idx]);
 
   setReferenceWhite('D50');
   for (let i = 0; i < length; i++) {

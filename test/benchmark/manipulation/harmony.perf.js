@@ -2,9 +2,10 @@ import { extend } from 'colord';
 import harmoniesPlugin from 'colord/plugins/harmonies';
 import mixPlugin from 'colord/plugins/mix';
 
+import { harmonize, rgb2hsb } from '../../../dist/index.js';
 import { performanceTest } from '../../../test-utils/perf.js';
 import { SampleGenerator } from '../../../test-utils/sample.js';
-import { harmonize, rgb2hsb } from '../../../dist/index.js';
+
 
 extend([harmoniesPlugin]);
 extend([mixPlugin]);
@@ -27,9 +28,9 @@ function analogous_() {
   return performanceTest(
     'Analogous',
     [
-      ['color-utils',  custom],
+      ['color-utils', custom],
       colord,
-    ]
+    ],
   );
 }
 
@@ -48,9 +49,9 @@ function complementary_() {
   return performanceTest(
     'Complementary',
     [
-      ['color-utils',  custom],
+      ['color-utils', custom],
       colord,
-    ]
+    ],
   );
 }
 
@@ -69,9 +70,9 @@ function split_() {
   return performanceTest(
     'split complementary',
     [
-      ['color-utils',  custom],
+      ['color-utils', custom],
       colord,
-    ]
+    ],
   );
 }
 
@@ -90,9 +91,9 @@ function triadic_() {
   return performanceTest(
     'triadic',
     [
-      ['color-utils',  custom],
+      ['color-utils', custom],
       colord,
-    ]
+    ],
   );
 }
 
@@ -111,9 +112,9 @@ function rectangle_() {
   return performanceTest(
     'rectangle',
     [
-      ['color-utils',  custom],
+      ['color-utils', custom],
       colord,
-    ]
+    ],
   );
 }
 
@@ -132,9 +133,9 @@ function shades_() {
   return performanceTest(
     'shades',
     [
-      ['color-utils',  custom],
+      ['color-utils', custom],
       colord,
-    ]
+    ],
   );
 }
 
@@ -153,9 +154,9 @@ function tints_() {
   return performanceTest(
     'tints',
     [
-      ['color-utils',  custom],
+      ['color-utils', custom],
       colord,
-    ]
+    ],
   );
 }
 
@@ -174,9 +175,9 @@ function tones_() {
   return performanceTest(
     'tones',
     [
-      ['color-utils',  custom],
+      ['color-utils', custom],
       colord,
-    ]
+    ],
   );
 }
 
@@ -203,7 +204,7 @@ function others() {
       tetradic1,
       tetradic3,
       colord,
-    ]
+    ],
   );
 }
 

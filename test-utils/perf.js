@@ -1,7 +1,8 @@
 import { Bench } from 'tinybench';
 
+
 const round = (val, place = 0) => {
-  return Math.round(10**place * val) / 10**place;
+  return Math.round(10 ** place * val) / 10 ** place;
 };
 
 function convertToMarkdownTable(data) {
@@ -9,8 +10,12 @@ function convertToMarkdownTable(data) {
     return '';
   }
 
-  const keys = ['Task name', 'Latency avg (ns)', 'Throughput avg (ops/s)', 'Comparison'];
-  const header = ['Library', 'Latency avg (ns)', 'Throughput avg (ops/s)', 'Comparison'];
+  const keys = [
+    'Task name', 'Latency avg (ns)', 'Throughput avg (ops/s)', 'Comparison',
+  ];
+  const header = [
+    'Library', 'Latency avg (ns)', 'Throughput avg (ops/s)', 'Comparison',
+  ];
 
   const maxTextLength = keys.map(() => 0);
   const markdownData = data.map((obj) => {
@@ -21,18 +26,20 @@ function convertToMarkdownTable(data) {
       if (key !== 'Comparison' && key !== 'Task name') {
         const arr = text.split('±');
         len = arr[0].length;
-      } else len = text.length;
+      }
+      else len = text.length;
       if (len > maxTextLength[i]) maxTextLength[i] = len;
       ret[key] = text;
     });
     return ret;
   });
 
-  markdownData.forEach(obj => {
+  markdownData.forEach((obj) => {
     keys.forEach((key, j) => {
       if (j === 0) {
         obj[key] = obj[key].padEnd(maxTextLength[0]);
-      } else if (key !== 'Comparison') {
+      }
+      else if (key !== 'Comparison') {
         const arr = obj[key].split('±');
         const numPadding = maxTextLength[j] - arr[0].length;
         arr[0] += '&ensp;'.repeat(numPadding);
@@ -42,7 +49,8 @@ function convertToMarkdownTable(data) {
   });
 
   let markdown = ` ${header.join(' | ')}\n`;
-  markdown += `${header.map(text => ''.padEnd(text.length + 2, '-')).join('|')}\n`;
+  markdown
+    += `${header.map(text => ''.padEnd(text.length + 2, '-')).join('|')}\n`;
 
   for (const row of markdownData) {
     const rowValues = keys.map(header => row[header]);
@@ -62,22 +70,23 @@ export const performanceTest = async (
   testName,
   fns,
   options,
-  print = true
+  print = true,
 ) => {
   if (print)
     console.log(testName);
   const bench = new Bench({ name: testName, time: 1000, ...options });
-  fns.forEach(fn => {
+  fns.forEach((fn) => {
     if (Array.isArray(fn)) {
       bench.add(...fn);
-    } else {
+    }
+    else {
       bench.add(fn.name, fn);
     }
   });
   await bench.run();
   if (print) {
     const table = bench.table();
-    const avgs = table.map((t) => parseInt(Object.values(t)[3]));
+    const avgs = table.map(t => parseInt(Object.values(t)[3]));
     // Find fastest case.
     let idx = -1, max = -Infinity;
     for (let i = 0; i < avgs.length; i++) {
@@ -90,7 +99,8 @@ export const performanceTest = async (
       if (i !== idx) {
         const percent = 100 * (1 - val / max);
         return `${round(percent, percent < 1 ? 2 : 0)}% slower`;
-      } else {
+      }
+      else {
         return 'fastest';
       }
     });
@@ -102,7 +112,8 @@ export const performanceTest = async (
 
     const markdowns = convertToMarkdownTable(table);
     console.table(markdowns);
-  } else {
+  }
+  else {
     console.log(testName, 'completed.');
   }
   return [bench.name, bench.table()];

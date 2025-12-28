@@ -1,19 +1,19 @@
 import { expect, test } from '@jest/globals';
-
+import convert from 'color-convert';
 import { extend } from 'colord';
 import cmykPlugin from 'colord/plugins/cmyk';
-import convert from 'color-convert';
 
-import { SampleGenerator } from '../../../test-utils/sample.js';
 import { rgb2cmyk, cmyk2rgb } from '../../../dist/index.js';
+import { SampleGenerator } from '../../../test-utils/sample.js';
+
 
 extend([cmykPlugin]);
 
 const { rgbs, length } = SampleGenerator.a();
 
 test('CMYK - comparison', () => {
-  const getConvert = (idx) => convert.rgb.cmyk.raw(rgbs[idx]);
-  const getCustom = (idx) => rgb2cmyk(rgbs[idx]);
+  const getConvert = idx => convert.rgb.cmyk.raw(rgbs[idx]);
+  const getCustom = idx => rgb2cmyk(rgbs[idx]);
 
   for (let i = 0; i < length; i++) {
     const convert_ = getConvert(i);

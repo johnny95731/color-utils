@@ -1,5 +1,10 @@
 import { describe, expect, test } from '@jest/globals';
-import { clip, deg2rad, dot3, elementwiseMean, l2Dist3, l2Norm3, pow, rad2deg, rangeMapping, round, squareSum4 } from '../../dist/index.js';
+
+import {
+  clip, deg2rad, dot3, elementwiseMean, l2Dist3, l2Norm3, pow,
+  rad2deg, rangeMapping, round, squareSum4,
+} from '../../dist/index.js';
+
 
 test('pow', () => {
   const specialCases = [
@@ -29,7 +34,7 @@ test('pow', () => {
     const rand2 = Math.random();
     expect(pow(rand, 0)).toBe(1);
     expect(pow(0, rand)).toBe(0);
-    expect(pow(rand, rand2)).toBeCloseTo(rand**rand2, 1e-10);
+    expect(pow(rand, rand2)).toBeCloseTo(rand ** rand2, 1e-10);
   }
 });
 
@@ -159,8 +164,12 @@ describe('Degree and Radian', () => {
 test('dot3', () => {
   const generator = () => {
     return [
-      [...Array(3)].map(() => Math.random() < 0.1 ? 0 : Math.random() * 100 - 50),
-      [...Array(3)].map(() => Math.random() < 0.1 ? 0 : Math.random() * 100 - 50),
+      [...Array(3)].map(
+        () => Math.random() < 0.1 ? 0 : Math.random() * 100 - 50,
+      ),
+      [...Array(3)].map(
+        () => Math.random() < 0.1 ? 0 : Math.random() * 100 - 50,
+      ),
     ];
   };
   const stdCases = [
@@ -199,14 +208,16 @@ test('dot3', () => {
 test('squareSum4', () => {
   const generator = () => {
     return [...Array(4)].map((_, i) =>
-      Math.random() < 0.1 ?
-        (i > 1 ? undefined : 0) :
-        Math.random() * 100 - 50
-    );
+      Math.random() < 0.1
+        ? (i > 1 ? undefined : 0)
+        : Math.random() * 100 - 50);
   };
   for (let i = 0; i < 20; i++) {
     const args = generator();
-    const ret = args.reduce((acc, val) => val == null ? acc : acc + val * val, 0);
+    const ret = args.reduce(
+      (acc, val) => val == null ? acc : acc + val * val,
+      0,
+    );
     expect(squareSum4(...args)).toBeCloseTo(ret);
   }
 });
@@ -214,10 +225,9 @@ test('squareSum4', () => {
 test('l2Norm3', () => {
   const generator = () => {
     return [...Array(3)].map(() =>
-      Math.random() < 0.1 ?
-        0 :
-        Math.random() * 100 - 50
-    );
+      Math.random() < 0.1
+        ? 0
+        : Math.random() * 100 - 50);
   };
   for (let i = 0; i < 20; i++) {
     const args = generator();
@@ -230,21 +240,19 @@ test('l2Dist3', () => {
   const generator = () => {
     return [
       [...Array(3)].map(() =>
-        Math.random() < 0.1 ?
-          0 :
-          Math.random() * 100 - 50
-      ),
+        Math.random() < 0.1
+          ? 0
+          : Math.random() * 100 - 50),
       [...Array(3)].map(() =>
-        Math.random() < 0.1 ?
-          0 :
-          Math.random() * 100 - 50
-      )
+        Math.random() < 0.1
+          ? 0
+          : Math.random() * 100 - 50),
     ];
   };
   for (let i = 0; i < 20; i++) {
     const [arr1, arr2] = generator();
     const ret = Math.sqrt(
-      arr1.reduce((acc, val, i) => (val -= arr2[i], acc + val * val), 0)
+      arr1.reduce((acc, val, i) => (val -= arr2[i], acc + val * val), 0),
     );
     expect(l2Dist3(arr1, arr2)).toBeCloseTo(ret);
   }
@@ -254,15 +262,13 @@ test('elementwiseMean', () => {
   const generator = () => {
     return [
       [...Array(3)].map(() =>
-        Math.random() < 0.1 ?
-          0 :
-          Math.random() * 100 - 50
-      ),
+        Math.random() < 0.1
+          ? 0
+          : Math.random() * 100 - 50),
       [...Array(3)].map(() =>
-        Math.random() < 0.1 ?
-          0 :
-          Math.random() * 100 - 50
-      )
+        Math.random() < 0.1
+          ? 0
+          : Math.random() * 100 - 50),
     ];
   };
   for (let i = 0; i < 20; i++) {

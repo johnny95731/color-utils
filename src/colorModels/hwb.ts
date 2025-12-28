@@ -11,7 +11,7 @@ export const rgb2hwb = (rgb: readonly number[]): number[] => {
     hue,
     min / 2.55,
     100 - max / 2.55,
-    alpha
+    alpha,
   ];
 };
 
@@ -32,6 +32,6 @@ export const hwb2rgb = (hwb: readonly number[]): number[] => {
     hwb[0],
     100 - 100 * w / temp || 0,
     temp,
-    alpha
+    alpha,
   ]);
 };

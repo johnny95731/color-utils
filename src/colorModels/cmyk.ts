@@ -1,4 +1,3 @@
-
 /**
  * Convert RGB to CMYK.
  * @param rgb RGB color array.
@@ -9,14 +8,14 @@ export const rgb2cmyk = (rgb: readonly number[]): number[] => {
   const r = rgb[0];
   const g = rgb[1];
   const b = rgb[2];
-  const max = Math.max(r, g, b) * .01;
+  const max = Math.max(r, g, b) * 0.01;
   // r / (Math.max(r, g, b) * .01) = (r / Math.max(r, g, b)) * 100
   return [
     100 - r / max || 0,
     100 - g / max || 0,
     100 - b / max || 0,
-    100 - max / .0255, // multiply 10000/255 = divide .0255
-    alpha
+    100 - max / 0.0255, // multiply 10000/255 = divide .0255
+    alpha,
   ];
 };
 

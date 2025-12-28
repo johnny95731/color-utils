@@ -1,14 +1,15 @@
 import { expect, test } from '@jest/globals';
 import convert from 'color-convert';
 
-import { SampleGenerator } from '../../../test-utils/sample.js';
 import { rgb2hwb, hwb2rgb, randInt } from '../../../dist/index.js';
+import { SampleGenerator } from '../../../test-utils/sample.js';
+
 
 const { rgbs, length } = SampleGenerator.a();
 
 test('HWB - comparison', () => {
-  const getConvert = (idx) => convert.rgb.hwb.raw(rgbs[idx]);
-  const getCustom = (idx) => rgb2hwb(rgbs[idx]);
+  const getConvert = idx => convert.rgb.hwb.raw(rgbs[idx]);
+  const getCustom = idx => rgb2hwb(rgbs[idx]);
 
   for (let i = 0; i < length; i++) {
     const convert_ = getConvert(i);
@@ -21,15 +22,15 @@ test('HWB - comparison', () => {
 
 test('hwb2rgb - normalize', () => {
   const generator = () => {
-    const hwb = [randInt(360), 50+randInt(50), 50+randInt(50)];
+    const hwb = [randInt(360), 50 + randInt(50), 50 + randInt(50)];
     const sum = hwb[1] + hwb[2];
     return {
       hwb,
       normolized: [
         hwb[0],
         100 * hwb[1] / sum,
-        100 * hwb[2] / sum
-      ]
+        100 * hwb[2] / sum,
+      ],
     };
   };
 

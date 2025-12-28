@@ -1,10 +1,11 @@
+import convert from 'color-convert';
 import { colord, extend } from 'colord';
 import cmykPlugin from 'colord/plugins/cmyk';
-import convert from 'color-convert';
 
+import { rgb2cmyk, cmyk2rgb } from '../../../dist/index.js';
 import { performanceTest } from '../../../test-utils/perf.js';
 import { SampleGenerator } from '../../../test-utils/sample.js';
-import { rgb2cmyk, cmyk2rgb } from '../../../dist/index.js';
+
 
 extend([cmykPlugin]);
 
@@ -35,11 +36,11 @@ function toCmyk() {
   return performanceTest(
     'RGB to CMYK',
     [
-      ['color-utils',  custom_],
+      ['color-utils', custom_],
       ['colord', colord_],
       ['color', color_],
       ['color-convert', convert_],
-    ]
+    ],
   );
 }
 function fromCmyk() {
@@ -76,11 +77,11 @@ function fromCmyk() {
   return performanceTest(
     'CMYK to RGB',
     [
-      ['color-utils',  custom_],
+      ['color-utils', custom_],
       ['colord', colord_],
       ['color', color_],
       ['color-convert', convert_],
-    ]
+    ],
   );
 }
 

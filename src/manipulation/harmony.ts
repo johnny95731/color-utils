@@ -1,5 +1,5 @@
-import { map, normalizeOption } from '../helpers';
 import { hsb2rgb } from '../colorModels/hsb';
+import { map, normalizeOption } from '../helpers';
 
 
 // # Constants
@@ -13,7 +13,7 @@ export const HARMONY_METHODS = [
   'square',
   'complementary',
   'split complementary',
-  'tetradic1', 'tetradic2', 'tetradic3'
+  'tetradic1', 'tetradic2', 'tetradic3',
 ] as const;
 /**
  * Support harmony adjusting methods.
@@ -26,9 +26,9 @@ export type HueHarmony = Exclude<Harmony, 'shades' | 'tints' | 'tones'>;
 
 
 export type HarmonyOp = (
-  ((primaryHsb: readonly number[]) => number[][]) |
-  ((primaryHsb: readonly number[], num?: number) => number[][])
-)
+  ((primaryHsb: readonly number[]) => number[][])
+  | ((primaryHsb: readonly number[], num?: number) => number[][])
+);
 
 
 // # Harmonize
@@ -45,11 +45,11 @@ export type HarmonyOp = (
  */
 export const shiftHue = (
   primary: readonly number[],
-  degs: number[]
+  degs: number[],
 ): number[][] => {
   const [h, s, b, a] = primary;
   // start from 1 'cause first color is primary color.
-  return map(degs, (deg) => [h + deg, s, b, a]);
+  return map(degs, deg => [h + deg, s, b, a]);
 };
 
 // ## Saturation/Brightness harmony
@@ -98,7 +98,8 @@ const hueDegs = {
   [HARMONY_METHODS[8]]: [0, 30, 180, 210],
   [HARMONY_METHODS[9]]: [0, 60, 180, 240],
   [HARMONY_METHODS[10]]: [0, 30, 150, 180],
-} as const satisfies Record<HueHarmony, number[]> & Record<Exclude<Harmony, HueHarmony>, HarmonyOp>;
+} as const satisfies Record<HueHarmony, number[]>
+& Record<Exclude<Harmony, HueHarmony>, HarmonyOp>;
 
 
 /**
@@ -111,13 +112,13 @@ const hueDegs = {
 export const harmonize = (
   hsb: readonly number[],
   method: Harmony | number,
-  args?: number
+  args?: number,
 ): number[][] => {
   method = normalizeOption(method, HARMONY_METHODS, 'analogous');
 
   const op = hueDegs[method];
-  const result = Array.isArray(op) ?
-    shiftHue(hsb, op) :
-    op(hsb, args);
+  const result = Array.isArray(op)
+    ? shiftHue(hsb, op)
+    : op(hsb, args);
   return map(result, hsb => hsb2rgb(hsb));
 };
