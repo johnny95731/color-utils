@@ -5,6 +5,7 @@ import { rgb2xyz, xyz2rgb } from './colorModels/ciexyz';
 import { cmyk2rgb, rgb2cmyk } from './colorModels/cmyk';
 import { hex2rgb } from './colorModels/hex';
 import { hsb2rgb, hsbHelper, rgb2hsb } from './colorModels/hsb';
+import { hsi2rgb, rgb2hsi } from './colorModels/hsi';
 import { hsl2rgb, rgb2hsl } from './colorModels/hsl';
 import { hwb2rgb, rgb2hwb } from './colorModels/hwb';
 import {
@@ -75,6 +76,14 @@ export const COLOR_SPACES: ColorSpace[] = (() => {
       labels_: ['Red', 'Green', 'Blue'],
       max_: map(3, () => [0, 255]),
       isSupported_: true,
+    },
+    {
+      name_: 'HSI',
+      fromRgb_: rgb2hsi,
+      toRgb_: hsi2rgb,
+      labels_: ['Hue', 'Saturation', 'Intensity'],
+      max_: HCL_MAX,
+      isSupported_: false,
     },
     {
       name_: 'HSL',
@@ -185,17 +194,18 @@ export const COLOR_SPACES: ColorSpace[] = (() => {
 
 const SPACE_INDEX_MAP: Record<string, number> = {
   RGB: 0,
-  HSL: 1,
-  HSB: 2,
-  HWB: 3,
-  CMYK: 4,
-  XYZ: 5,
-  LAB: 6,
-  LUV: 7,
-  LCHAB: 8,
-  LCHUV: 9,
-  OKLAB: 10,
-  OKLCH: 11,
+  HSI: 1,
+  HSL: 2,
+  HSB: 3,
+  HWB: 4,
+  CMYK: 5,
+  XYZ: 6,
+  LAB: 7,
+  LUV: 8,
+  LCHAB: 9,
+  LCHUV: 10,
+  OKLAB: 11,
+  OKLCH: 12,
 };
 
 /**

@@ -16,6 +16,7 @@ export * from 'src/colorModels/ciexyz';
 export * from 'src/colorModels/cmyk';
 export * from 'src/colorModels/hex';
 export * from 'src/colorModels/hsb';
+export * from 'src/colorModels/hsi';
 export * from 'src/colorModels/hsl';
 export * from 'src/colorModels/hwb';
 export * from 'src/colorModels/lch';
