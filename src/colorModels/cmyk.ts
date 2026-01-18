@@ -3,6 +3,7 @@
  * Convert RGB to CMYK.
  * @param rgb RGB color array.
  * @return CMYK color array.
+ * @category Color Models/CMYK
  */
 export const rgb2cmyk = (rgb: readonly number[]): number[] => {
   const alpha = rgb[3];
@@ -24,6 +25,7 @@ export const rgb2cmyk = (rgb: readonly number[]): number[] => {
  * Convert CMYK to RGB.
  * @param cmyk CMYK color array.
  * @return RGB color array.
+ * @category Color Models/CMYK
  */
 export const cmyk2rgb = (cmyk: readonly number[]): number[] => {
   const alpha = cmyk[4];

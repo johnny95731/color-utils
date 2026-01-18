@@ -6,6 +6,7 @@ import { getAlpha } from '../colors';
 
 /**
  * Support mix modes.
+ * @category Mixing
  */
 export const MIXING_MODES = [
   'mean', 'brighter', 'deeper', 'soft light', 'additive', 'weighted'
@@ -13,10 +14,11 @@ export const MIXING_MODES = [
 
 /**
  * Support mix modes.
+ * @category Mixing
  */
 export type Mixing = typeof MIXING_MODES[number];
 
-export type MixOp =
+type MixOp =
   ((c1: readonly number[], c2: readonly number[]) => number[]) |
   ((c1: readonly number[], c2: readonly number[], formula: string) => number[]) |
   ((c1: readonly number[], c2: readonly number[], ...args: number[]) => number[]);
@@ -31,6 +33,13 @@ export type MixOp =
  * @param color2 Color array 2.
  * @param weight1 Default: `0.5`. Weight of `color1`. Should be in range [0, 1].
  * @param weight2 Default: `1 - weight2`. Weight of `color1`. Should be in range [0, 1].
+ * @example
+ * ```ts
+ * const a = randRgbGen();
+ * const b = randRgbGen();
+ * mix(a, b, 0.2, 0.8);
+ * ```
+ * @category Mixing
  */
 export const mix = (
   color1: readonly number[],
@@ -53,7 +62,7 @@ export const mix = (
   weightSum = weight1 + weight2;
 
   return map(len, i => {
-    if (i < len-1)
+    if (i < len - 1)
       return (weight1 * color1[i] + weight2 * color2[i]) / weightSum;
     else
       return weightSum * alphaMultipler;
@@ -64,6 +73,14 @@ export const mix = (
  * Mixing two colors by evaluate their elementwise average.
  * @param color1 Color array.
  * @param color2 Color array.
+ * @example
+ * ```ts
+ * const a = randRgbGen();
+ * const b = randRgbGen();
+ * meanMix(a, b);
+ * mix(a, b, 0.5, 0.5) == meanMix(); // true
+ * ```
+ * @category Mixing
  */
 export const meanMix = (
   color1: readonly number[],
@@ -79,9 +96,16 @@ export const meanMix = (
  * saturation and luminance.
  * @param rgb1 RGB color.
  * @param rgb2 RGB color.
- * @param gamma Gamma-corection coefficient. The color is deeper if gamma > 1.
- *   The color is brighter if gamma < 1.
+ * @param gamma Gamma-corection coefficient. The color is deeper if gamma > 1;
+ * and is brighter if gamma < 1.
  * @returns RGB color.
+ * @example
+ * ```ts
+ * const a = randRgbGen();
+ * const b = randRgbGen();
+ * gammaMix(a, b, 0.7);
+ * ```
+ * @category Mixing
  */
 export const gammaMix = (
   rgb1: readonly number[],
@@ -97,10 +121,17 @@ export const gammaMix = (
 };
 
 /**
- *
+ * Gamma mix wit gamma=0.3
  * @param rgb1 RGB color.
  * @param rgb2 RGB color.
- * @returns Color in `space`
+ * @returns 
+ * @example
+ * ```ts
+ * const a = randRgbGen();
+ * const b = randRgbGen();
+ * brighterMix(a, b);
+ * ```
+ * @category Mixing
  */
 export const brighterMix = (
   rgb1: readonly number[],
@@ -108,6 +139,19 @@ export const brighterMix = (
 ) =>
   gammaMix(rgb1, rgb2, 0.3);
 
+/**
+ * Gamma mix wit gamma=1.5
+ * @param rgb1 RGB color.
+ * @param rgb2 RGB color.
+ * @returns 
+ * @example
+ * ```ts
+ * const a = randRgbGen();
+ * const b = randRgbGen();
+ * deeperMix(a, b);
+ * ```
+ * @category Mixing
+ */
 export const deeperMix = (
   rgb1: readonly number[],
   rgb2: readonly number[],
@@ -126,6 +170,7 @@ export const deeperMix = (
  * @param rgbSrc Source RGB color (top layer). Values in [0, 255].
  * @param blendFn Blending function. Receives values in [0, 1]
  * @returns RGB color after blending.
+ * @category Mixing
  */
 export const blendAndComposite = (
   rgbDst: readonly number[],
@@ -136,8 +181,8 @@ export const blendAndComposite = (
   const alphaDst = getAlpha(rgbDst);
 
   const factorBlend = alphaSrc * alphaDst;
-  const factorSrc   = alphaSrc - factorBlend;
-  const factorDst   = alphaDst - factorBlend;
+  const factorSrc = alphaSrc - factorBlend;
+  const factorDst = alphaDst - factorBlend;
 
   const newAlpha = alphaSrc + alphaDst - factorBlend;
 
@@ -160,6 +205,7 @@ export const blendAndComposite = (
  * @param rgbSrc Source RGB color (top layer).
  * @param formula Default: 'w3c'. The softlight formula.
  * @returns RGB color.
+ * @category Mixing
  */
 export const softLightBlend = (
   rgbDst: readonly number[],
@@ -190,7 +236,7 @@ export const softLightBlend = (
     fn = (a, b) => {
       return (
         b <= 0.5 ? // a = 0, b = 1
-          a - (1 - 2 * b) * a * (1 - a):
+          a - (1 - 2 * b) * a * (1 - a) :
           (
             w3c = a <= 0.25 ? ((16 * a - 12) * a + 4) * a : Math.sqrt(a),
             a + (2 * b - 1) * (w3c - a)
@@ -203,10 +249,10 @@ export const softLightBlend = (
 
 /**
  * Add colors in premultiplied form. Returns non-premultiplied color.
- *
  * @param rgb1 RGB color.
  * @param rgb2 RGB color.
  * @returns RGB color.
+ * @category Mixing
  */
 export const additive = (
   rgb1: readonly number[],
@@ -232,6 +278,7 @@ export const additive = (
  * @param method Default: `'mean'`. Mix method. If not specified, invalid, or
  * out of range, the default is 'mean'.
  * @returns RGB color.
+ * @category Mixing
  */
 export const mixColors = (
   rgbs: readonly number[][],

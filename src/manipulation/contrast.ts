@@ -7,6 +7,7 @@ import { mapNonAlpha } from '../colors';
 // # Constants
 /**
  * Methods of adjusting contrast.
+ * @category Contrast
  */
 export const CONTRAST_METHODS = [
   'linear',
@@ -16,11 +17,13 @@ export const CONTRAST_METHODS = [
 ] as const;
 /**
  * Support contrast adjusting methods.
+ * @category Contrast
  */
 export type ContrastMethod = typeof CONTRAST_METHODS[number];
 
-export type ContrastFunction = (rgbs: readonly number[][], ...arg: number[]) => number[][]
-
+/** @inline */
+type ContrastFunction =
+  (rgbs: readonly number[][], ...arg: number[]) => number[][];
 
 
 // # Adjusts contrast.
@@ -29,6 +32,12 @@ export type ContrastFunction = (rgbs: readonly number[][], ...arg: number[]) => 
  * @param rgbs RGB arrays.
  * @param c Scaling coefficient.
  * @returns RGB arrays.
+ * @example
+ * ```ts
+ * const rgbs = map(5, () => randRgbGen())
+ * scaling(rgbs)
+ * ```
+ * @category Contrast
  */
 export const scaling = (rgbs: readonly number[][], c: number = 1): number[][] => {
   return map(
@@ -47,6 +56,12 @@ export const scaling = (rgbs: readonly number[][], c: number = 1): number[][] =>
  * @param rgbs RGB array(s).
  * @param gamma Gamma coefficient.
  * @returns RGB arrays.
+ * @example
+ * ```ts
+ * const rgbs = map(5, () => randRgbGen())
+ * gammaCorrection(rgbs)
+ * ```
+ * @category Contrast
  */
 export const gammaCorrection = (
   rgbs: readonly number[][],
@@ -60,11 +75,18 @@ export const gammaCorrection = (
 
 
 /**
+ * @function
  * Enhance the contrast by scaling their luminance channel of CIELAB space.
  * @param rgbs
  * @returns RGB arrays.
+ * @example
+ * ```ts
+ * const rgbs = map(5, () => randRgbGen())
+ * autoEnhancement(rgbs)
+ * ```
+ * @category Contrast
  */
-export const autoEnhancement: ContrastFunction = (
+export const autoEnhancement = ((
   rgbs: readonly number[][]
 ): number[][] => {
   let minL = Infinity;
@@ -87,7 +109,7 @@ export const autoEnhancement: ContrastFunction = (
     result[i++] = lab2rgb(temp);
   }
   return result;
-};
+}) satisfies ContrastFunction;
 
 
 /**
@@ -101,8 +123,14 @@ export const autoEnhancement: ContrastFunction = (
  * @param rgbs
  * @param coeff
  * @returns RGB arrays.
+ * @example
+ * ```ts
+ * const rgbs = map(5, () => randRgbGen())
+ * autoBrightness(rgbs)
+ * ```
+ * @category Contrast
  */
-export const autoBrightness: ContrastFunction = (
+export const autoBrightness = (
   rgbs: readonly number[][],
   coeff: number = 0.7
 ): number[][] => {
@@ -130,6 +158,13 @@ export const autoBrightness: ContrastFunction = (
   }
 };
 
+/**
+ * @function
+ * Returns a function for enhancing colors.
+ * @param method The enhance method name.
+ * @returns An enhance function.
+ * @category Contrast
+ */
 export const getAdjuster = (method: ContrastMethod): ContrastFunction => {
   if (method === CONTRAST_METHODS[0]) return scaling;
   if (method === CONTRAST_METHODS[1]) return gammaCorrection;
@@ -143,9 +178,14 @@ export const getAdjuster = (method: ContrastMethod): ContrastFunction => {
  * Adjust the contrast of array of RGB colors.
  * @param rgbs RGB colors.
  * @param method Adjust method.
- * @param space Default: 'RGB'. Color space of input and output colors.
  * @param args
  * @returns RGB colors.
+ * ```ts
+ * const rgbs = map(5, () => randRgbGen())
+ * adjContrast(rgbs, 'linear', 1.2)
+ * adjContrast(rgbs, 'auto enhancement')
+ * ```
+ * @category Contrast
  */
 export const adjContrast = (
   rgbs: number[][],
@@ -153,10 +193,7 @@ export const adjContrast = (
   ...args: number[]
 ): number[][] => {
   method = normalizeOption(method, CONTRAST_METHODS);
-
   const op = getAdjuster(method);
-
-  const result =  op(rgbs, ...args);
-
+  const result = op(rgbs, ...args);
   return result;
 };

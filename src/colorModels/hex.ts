@@ -5,6 +5,7 @@ const hexMatcher = /^#?([0-9a-f]{3,8})$/i;
  * Verify the string whether is a (3 channel, no alpha channel) Hex color.
  * @param str String that need to be verified.
  * @return Validity of string.
+ * @category Color Models/HEX
  */
 export const isValidHex = (str: string): boolean => {
   const len = hexMatcher.exec(str)?.[1].length;
@@ -16,6 +17,7 @@ export const isValidHex = (str: string): boolean => {
  * Convert RGB to Hex.
  * @param rgb RGB color array.
  * @return Hex color.
+ * @category Color Models/HEX
  */
 export const rgb2hex = (
   rgb: readonly number[]
@@ -40,6 +42,7 @@ export const rgb2hex = (
  * Convert Hex color to RGB color.
  * @param hex Hex code. If the input is not valid, outputs `[0,0,0,1]`.
  * @return rgb
+ * @category Color Models/HEX
  */
 export const hex2rgb = (hex: string): number[] => {
   const hexMatch = hexMatcher.exec(hex);
@@ -55,7 +58,7 @@ export const hex2rgb = (hex: string): number[] => {
     // parseInt('E5B', 16) >>> 4 = parseInt('E5', 16) = right shift 1 hex digit.
     shift = len < 4 ? 8 : 12;
     return [                            // 3-digit / 4-digit
-      ((num >> shift)       & 15) * 17, // right shift 8 / 12
+      ((num >> shift) & 15) * 17, // right shift 8 / 12
       ((num >> (shift - 4)) & 15) * 17, // right shift 4 / 8
       ((num >> (shift - 8)) & 15) * 17, // right shift 0 / 4
       len > 3 ? (num & 15) * 17 / 255 : 1,
@@ -63,8 +66,8 @@ export const hex2rgb = (hex: string): number[] => {
   }
   shift = len < 8 ? 16 : 24;
   return [                       // 6-digit / 8-digit
-    (num >> shift)        & 255, // right shift 16 / 24
-    (num >> (shift - 8))  & 255, // right shift 8  / 16
+    (num >> shift) & 255, // right shift 16 / 24
+    (num >> (shift - 8)) & 255, // right shift 8  / 16
     (num >> (shift - 16)) & 255, // right shift 0  / 8
     len > 6 ? (num & 255) / 255 : 1,
   ];

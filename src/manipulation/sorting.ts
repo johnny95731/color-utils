@@ -7,21 +7,28 @@ import { rgb2lab } from '../colorModels/cielab';
 // # Constants
 /**
  * Actions for sorting palette colors.
+ * @category Sorting
  */
 export const SORTING_ACTIONS = [
   'brightness', 'random', 'reversion', 'CIE76', 'CIE94', 'CIEDE2000'
 ] as const;
+/**
+ * @category Sorting
+ */
 export type Sort = typeof SORTING_ACTIONS[number];
 
 type SortOp = (rgb1: readonly number[], rgb2: readonly number[]) => number
 
+/** @inline */
 type CIEDifferenceFn = (lab1: readonly number[], lab2: readonly number[]) => number
 
 // # Distance functions.
 /**
+ * @function
  * Brightness difference of two colors: `rgb2gray(rgb1) - rgb2gray(rgb2)`.
  * @param rgb1 First RGB color.
  * @param rgb2 Second RGB color.
+ * @category Sorting
  */
 export const diffBrightness: SortOp = (
   rgb1: readonly number[],
@@ -31,19 +38,23 @@ export const diffBrightness: SortOp = (
 };
 
 /**
+ * @function
  * Color difference of two LAB colors with CIE 1976 formula.
  * @see https://en.wikipedia.org/wiki/Color_difference
+ * @category Sorting
  */
 export const distE76: CIEDifferenceFn = (lab1: readonly number[], lab2: readonly number[]) => {
   return l2Dist3(lab1, lab2);
 };
 
 /**
+ * @function
  * Color difference of two CIELAB colors with CIE 1994 formula.
  * @param lab1 CIELAB color 1
  * @param lab2 CIELAB color 2
  * @returns
  * @see https://en.wikipedia.org/wiki/Color_difference
+ * @category Sorting
  */
 export const distE94: CIEDifferenceFn = (lab1: readonly number[], lab2: readonly number[]) => {
   const l1 = lab1[0];
@@ -61,7 +72,7 @@ export const distE94: CIEDifferenceFn = (lab1: readonly number[], lab2: readonly
   const deltaL = l1 - l2;
   const deltaC = c1Star - c2Star;
   // May be NaN. Due to floating problem.
-  const deltaH = Math.sqrt(deltaA*deltaA + deltaB*deltaB - deltaC*deltaC) || 0;
+  const deltaH = Math.sqrt(deltaA * deltaA + deltaB * deltaB - deltaC * deltaC) || 0;
 
   return l2Norm3(
     deltaL,
@@ -71,10 +82,12 @@ export const distE94: CIEDifferenceFn = (lab1: readonly number[], lab2: readonly
 };
 
 /**
+ * @function
  * Color difference of two CIELAB colors with CIEDE2000 formula.
  * @param lab1 CIELAB color 1
  * @param lab2 CIELAB color 2
  * @see https://en.wikipedia.org/wiki/Color_difference
+ * @category Sorting
  */
 export const distE00: CIEDifferenceFn = (() => {
   const cos6 = Math.cos(deg2rad(6));
@@ -144,10 +157,10 @@ export const distE00: CIEDifferenceFn = (() => {
     // Reduced:
     const T = 1 + 0.2 * cos63
       - 0.17 * (cosH * cos30 + sinH / 2)
-      + 0.32 * ((4*cosH*cosH - 3) * cosH * cos6 + (4*sinH*sinH - 3) * sinH * sin6)
+      + 0.32 * ((4 * cosH * cosH - 3) * cosH * cos6 + (4 * sinH * sinH - 3) * sinH * sin6)
       + 0.4 * cos2H * (0.6 - cos2H * cos63 - 2 * cosH * sinH * sin63);
 
-    const lMeanP2 = ((l1 + l2) / 2 - 50)**2;
+    const lMeanP2 = ((l1 + l2) / 2 - 50) ** 2;
     const cMeanP = (c1P + c2P) / 2;
     const cMeanP7 = pow(cMeanP, 7);
 
@@ -156,7 +169,7 @@ export const distE00: CIEDifferenceFn = (() => {
     const SH = 1 + 0.015 * cMeanP * T;
     const RT = (
       2 * Math.sqrt(cMeanP7 / (cMeanP7 + 6103515625))
-      * Math.sin(deg2rad(60 / Math.exp((hMeanP/25 - 11)**2)))
+      * Math.sin(deg2rad(60 / Math.exp((hMeanP / 25 - 11) ** 2)))
     );
 
     // Final terms
@@ -177,6 +190,7 @@ export const distE00: CIEDifferenceFn = (() => {
 /**
  * In-place shuffle an array by Fisher-Yates shuffle.
  * @param arr The array to be shuffled.
+ * @category Sorting
  */
 export const shuffle = <T>(
   arr: T[],
@@ -204,10 +218,12 @@ type tspGreedy = {
   ): T[]
 }
 /**
+ * @function
  * Travelling salesman problem by greedy algorithm.
  * The first point is fixed.
  * @param items Array of points.
  * @param diffOp Distance function.
+ * @category Sorting
  */
 export const tspGreedy: tspGreedy = <T>(
   items: T[] | readonly T[],
@@ -263,6 +279,7 @@ export const tspGreedy: tspGreedy = <T>(
  * some key to get RGB.
  * @param method Sort method.
  * @param rgbGetter To get RGB from input color.
+ * @category Sorting
  */
 export const sortColors = <T>(
   colors: readonly T[],
@@ -297,6 +314,7 @@ export const sortColors = <T>(
  * Sort array of RGB colors.
  * @param rgbs Sort RGB colors.
  * @param method Sort method.
+ * @category Sorting
  */
 export const sortRgbs = (
   rgbs: readonly number[][],

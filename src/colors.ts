@@ -11,7 +11,9 @@ import { lchuv2rgb, luv2rgb, rgb2lchuv, rgb2luv } from './colorModels/cieluv';
 import { xyzSpace } from './colorModels/cie-utils';
 import { oklab2rgb, oklch2rgb, rgb2oklab, rgb2oklch } from './colorModels/oklab';
 
-
+/**
+ * @category Color
+ */
 export type ColorSpace = {
   /**
    * Name of the color space.
@@ -59,6 +61,7 @@ export type ColorSpace = {
 }
 /**
  * Support color spaces.
+ * @category Color
  */
 export const COLOR_SPACES: ColorSpace[] = (() => {
   const HCL_MAX = [[0, 360], [0, 100], [0, 100]] as const; // For Hue-Chroma-Luminance models.
@@ -162,9 +165,9 @@ export const COLOR_SPACES: ColorSpace[] = (() => {
       isSupported_: true,
     },
   ] satisfies (
-      Omit<ColorSpace, 'max_'> &
-      { 'max_'?: ColorSpace['max_'] | number}
-    )[];
+    Omit<ColorSpace, 'max_'> &
+    { 'max_'?: ColorSpace['max_'] | number }
+  )[];
 
   if (typeof CSS !== 'undefined') {
     for (const obj of spaces) {
@@ -199,6 +202,7 @@ const SPACE_INDEX_MAP: Record<string, number> = {
 /**
  * Return an item in `COLOR_SPACES`.
  * @param space Item in `COLOR_SPACES` or `COLOR_SPACES[number].name_`
+ * @category Color
  */
 export const getColorSpace = (
   space: ColorSpace | string = COLOR_SPACES[0]
@@ -213,6 +217,7 @@ export const getColorSpace = (
 /**
  * @deprecated.
  * Return the range of a space.
+ * @category Color
  */
 export const getSpaceRange = (
   space: ColorSpace | string
@@ -223,6 +228,7 @@ export const getSpaceRange = (
 /**
  * Convert the color to specific space.
  * @param color
+ * @category Color
  */
 export const toSpace = (
   color: readonly number[],
@@ -239,6 +245,9 @@ export const toSpace = (
 };
 
 
+/**
+ * @category Color
+ */
 export type CssColorOptions = {
   /**
    * Check whether the browser supports the target color format. If not
@@ -280,6 +289,7 @@ export type CssColorOptions = {
  * @param space The space of color parameter.
  * @param options
  * @returns
+ * @category Color
  */
 export const getCssColor = (
   color: readonly number[],
@@ -353,6 +363,7 @@ export const getCssColor = (
 /**
  * If input a hex, convert to array and return it.
  * If input an array, return it.
+ * @category Color
  */
 export const rgbArraylize = (
   rgb: readonly number[] | string
@@ -363,6 +374,7 @@ export const rgbArraylize = (
 /**
  * Normalize alpha channel to interval [0, 1].
  * @param alpha A number. undefined will be regarded as 1
+ * @category Color
  */
 export const alphaNormalize = (alpha: number | undefined): number => {
   if (alpha === undefined) return 1;
@@ -374,15 +386,17 @@ export const alphaNormalize = (alpha: number | undefined): number => {
  *
  * Get and normalize the last element of array.
  * @param color Color array.
+ * @category Color
  */
 export const getAlpha = (color: readonly number[]): number => {
-  return alphaNormalize(color[color.length-1]);
+  return alphaNormalize(color[color.length - 1]);
 };
 
 /**
  * Handle RGB channels of a color array, excluding the alpha channel.
  * @param rgb A 3- or 4-element color array.
  * @param fn Callback function that handle first 3 channels.
+ * @category Color
  */
 export const mapNonAlpha = (
   rgb: readonly number[],
@@ -399,6 +413,7 @@ export const mapNonAlpha = (
  * Calculate hue (H channel of HSL/HSB) from rgb. Also, returns minimum and
  * maximum of rgb.
  * @param rgb RGB array.
+ * @category Color
  */
 export const rgb2hue = (rgb: readonly number[] | string): number => {
   return hsbHelper(rgbArraylize(rgb))[0];
@@ -408,6 +423,7 @@ export const rgb2hue = (rgb: readonly number[] | string): number => {
 /**
  * Linearlize a sRGB channel.
  * Maps [0, 255] into [0, 1]
+ * @category Color
  */
 export const srgb2linearRgb = (val: number) => {
   return val < 10.31475 ? // 10.31475 = 0.04045 * 255
@@ -417,6 +433,7 @@ export const srgb2linearRgb = (val: number) => {
 /**
  * Gamma correction a sRGB-linear channel
  * Maps [0, 255] into [0, 1]
+ * @category Color
  */
 export const linearRgb2srgb = (val: number) => {
   return val < 0.0031308 ?
@@ -429,6 +446,7 @@ export const linearRgb2srgb = (val: number) => {
  * Conver RGB to grayscale. The value is the same as the Y channel of YIQ space.
  * @param rgb Array of RGB color.
  * @return Grayscale [0, 255]
+ * @category Color
  */
 export const rgb2gray = (rgb: string | readonly number[]): number => (
   dot3(
@@ -439,6 +457,7 @@ export const rgb2gray = (rgb: string | readonly number[]): number => (
 
 /**
  * The rgb is light if the grayscale >= 127.5.
+ * @category Color
  */
 export const isLight = (rgb: readonly number[] | string): boolean => {
   return rgb2gray(rgb) > 127.5;
@@ -448,6 +467,7 @@ export const isLight = (rgb: readonly number[] | string): boolean => {
  * Evaluate relative luminance from sRGB.
  * @returns Relative luminance, between [0, 1].
  * @see https://www.w3.org/WAI/GL/wiki/Relative_luminance
+ * @category Color
  */
 export const rgb2luminance = (rgb: string | readonly number[]): number => {
   rgb = rgbArraylize(rgb);
@@ -460,20 +480,23 @@ export const rgb2luminance = (rgb: string | readonly number[]): number => {
 
 /**
  * @deprecated Use `rgb2luminance` instead.
- *
+ * @function
  * Evaluate relative luminance from RGB.
  * @returns Relative luminance, between [0, 1].
  * @see https://www.w3.org/WAI/GL/wiki/Relative_luminance
+ * @category Color
  */
 export const getRelativeLuminance = rgb2luminance;
 
 /**
  * Returns the contrast ratio which is defined by WCAG 2.1.
+ * @category Color
  */
 
 /**
  * Returns the contrast ratio which is defined by WCAG 2.1.
  * @see https://www.w3.org/WAI/GL/wiki/Contrast_ratio
+ * @category Color
  */
 export const rgb2contrast = (
   rgb1: string | readonly number[],
@@ -487,15 +510,17 @@ export const rgb2contrast = (
 
 /**
  * @deprecated Use `rgb2contrast` instead.
- *
+ * @function
  * Returns the contrast ratio which is defined by WCAG 2.1.
  * @see https://www.w3.org/WAI/GL/wiki/Contrast_ratio
+ * @category Color
  */
 export const getContrastRatio = rgb2contrast;
 
 /**
  * WCAG 2.2 requirements about contrast ratio of text.
  * @see https://www.w3.org/TR/WCAG/#contrast-minimum
+ * @category Color
  */
 export type ReadbleOptions = {
   /**
@@ -519,6 +544,15 @@ export type ReadbleOptions = {
    */
   levelAAA?: boolean
 }
+/**
+ * Check two RGB colors satisfies the WCAG contrast ratio
+ * @param rgb1 RGB color 1.
+ * @param rgb2 RGB color 1.
+ * @param options Conditions. level AA or level AAA. Large text size or
+ * normal text size.
+ * @returns 
+ * @category Color
+ */
 export const isReadable = (
   rgb1: string | readonly number[],
   rgb2: string | readonly number[],
@@ -544,6 +578,7 @@ export const isReadable = (
  * @param randAlpha Default: `false`. With a random value of alpha channel.
  * If set to `false`, the alpha channel will be `1`
  * @return [R, G, B, alpha]
+ * @category Color
  */
 export const randRgbGen = (randAlpha: boolean = false) => [
   randInt(255),

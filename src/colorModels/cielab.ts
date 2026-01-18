@@ -6,6 +6,7 @@ import { cieTrans, cieTransInv, xyzMax } from './cie-utils';
  * Convert RGB to CIE Lab.
  * @param rgb RGB color array.
  * @return CIE Lab color array.
+ * @category Color Models/CIE LAB
  */
 export const rgb2lab = (rgb: readonly number[]): number[] => {
   const alpha = rgb[3];
@@ -23,6 +24,7 @@ export const rgb2lab = (rgb: readonly number[]): number[] => {
  * Convert CIE LAB to RGB.
  * @param lab CIE LAB color array.
  * @return RGB color array.
+ * @category Color Models/CIE LAB
  */
 export const lab2rgb = (lab: readonly number[]): number[] => {
   const alpha = lab[3];
@@ -41,6 +43,7 @@ export const lab2rgb = (lab: readonly number[]): number[] => {
  * Convert RGB to CIE LCh(ab).
  * @param rgb RGB color array.
  * @return CIE LCh(ab) color array.
+ * @category Color Models/CIE LAB
  */
 export const rgb2lchab = (rgb: readonly number[]): number[] => {
   return lcc2lch(rgb2lab(rgb));
@@ -50,6 +53,7 @@ export const rgb2lchab = (rgb: readonly number[]): number[] => {
  * Convert CIE LCh(ab) to RGB.
  * @param lch CIE LCh(ab) color array.
  * @return RGB color array.
+ * @category Color Models/CIE LAB
  */
 export const lchab2rgb = (lch: readonly number[]): number[] => {
   return lab2rgb(lch2lcc(lch));

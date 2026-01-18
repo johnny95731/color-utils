@@ -52,6 +52,7 @@
     "terser": "^5.39.0",
     "tinybench": "^3.1.1",
     "tslib": "^2.8.1",
+    "typedoc": "^0.28.16",
     "typescript": "^5.8.2",
     "typescript-eslint": "^8.26.1"
   },
@@ -72,6 +73,8 @@
     "watch": "rollup -c rollup.config.watch.ts --configPlugin @rollup/plugin-typescript -w",
     "benchmark": "node ./test/trans-perf.js",
     "equiv": "node ./test/trans-equiv-tests.js",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage --watchAll"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage --watchAll",
+    "predeploy": "typedoc",
+    "deploy": "gh-pages --dotfiles -d docs"
   }
 }

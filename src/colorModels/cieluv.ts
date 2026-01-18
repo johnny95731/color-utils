@@ -1,26 +1,33 @@
 import { lcc2lch, lch2lcc } from './lch';
 import { rgb2xyz, xyz2rgb } from './ciexyz';
-import { cieTrans, cieTransInv, xyzMax,  } from './cie-utils';
+import { cieTrans, cieTransInv, xyzMax, } from './cie-utils';
 
 
-/**
- * Convert RGB to CIE LUV.
- * @param rgb RGB color array.
- * @return CIE LUV color array.
- */
-type rgb2luv = (xyz: readonly number[]) => number[]
+interface rgb2luv {
+  /**
+   * Convert RGB to CIE LUV.
+   * @param rgb RGB color array.
+   * @return CIE LUV color array.
+   * @category Color Models/CIE LUV
+   * @function
+   */
+  (rgb: readonly number[]): number[]
+}
 
-/**
- * Convert CIE LUV to RGB.
- * Note that the change of luminance may be non-intutive.
- * For example, luv2rgb([14, -70, -90]) is [255, 0, 0], but
- * luv2rgb([15, -70, -90]) is [0, 255, 255].
- * @param luv CIE LUV color array.
- * @return RGB color array.
- */
-type luv2rgb = (luv: readonly number[]) => number[]
+interface luv2rgb {
+  /**
+   * Convert CIE LUV to RGB.
+   * Note that the change of luminance may be non-intutive.
+   * For example, luv2rgb([14, -70, -90]) is [255, 0, 0], but
+   * luv2rgb([15, -70, -90]) is [0, 255, 255].
+   * @param luv CIE LUV color array.
+   * @return RGB color array.
+   * @category Color Models/CIE LUV
+   */
+  (luv: readonly number[]): number[]
+}
 
-const [rgb2luv, luv2rgb] = (() => {
+const luv = (() => {
   const weightedSum = (xyz: readonly number[]) => {
     return xyz[0] + 15 * xyz[1] + 3 * xyz[2];
   };
@@ -69,14 +76,18 @@ const [rgb2luv, luv2rgb] = (() => {
     ];
     return xyz2rgb(xyz);
   };
-  return [rgb2luv, luv2rgb];
+  return [rgb2luv, luv2rgb] as const;
 })();
-export { rgb2luv, luv2rgb };
+/** @function */
+export const rgb2luv: rgb2luv = luv[0];
+/** @function */
+export const luv2rgb: luv2rgb = luv[1];
 
 /**
  * Convert RGB to CIE LCh(uv).
  * @param rgb RGB color array.
  * @return CIE LCh(uv) color array.
+ * @category Color Models/CIE LUV
  */
 export const rgb2lchuv = (rgb: readonly number[]): number[] => {
   return lcc2lch(rgb2luv(rgb));
@@ -86,6 +97,7 @@ export const rgb2lchuv = (rgb: readonly number[]): number[] => {
  * Convert CIE LCh(uv) to RGB.
  * @param lch CIE LCh(uv) color array.
  * @return RGB color array.
+ * @category Color Models/CIE LUV
  */
 export const lchuv2rgb = (lch: readonly number[]): number[] => {
   return luv2rgb(lch2lcc(lch));

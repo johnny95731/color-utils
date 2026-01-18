@@ -1,7 +1,15 @@
 import { map, type DeepReadonly } from './helpers';
 
 /**
- * An alias of x**y. About 25%~30% faster than x**y = Math.pow(x,y) for non-integer `y`.
+ * An lower accuray and faster of `x ** y` for non-integer `y`.
+ * @param x Base.
+ * @param y Exponent.
+ * @example
+ * ```ts
+ * pow(0, 0); // 1
+ * pow(2, 3); // 8
+ * ```
+ * @category Utility
  */
 export const pow = (x: number, y: number) => {
   if (!y) return 1;
@@ -10,7 +18,8 @@ export const pow = (x: number, y: number) => {
 };
 
 /**
- * Generate a random (positive) integer between [0, max].
+ * Generate a random (positive) integer between 0 and 0, max + 1.
+ * @category Utility
  */
 export const randInt = (max: number) => {
   return Math.random() * (max + 1) | 0;
@@ -19,11 +28,17 @@ export const randInt = (max: number) => {
 /**
  * Rounding a number to specific place value.
  * @param num A number.
- * @param place Default: `0`. Rounding to specific place value. Positive means decimal places
- * and negative means whole number places.
+ * @param place Default: `0`. Rounding to specific place value. Positive means
+ * decimal places and negative means whole number places.
+ * @example
+ * ```ts
+ * round(123.456, 1); // 123.4
+ * round(123.456, -1); // 120
+ * ```
+ * @category Utility
  */
 export const round = (num: number, place: number = 0): number =>
-  Math.round(10**place * num) / 10**place;
+  Math.round(10 ** place * num) / 10 ** place;
 
 
 /**
@@ -32,6 +47,14 @@ export const round = (num: number, place: number = 0): number =>
  * @param min Minimum value.
  * @param max Maximum value.
  * @returns Clipped number.
+ * @example
+ * ```ts
+ * round(-1, 0, 1);    // 0
+ * round(-1, -2, 2);   // -1
+ * round(-1, -10, -5); // -5
+ * round(-1, -2);      // -1
+ * ```
+ * @category Utility
  */
 export const clip = (num: number, min?: number, max?: number): number => {
   // +undifined = NaN. The comparison always get false
@@ -49,6 +72,13 @@ export const clip = (num: number, min?: number, max?: number): number => {
  * @param newMax Maximum of new range.
  * @param place Rounding to specific place value. Positive means decimal places
  * and negative means whole number places.
+ * @example
+ * ```ts
+ * rangeMapping(0.5, 0, 1, 0, 10); // 5
+ * rangeMapping(0.2, 0, 1, 0, 5);  // 1
+ * rangeMapping(-0.2, 0, 1, 0, 5);  // 0
+ * ```
+ * @category Utility
  */
 export const rangeMapping = (
   val: number,
@@ -63,7 +93,8 @@ export const rangeMapping = (
   return place == null ? newVal : round(newVal, place);
 };
 
-export const [deg2rad, rad2deg] = (() => {
+
+const deg = (() => {
   const factor = Math.PI / 180;
   /** Degree to radian. */
   const deg2rad = (deg: number) => {
@@ -73,11 +104,35 @@ export const [deg2rad, rad2deg] = (() => {
   const rad2deg = (rad: number) => {
     return rad / factor;
   };
-  return [deg2rad, rad2deg];
+  return [deg2rad, rad2deg] as const;
 })();
+/**
+ * @function
+ * Convert value from degree to radian.
+ * @param deg Degree value.
+ * @returns Radian value.
+ * @category Utility
+ */
+export const deg2rad = deg[0];
+/**
+ * @function
+ * Convert value from radian to degree.
+ * @param deg Degree value.
+ * @returns Radian value.
+ * @category Utility
+ */
+export const rad2deg = deg[1];
 
 /**
  * Dot product of two arrays with lenght=3.
+ * @example
+ * ```ts
+ * const a = [0, 1, 2, 3];
+ * const b = [3, 4, 5, 6];
+ * dot3(a, b); // 14
+ * dot3(a.slice(0, 3), b.slice(0, 3)); // 14
+ * ```
+ * @category Utility
  */
 export const dot3 = (arr1: readonly number[], arr2: readonly number[]): number => {
   return arr1[0] * arr2[0] + arr1[1] * arr2[1] + arr1[2] * arr2[2];
@@ -85,10 +140,19 @@ export const dot3 = (arr1: readonly number[], arr2: readonly number[]): number =
 
 /**
  * Return the summation of square of numbers.
+ * @category Utility
  */
 export const squareSum4 = (a: number, b: number, c: number = 0, d: number = 0): number => {
   return a * a + b * b + c * c + d * d;
 };
+/**
+ * `sqrt(a**2 + b**2 + c**2)`
+ * @param a 
+ * @param b 
+ * @param c 
+ * @returns 
+ * @category Utility
+ */
 export const l2Norm3 = (a: number, b: number, c: number = 0) => Math.sqrt(squareSum4(a, b, c));
 
 /**
@@ -96,6 +160,7 @@ export const l2Norm3 = (a: number, b: number, c: number = 0) => Math.sqrt(square
  * @param color1 Array with length = 3.
  * @param color2 Array with length = 3.
  * @returns The mean value of arr1 and arr2.
+ * @category Utility
  */
 export const l2Dist3 = (color1: readonly number[], color2: readonly number[]): number => {
   return l2Norm3(
@@ -111,6 +176,15 @@ export const l2Dist3 = (color1: readonly number[], color2: readonly number[]): n
  * @param arr1 Array 1.
  * @param arr2 Array 2.
  * @returns The mean value of arr1 and arr2.
+ * @example
+ * ```ts
+ * const a = [0, 1, 2, 3];
+ * const b = [3, 4, 5, 6];
+ * const c = [3, 4, 5];
+ * elementwiseMean(a, b); // [1.5, 2.5, 3.5, 4.5]
+ * elementwiseMean(a, c); // [1.5, 2.5, 3.5]
+ * ```
+ * @category Utility
  */
 export const elementwiseMean = (arr1: readonly number[], arr2: readonly number[]): number[] => {
   return map(
@@ -119,13 +193,16 @@ export const elementwiseMean = (arr1: readonly number[], arr2: readonly number[]
   );
 };
 
+/** @ignore */
 export type Array3<T = number> = [T, T, T]
+/** @ignore */
 export type Mat3x3<T = number> = Array3<Array3<T>>
 
 /**
  * @deprecated
  * Matrix-vector product.
  * Multiply a 3x3 matrix by a 3 vector
+ * @category Utility
  */
 export const matVecProduct3 = <
   Mat extends number[][] | Mat3x3,

@@ -5,6 +5,7 @@ import { hsb2rgb } from '../colorModels/hsb';
 // # Constants
 /**
  * Methods of adjusting contrast.
+ * @category Harmony
  */
 export const HARMONY_METHODS = [
   'shades', 'tints', 'tones', // change saturation and/or luminance
@@ -17,15 +18,17 @@ export const HARMONY_METHODS = [
 ] as const;
 /**
  * Support harmony adjusting methods.
+ * @category Harmony
  */
 export type Harmony = typeof HARMONY_METHODS[number];
 /**
  * Harmony methods which by changing the hue.
+ * @category Harmony
  */
 export type HueHarmony = Exclude<Harmony, 'shades' | 'tints' | 'tones'>;
 
 
-export type HarmonyOp = (
+type HarmonyOp = (
   ((primaryHsb: readonly number[]) => number[][]) |
   ((primaryHsb: readonly number[], num?: number) => number[][])
 )
@@ -42,6 +45,12 @@ export type HarmonyOp = (
  * first channel represents hue.
  * @param degs Shift degrees.
  * @returns HSL/HSB/HWB color (same as input).
+ * @example
+ * ```ts
+ * const hsb = [20, 50, 50, 1];
+ * shiftHue(hsb, 15); // [35, 50, 50, 1]
+ * ```
+ * @category Harmony
  */
 export const shiftHue = (
   primary: readonly number[],
@@ -54,7 +63,16 @@ export const shiftHue = (
 
 // ## Saturation/Brightness harmony
 /**
- * Generate gradient that decreasing in brightness.
+ * Generate gradient that is decreasing in brightness.
+ * @param hsb A color in HSB space. Or a color that the third channel
+ * represents brightness, such as HSL or HSI.
+ * @param num Numbers of output colors.
+ * @example
+ * ```ts
+ * const hsb = rgb2hsb(randRgbGen());
+ * shades(hsb, 3);
+ * ```
+ * @category Harmony
  */
 export const shades = (hsb: readonly number[], num: number = 6) => {
   const [h, s, b, a] = hsb;
@@ -66,6 +84,15 @@ export const shades = (hsb: readonly number[], num: number = 6) => {
 
 /**
  * Generate gradient that decreasing in saturation.
+ * @param hsb A color in HSB space. Or a color that the second channel
+ * represents saturation, such as HSL or LCHab.
+ * @param num Numbers of output colors.
+ * @example
+ * ```ts
+ * const hsb = rgb2hsb(randRgbGen());
+ * tints(hsb, 5);
+ * ```
+ * @category Harmony
  */
 export const tints = (hsb: readonly number[], num: number = 6) => {
   const [h, s, b, a] = hsb;
@@ -77,6 +104,16 @@ export const tints = (hsb: readonly number[], num: number = 6) => {
 
 /**
  * Generate gradient that decreasing in both saturation and brightness.
+ * @param hsb A color in HSB space. Or, a color that the 2nd and 3rd
+ * channels represent saturation and brightness, respectively, such
+ * as HSL.
+ * @param num Numbers of output colors.
+ * @example
+ * ```ts
+ * const hsb = rgb2hsb(randRgbGen());
+ * tones(hsb, 5);
+ * ```
+ * @category Harmony
  */
 export const tones = (hsb: readonly number[], num: number = 6) => {
   const [h, s, b, a] = hsb;
@@ -107,6 +144,13 @@ const hueDegs = {
  * @param method Harmony method.
  * @param args Argument `num` for `shades`, `tints`, and `tones`.
  * @returns RGB colors.
+ * @example
+ * ```ts
+ * const hsb = rgb2hsb(randRgbGen());
+ * harmonize(hsb, 'shades', 5);
+ * harmonize(hsb, 'analogous');
+ * ```
+ * @category Harmony
  */
 export const harmonize = (
   hsb: readonly number[],

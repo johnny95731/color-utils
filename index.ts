@@ -1,5 +1,6 @@
 
 export { cloneDeep, map } from 'src/helpers.ts';
+export type { DeepWriteable, DeepReadonly } from 'src/helpers.ts';
 export * from 'src/numeric';
 export * from 'src/colors';
 

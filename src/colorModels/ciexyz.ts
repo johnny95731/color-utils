@@ -7,6 +7,7 @@ import { rgb2xyzMat, xyz2rgbMat } from './cie-utils';
  * Convert RGB to CIE XYZ.
  * @param rgb RGB color array.
  * @return CIE XYZ color array.
+ * @category Color Models/CIE XYZ
  */
 export const rgb2xyz = (rgb: readonly number[]): number[] => {
   const alpha = rgb[3];
@@ -27,6 +28,7 @@ export const rgb2xyz = (rgb: readonly number[]): number[] => {
  * Convert CIE XYZ to RGB.
  * @param xyz RGB color array.
  * @return RGB color array.
+ * @category Color Models/CIE XYZ
  */
 export const xyz2rgb = (xyz: readonly number[]): number[] => {
   const alpha = xyz[3];

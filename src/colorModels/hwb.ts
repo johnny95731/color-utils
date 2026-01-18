@@ -4,9 +4,10 @@ import { hsb2rgb, hsbHelper } from './hsb';
  * Convert RGB to HWB.
  * @param rgb RGB color array.
  * @return [hue, whiteness, blackness].
+ * @category Color Models/HWB
  */
 export const rgb2hwb = (rgb: readonly number[]): number[] => {
-  const [hue, min, max,, alpha] = hsbHelper(rgb);
+  const [hue, min, max, , alpha] = hsbHelper(rgb);
   return [
     hue,
     min / 2.55,
@@ -19,6 +20,7 @@ export const rgb2hwb = (rgb: readonly number[]): number[] => {
  * Convert HWB to RGB.
  * @param hwb HWB color array.
  * @return RGB color array.
+ * @category Color Models/HWB
  */
 export const hwb2rgb = (hwb: readonly number[]): number[] => {
   const alpha = hwb[3];

@@ -5,6 +5,7 @@ import { hsbHelper } from './hsb';
  * Convert RGB to HSL.
  * @param rgb RGB color array.
  * @return [hue, sat, lum]
+ * @category Color Models/HSL
  */
 export const rgb2hsl = (rgb: readonly number[]): number[] => {
   const [hue, min, max, delta, alpha] = hsbHelper(rgb);
@@ -23,6 +24,7 @@ export const rgb2hsl = (rgb: readonly number[]): number[] => {
  * Convert HSL to RGB.
  * @param hsl HSL array.
  * @return RGB color array.
+ * @category Color Models/HSL
  */
 export const hsl2rgb = (hsl: readonly number[]): number[] => {
   const alpha = hsl[3];

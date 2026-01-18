@@ -1,13 +1,29 @@
+/**
+ * Deeply read-only object.
+ * @category Utility
+ */
 export type DeepReadonly<T> = Readonly<{
   [K in keyof T]:
-    // Is it a primitive? Then make it readonly
-    T[K] extends (number | string | symbol) ? Readonly<T[K]>
-    // Is it an array of items? Then make the array readonly and the item as well
-    : T[K] extends Array<infer A> ? Readonly<Array<DeepReadonly<A>>>
-    // It is some other object, make it readonly as well
-    : DeepReadonly<T[K]>;
+  // Is it a primitive? Then make it readonly
+  T[K] extends (number | string | symbol) ? Readonly<T[K]>
+  // Is it an array of items? Then make the array readonly and the item as well
+  : T[K] extends Array<infer A> ? Readonly<Array<DeepReadonly<A>>>
+  // It is some other object, make it readonly as well
+  : DeepReadonly<T[K]>;
 }>
+/**
+ * Deeply write-able object.
+ * @category Utility
+ */
 export type DeepWriteable<T> = { -readonly [P in keyof T]: DeepWriteable<T[P]> };
+
+/**
+ * Clone object deeply. Object that is neither Array nor Date will become
+ * standard object.
+ * @param obj 
+ * @returns 
+ * @category Utility
+ */
 export const cloneDeep = <T>(obj: T): DeepWriteable<T> => {
   let result;
 
@@ -43,14 +59,30 @@ export const cloneDeep = <T>(obj: T): DeepWriteable<T> => {
 
 type map = {
   /**
-   * Generate an array with specific length.
+   * @overload 
+   * Similar to Array.prototype.map, but this can control the length of output
+   * array by 
+   * @typeParam R Returned type of elements in the array.
+   * @param len Length of the output array.
+   * @param callback Generate elements by indices.
+   * @returns {R[]} An array.
+   * @category Utility
    */
   <R>(
     len: number,
     callback: (i: number) => R
   ): R[];
   /**
-   * Similar to Array.prototype.map but this can control the length of output array .
+   * @overload 
+   * Similar to Array.prototype.map, but this can control the length of output
+   * array by 
+   * @typeParam R Returned type of callback function.
+   * @typeParam T Input type of elements in the array `arr`.
+   * @param arr Array of elements.
+   * @param callback Generate elements by elements in `arr` and indices.
+   * @param len The length of output array.
+   * @returns {R[]} An array.
+   * @category Utility
    */
   <R, T extends readonly unknown[]>(
     arr: T,
@@ -58,12 +90,13 @@ type map = {
     len?: number,
   ): R[]
 }
+/** @function */
 export const map: map = <R, T extends readonly unknown[]>(
   arr: number | T,
   callback:
     typeof arr extends number ?
-      ((i: number) => R) :
-      ((val: T[number], i: number) => R),
+    ((i: number) => R) :
+    ((val: T[number], i: number) => R),
   len?: number,
 ): R[] => {
   // @ts-expect-error
@@ -89,6 +122,7 @@ export const map: map = <R, T extends readonly unknown[]>(
  * @param list Valid options.
  * @param defaults Default value.
  * @returns A value in list.
+ * @category Utility
  */
 export const normalizeOption = <T extends readonly string[]>(
   value: T[number] | number,
