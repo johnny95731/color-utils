@@ -1,0 +1,3071 @@
+<!DOCTYPE html><html class="default" lang="en" data-base="./"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>@johnny95731/color-utils</title><meta name="description" content="Documentation for @johnny95731/color-utils"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script defer src="assets/main.js"></script><script async src="assets/icons.js" id="tsd-icons-script"></script><script async src="assets/search.js" id="tsd-search-script"></script><script async src="assets/navigation.js" id="tsd-nav-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => window.app?app.showPage():document.body.style.removeProperty("display"),500)</script><header class="tsd-page-toolbar"><div class="tsd-toolbar-contents container"><a href="index.html" class="title">@johnny95731/color-utils</a><div id="tsd-toolbar-links"></div><button id="tsd-search-trigger" class="tsd-widget" aria-label="Search"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-search"></use></svg></button><dialog id="tsd-search" aria-label="Search"><input role="combobox" id="tsd-search-input" aria-controls="tsd-search-results" aria-autocomplete="list" aria-expanded="true" autocapitalize="off" autocomplete="off" placeholder="Search the docs" maxLength="100"/><ul role="listbox" id="tsd-search-results"></ul><div id="tsd-search-status" aria-live="polite" aria-atomic="true"><div>Preparing search index...</div></div></dialog><a href="#" class="tsd-widget menu" id="tsd-toolbar-menu-trigger" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-menu"></use></svg></a></div></header><div class="container container-main"><div class="col-content"><div class="tsd-page-title"><h1>@johnny95731/color-utils</h1></div><div class="tsd-panel tsd-typography"><h1>color-utils</h1>
+<p><strong>color-utils</strong> provides functions for color conversions, harmonies, mix, and sort.</p>
+<p>To see detail changes: <a href="https://github.com/johnny95731/color-utils/blob/main/CHANGELOG.md">Changelog</a> (record since v1.2.0).</p>
+<h2>Features</h2>
+<ul>
+<li><strong>Small</strong>: 11.7KB for core conversion functionality. The full build is only 15.1KB (or 13.6KB with mangle.properties.regex), all sizes after minification.</li>
+<li><strong>High performance</strong>: Optimized for speed. <a href="#benchmark">Benchmark</a></li>
+<li><strong>Browser Detection</strong>: Automatically detects support for CSS <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/color_value"><code>&lt;color&gt;</code></a> values during string conversions.</li>
+<li><strong>Procedural</strong>: Better Tree-shaking and high performance.</li>
+<li><strong>Immutable</strong>.</li>
+<li><strong>Typed</strong>.</li>
+<li>Supports both ESM and CommonJS.</li>
+<li><strong>Zero Dependencies</strong>.</li>
+</ul>
+<h2>Install</h2>
+<pre><code class="shell"><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-2">install</span><span class="hl-1"> </span><span class="hl-2">@johnny95731/color-utils</span>
+</code><button type="button">Copy</button></pre>
+
+<h2>Usage</h2>
+<pre><code class="ts"><span class="hl-3">import</span><span class="hl-1"> { </span><span class="hl-4">rgb2hex</span><span class="hl-1">, </span><span class="hl-4">rgb2hsb</span><span class="hl-1">, </span><span class="hl-4">rgb2gray</span><span class="hl-1">, </span><span class="hl-4">randRgbGen</span><span class="hl-1"> } </span><span class="hl-3">from</span><span class="hl-1"> </span><span class="hl-2">&#39;@johnny95731/color-utils&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">rgb1</span><span class="hl-1"> = </span><span class="hl-0">randRgbGen</span><span class="hl-1">();     </span><span class="hl-7">// [ 32, 245, 203, 1 ];</span><br/><span class="hl-0">rgb2hex</span><span class="hl-1">(</span><span class="hl-4">rgb1</span><span class="hl-1">);  </span><span class="hl-7">// &quot;#20F5CB&quot;</span><br/><span class="hl-0">rgb2hsb</span><span class="hl-1">(</span><span class="hl-4">rgb1</span><span class="hl-1">);  </span><span class="hl-7">// [ 168.16901408450707, 86.93877551020408, 96.07843137254902, 1 ]</span><br/><span class="hl-0">rgb2gray</span><span class="hl-1">(</span><span class="hl-4">rgb1</span><span class="hl-1">); </span><span class="hl-7">// 176.525</span><br/><br/><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">rgb2</span><span class="hl-1"> = </span><span class="hl-0">randRgbGen</span><span class="hl-1">(</span><span class="hl-5">true</span><span class="hl-1">); </span><span class="hl-7">// [ 124, 191, 136, 0.175 ];</span><br/><span class="hl-0">rgb2hex</span><span class="hl-1">(</span><span class="hl-4">rgb2</span><span class="hl-1">);  </span><span class="hl-7">// &quot;#7CBF882D&quot;</span><br/><span class="hl-0">rgb2hsb</span><span class="hl-1">(</span><span class="hl-4">rgb2</span><span class="hl-1">);  </span><span class="hl-7">// [ 130.7462686567164, 35.07853403141361, 74.90196078431373, 0.175 ]</span><br/><span class="hl-0">rgb2gray</span><span class="hl-1">(</span><span class="hl-4">rgb2</span><span class="hl-1">); </span><span class="hl-7">// 164.69699999999997</span>
+</code><button type="button">Copy</button></pre>
+
+<h2>Supported Color Spaces</h2>
+<p>More infomations abous color spaces: <a href="#color-space-ranges">Color Space Ranges</a></p>
+<ul>
+<li>RGB</li>
+<li>HEX (3/4/6/8 digit)</li>
+<li>HSL</li>
+<li>HSB (alias of HSV)</li>
+<li>HWB</li>
+<li>CMYK</li>
+<li>NAMED (Closest CSS <code>&lt;named-color&gt;</code>).</li>
+</ul>
+<p>Absolute color space:</p>
+<ul>
+<li>XYZ (D65 is the default of reference white. Calling <code>setReferenceWhite('D50')</code> to switch to D50)</li>
+<li>LAB</li>
+<li>LCHab</li>
+<li>LUV</li>
+<li>LCHuv</li>
+<li>Oklab</li>
+<li>Oklch</li>
+</ul>
+<h2>API</h2>
+<details>
+<summary><code>randRgbGen(randAlpha: boolean = false): number[]</code></summary>
+<p>Generates a random RGB color. If set the parameter <code>randAlpha</code> to <code>true</code>, give a random  alpha value.</p>
+<pre><code class="ts"><span class="hl-0">randRgbGen</span><span class="hl-1">();     </span><span class="hl-7">// [48, 189, 131, 1]</span><br/><span class="hl-0">randRgbGen</span><span class="hl-1">(</span><span class="hl-5">true</span><span class="hl-1">); </span><span class="hl-7">// [15, 4, 86, 0.487]</span>
+</code><button type="button">Copy</button></pre>
+
+</details>
+<h3>Basic Conversions</h3>
+<p>The naming of converters is connecting input space and output space with a letter 2(to). Most conversinons are group of two, rgb2space and space2rgb. For example, <code>rgb2hsl</code> and <code>hsl2rgb</code>. About alpha channel handling, see <a href="#alpha">alpha channel</a></p>
+<pre><code class="ts"><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">rgb1</span><span class="hl-1"> = </span><span class="hl-0">randRgbGen</span><span class="hl-1">();     </span><span class="hl-7">// [ 32, 245, 203, 1 ];</span><br/><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">hex1</span><span class="hl-1"> = </span><span class="hl-0">rgb2hex</span><span class="hl-1">(</span><span class="hl-4">rgb1</span><span class="hl-1">);    </span><span class="hl-7">// &quot;#20F5CB&quot;</span><br/><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">ret1</span><span class="hl-1"> = </span><span class="hl-0">hex2rgb</span><span class="hl-1">(</span><span class="hl-4">hex1</span><span class="hl-1">);    </span><span class="hl-7">// [ 32, 245, 203, 1 ]</span><br/><br/><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">rgb2</span><span class="hl-1"> = </span><span class="hl-0">randRgbGen</span><span class="hl-1">(</span><span class="hl-5">true</span><span class="hl-1">); </span><span class="hl-7">// [ 124, 191, 136, 0.175 ];</span><br/><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">hex2</span><span class="hl-1"> = </span><span class="hl-0">rgb2hex</span><span class="hl-1">(</span><span class="hl-4">rgb2</span><span class="hl-1">);    </span><span class="hl-7">// &quot;#7CBF882D&quot;</span><br/><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">ret2</span><span class="hl-1"> = </span><span class="hl-0">hex2rgb</span><span class="hl-1">(</span><span class="hl-4">hex2</span><span class="hl-1">);    </span><span class="hl-7">// [ 124, 191, 136, 0.17647058823529413 ]</span>
+</code><button type="button">Copy</button></pre>
+
+<pre><code class="ts"><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">rgb</span><span class="hl-1"> = </span><span class="hl-0">randRgbGen</span><span class="hl-1">(); </span><span class="hl-7">// [215, 117, 43, 1];</span><br/><br/><span class="hl-7">// HSL</span><br/><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">hsl</span><span class="hl-1"> = </span><span class="hl-0">rgb2hsl</span><span class="hl-1">(</span><span class="hl-4">rgb</span><span class="hl-1">); </span><span class="hl-7">// [ 25.813953488372093, 68.25396825396825, 50.58823529411765, 1 ]</span><br/><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">ret</span><span class="hl-1"> = </span><span class="hl-0">hsl2rgb</span><span class="hl-1">(</span><span class="hl-4">hsl</span><span class="hl-1">); </span><span class="hl-7">// [ 215, 116.99999999999997, 43, 1 ]</span><br/><br/><span class="hl-7">// HSB</span><br/><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">hsb</span><span class="hl-1"> = </span><span class="hl-0">rgb2hsb</span><span class="hl-1">(</span><span class="hl-4">rgb</span><span class="hl-1">); </span><span class="hl-7">// [ 25.813953488372093, 80, 84.31372549019608, 1 ]</span><br/><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">ret</span><span class="hl-1"> = </span><span class="hl-0">hsb2rgb</span><span class="hl-1">(</span><span class="hl-4">hsb</span><span class="hl-1">); </span><span class="hl-7">// [ 214.99999999999997, 116.99999999999994, 42.99999999999997, 1 ]</span><br/><br/><span class="hl-7">// HWB</span><br/><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">hwb</span><span class="hl-1"> = </span><span class="hl-0">rgb2hwb</span><span class="hl-1">(</span><span class="hl-4">rgb</span><span class="hl-1">); </span><span class="hl-7">// [ 25.813953488372093, 16.862745098039216, 15.686274509803923, 1 ]</span><br/><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">ret</span><span class="hl-1"> = </span><span class="hl-0">hwb2rgb</span><span class="hl-1">(</span><span class="hl-4">hwb</span><span class="hl-1">); </span><span class="hl-7">// [ 214.99999999999997, 116.99999999999994, 42.99999999999997, 1 ]</span><br/><br/><span class="hl-7">// CMYK</span><br/><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">cmyk</span><span class="hl-1"> = </span><span class="hl-0">rgb2cmyk</span><span class="hl-1">(</span><span class="hl-4">rgb</span><span class="hl-1">);  </span><span class="hl-7">// [ 0, 45.581395348837205, 80, 15.686274509803923, 1 ]</span><br/><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">ret</span><span class="hl-1">  = </span><span class="hl-0">cmyk2rgb</span><span class="hl-1">(</span><span class="hl-4">cmyk</span><span class="hl-1">); </span><span class="hl-7">// [ 215, 117.00000000000001, 42.99999999999999, 1 ]</span><br/><br/><span class="hl-7">// XYZ</span><br/><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">xyz</span><span class="hl-1"> = </span><span class="hl-0">rgb2xyz</span><span class="hl-1">(</span><span class="hl-4">rgb</span><span class="hl-1">); </span><span class="hl-7">// [ 34.82492294995061, 27.348113685721042, 5.729817939366711, 1 ]</span><br/><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">ret</span><span class="hl-1"> = </span><span class="hl-0">xyz2rgb</span><span class="hl-1">(</span><span class="hl-4">xyz</span><span class="hl-1">); </span><span class="hl-7">// [ 215, 116.99999999999997, 42.99999999999999, 1 ]</span><br/><br/><span class="hl-7">// LAB</span><br/><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">lab</span><span class="hl-1"> = </span><span class="hl-0">rgb2lab</span><span class="hl-1">(</span><span class="hl-4">rgb</span><span class="hl-1">); </span><span class="hl-7">// [ 59.295166898095005, 33.23559720107427, 54.87179474020556, 1 ]</span><br/><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">ret</span><span class="hl-1"> = </span><span class="hl-0">lab2rgb</span><span class="hl-1">(</span><span class="hl-4">lab</span><span class="hl-1">); </span><span class="hl-7">// [ 214.99999999999994, 117.00000000000003, 42.99999999999999, 1 ]</span><br/><br/><span class="hl-7">// LUV</span><br/><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">luv</span><span class="hl-1"> = </span><span class="hl-0">rgb2luv</span><span class="hl-1">(</span><span class="hl-4">rgb</span><span class="hl-1">); </span><span class="hl-7">// [ 59.295166898095005, 79.79758781313612, 49.446929802364046, 1 ]</span><br/><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">ret</span><span class="hl-1"> = </span><span class="hl-0">luv2rgb</span><span class="hl-1">(</span><span class="hl-4">luv</span><span class="hl-1">); </span><span class="hl-7">// [ 215.00000000000003, 116.99999999999994, 43.0000000000003, 1 ]</span><br/><br/><span class="hl-7">// LCHab</span><br/><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">lchab</span><span class="hl-1"> = </span><span class="hl-0">rgb2lchab</span><span class="hl-1">(</span><span class="hl-4">rgb</span><span class="hl-1">);   </span><span class="hl-7">// [ 59.295166898095005, 64.15230922829907, 58.796900617389596, 1 ]</span><br/><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">ret</span><span class="hl-1">   = </span><span class="hl-0">lchab2rgb</span><span class="hl-1">(</span><span class="hl-4">lchab</span><span class="hl-1">); </span><span class="hl-7">// [ 214.99999999999994, 117.00000000000003, 42.99999999999999, 1 ]</span><br/><br/><span class="hl-7">// LCHuv</span><br/><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">lchuv</span><span class="hl-1"> = </span><span class="hl-0">rgb2lchuv</span><span class="hl-1">(</span><span class="hl-4">rgb</span><span class="hl-1">);   </span><span class="hl-7">// [ 59.295166898095005, 93.87573641615329, 31.784609125244227, 1 ]</span><br/><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">ret</span><span class="hl-1">   = </span><span class="hl-0">lchuv2rgb</span><span class="hl-1">(</span><span class="hl-4">lchuv</span><span class="hl-1">); </span><span class="hl-7">// [ 215.00000000000003, 116.99999999999994, 43.0000000000003, 1 ]</span><br/><br/><span class="hl-7">// Oklab</span><br/><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">oklab</span><span class="hl-1"> = </span><span class="hl-0">rgb2oklab</span><span class="hl-1">(</span><span class="hl-4">rgb</span><span class="hl-1">);   </span><span class="hl-7">// [ 0.6614476183541314, 0.08895010318560151, 0.11843002577812112, 1 ]</span><br/><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">ret</span><span class="hl-1">   = </span><span class="hl-0">oklab2rgb</span><span class="hl-1">(</span><span class="hl-4">oklab</span><span class="hl-1">); </span><span class="hl-7">// [ 215.00000000000006, 116.99999999999986, 43.00000000000048, 1 ]</span><br/><br/><span class="hl-7">// Oklch</span><br/><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">oklch</span><span class="hl-1"> = </span><span class="hl-0">rgb2oklch</span><span class="hl-1">(</span><span class="hl-4">rgb</span><span class="hl-1">);   </span><span class="hl-7">// [ 0.6614476183541314, 0.1481141177016411, 53.09061919375927, 1 ]</span><br/><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">ret</span><span class="hl-1">   = </span><span class="hl-0">oklch2rgb</span><span class="hl-1">(</span><span class="hl-4">oklch</span><span class="hl-1">); </span><span class="hl-7">// [ 215.00000000000006, 116.99999999999986, 43.00000000000048, 1 ]</span>
+</code><button type="button">Copy</button></pre>
+
+<h4 id="alpha"><bold>Alpha Channel / Opacity</bold></h4>
+<p>The 4th value (5th in CMYK) is the alpha value. The value should be between 0 and 1.</p>
+<ul>
+<li><strong>conversions except HEX</strong>: Pass through the alpha value without any validation.<br/></li>
+<li><strong><code>rgb2hex</code></strong>: Outputs a 6-digit hex code (omitting the alpha channel) if the alpha value &gt;= 1 or is <code>undefined</code>. If the alpha &lt; 1, function will output a 8-digit hex code.<br/></li>
+<li><strong><code>hex2rgb</code></strong>: Computes the alpha value if the input is a 4- or 8-digit hex code; for 3- or 6-digit codes, the alpha channel defaults to 1.</li>
+<li><strong>color mixing</strong>: Affect results.</li>
+<li><strong>other manipulations</strong>: Pass through alpha value and does not affect results.</li>
+</ul>
+<div>
+<p><em><strong>Error Handling</strong></em></p>
+<p><code>hex2rgb</code> and <code>named2rgb</code> return <code>[0, 0, 0]</code> when the input is invalid.</p>
+</div>
+<h3><code>ColorSpace</code>Type</h3>
+<p><code>COLOR_SPACES</code> array stores <code>ColorSpace</code> objects, which contains informations about spaces</p>
+<table>
+<thead>
+<tr>
+<th>key</th>
+<th>info</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name_</td>
+<td>Name of color space</td>
+</tr>
+<tr>
+<td>isSupported_</td>
+<td>In browser environment, the value will be initialized by calling <code>CSS.supports('color', 'space(0 0 0)');</code>. In node environment, the values are preset.</td>
+</tr>
+<tr>
+<td>labels_</td>
+<td>Labels of channels.</td>
+</tr>
+<tr>
+<td>max_</td>
+<td>Ranges of channels.</td>
+</tr>
+<tr>
+<td>fromRgb_</td>
+<td>Converter from RGB to space.</td>
+</tr>
+<tr>
+<td>toRgb_</td>
+<td>Converter from space to RGB.</td>
+</tr>
+<tr>
+<td>white_</td>
+<td>White point. The property only exists in XYZ space.</td>
+</tr>
+</tbody>
+</table>
+<p>Note: <code>COLOR_SPACES</code> does not have HEX and NAMED space. And, both <code>LCHab</code> and <code>LCHuv</code> will check <code>CSS.supports('color', 'lch(0 0 0)');</code> though these two spaces are not equvalent.</p>
+<details>
+<summary>Default values of <code>ColorSpace.isSupported_</code></summary>
+<table>
+<thead>
+<tr>
+<th>space</th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RGB</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td>HSL</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td>HSB</td>
+<td><code>false</code></td>
+</tr>
+<tr>
+<td>HWB</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td>CMYK</td>
+<td><code>false</code></td>
+</tr>
+<tr>
+<td>XYZ</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td>LAB</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td>LCHab</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td>LUV</td>
+<td><code>false</code></td>
+</tr>
+<tr>
+<td>LCHuv</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td>Oklab</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td>Oklch</td>
+<td><code>true</code></td>
+</tr>
+</tbody>
+</table>
+</details>
+<br/>
+<p>Argumemts with type <code>ColorSpace | string</code> can input <code>ColorSpace</code> object or <strong>space name</strong>:</p>
+<ul>
+<li>The space name is case-insensitive.</li>
+<li><code>'HEX'</code> and <code>'NAMED'</code> are not valid names.</li>
+<li>Invalid name will be regarded as RGB space.</li>
+</ul>
+<details>
+<summary><code>getColorSpace(space: ColorSpace | string): ColorSpace</code></summary>
+<p>Return an item in <code>COLOR_SPACES</code>. If <code>space</code> argument is a invalid string, that is, find the item that <code>ColorSpace.name_ === space</code> (if no such item, return RGB space).</p>
+</details>
+<details>
+<summary><code>toSpace(color: readonly number[],
+    space: ColorSpace | string,
+    to: ColorSpace | string
+  ): number[]
+</code></summary>
+<p>Convert color from a space to target space.</p>
+<pre><code class="ts"><span class="hl-0">toSpace</span><span class="hl-1">([</span><span class="hl-8">176</span><span class="hl-1">, </span><span class="hl-8">59</span><span class="hl-1">, </span><span class="hl-8">79</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">], </span><span class="hl-2">&#39;RGB&#39;</span><span class="hl-1">, </span><span class="hl-2">&#39;XYZ&#39;</span><span class="hl-1">); </span><span class="hl-7">// [ 20.88159899406145, 12.925309240980702, 8.790857610353417, 1 ]</span><br/><span class="hl-0">rgb2xyz</span><span class="hl-1">([</span><span class="hl-8">176</span><span class="hl-1">, </span><span class="hl-8">59</span><span class="hl-1">, </span><span class="hl-8">79</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">]);               </span><span class="hl-7">// [ 20.88159899406145, 12.925309240980702, 8.790857610353417, 1 ]</span>
+</code><button type="button">Copy</button></pre>
+
+</details>
+<details>
+<summary><code>getCssColor(color: readonly number[], space: ColorSpace | string, options?: CssColorOptions): string</code></summary>
+<p>Convert the color to string.</p>
+<p>If <code>checkSupport</code> is <code>true</code>, then the function will set <code>sep = ' '</code> and change the color space to RGB when the browser does not support this color space.</p>
+<pre><code class="ts"><span class="hl-0">getCssColor</span><span class="hl-1">([</span><span class="hl-8">140</span><span class="hl-1">, </span><span class="hl-8">17</span><span class="hl-1">, </span><span class="hl-8">243</span><span class="hl-1">], </span><span class="hl-2">&#39;RGB&#39;</span><span class="hl-1">);                        </span><span class="hl-7">// &quot;rgb(54.9% 6.67% 95.29%)&quot;</span><br/><span class="hl-0">getCssColor</span><span class="hl-1">([</span><span class="hl-8">140</span><span class="hl-1">, </span><span class="hl-8">17</span><span class="hl-1">, </span><span class="hl-8">243</span><span class="hl-1">], </span><span class="hl-2">&#39;RGB&#39;</span><span class="hl-1">, { </span><span class="hl-4">sep_:</span><span class="hl-1"> </span><span class="hl-2">&quot;,&quot;</span><span class="hl-1"> });         </span><span class="hl-7">// &quot;rgb(54.9%,6.67%,95.29%)&quot;</span><br/><span class="hl-0">getCssColor</span><span class="hl-1">([</span><span class="hl-8">140</span><span class="hl-1">, </span><span class="hl-8">17</span><span class="hl-1">, </span><span class="hl-8">243</span><span class="hl-1">], </span><span class="hl-2">&#39;RGB&#39;</span><span class="hl-1">, { </span><span class="hl-4">percent_:</span><span class="hl-1"> </span><span class="hl-5">false</span><span class="hl-1"> });   </span><span class="hl-7">// &quot;rgb(140 17 243)&quot;</span><br/><span class="hl-0">getCssColor</span><span class="hl-1">([</span><span class="hl-8">273</span><span class="hl-1">, </span><span class="hl-8">90</span><span class="hl-1">, </span><span class="hl-8">51</span><span class="hl-1">], </span><span class="hl-2">&#39;HSL&#39;</span><span class="hl-1">);                         </span><span class="hl-7">// &quot;hsl(273 90% 51%)&quot;</span><br/><span class="hl-0">getCssColor</span><span class="hl-1">([</span><span class="hl-8">27</span><span class="hl-1">, </span><span class="hl-8">12</span><span class="hl-1">, </span><span class="hl-8">86</span><span class="hl-1">], </span><span class="hl-2">&#39;xyz&#39;</span><span class="hl-1">);                          </span><span class="hl-7">// &quot;xyz(28.41% 12% 78.98%)&quot;</span><br/><span class="hl-0">getCssColor</span><span class="hl-1">([</span><span class="hl-8">27</span><span class="hl-1">, </span><span class="hl-8">12</span><span class="hl-1">, </span><span class="hl-8">86</span><span class="hl-1">], </span><span class="hl-2">&#39;xyz&#39;</span><span class="hl-1">, { </span><span class="hl-4">checkSupport_:</span><span class="hl-1"> </span><span class="hl-5">true</span><span class="hl-1"> }); </span><span class="hl-7">// &quot;color(xyz-d65 28.41% 12% 78.98%)&quot;</span>
+</code><button type="button">Copy</button></pre>
+
+<pre><code class="ts"><span class="hl-5">type</span><span class="hl-1"> </span><span class="hl-9">CssColorOptions</span><span class="hl-1"> = {</span><br/><span class="hl-1">  </span><span class="hl-7">/**</span><br/><span class="hl-7">   * Check the browser support or not. If browser does not support the color,</span><br/><span class="hl-7">   * return string in RGB space.</span><br/><span class="hl-7">   * </span><span class="hl-5">@default</span><span class="hl-7"> </span><span class="hl-4">false</span><br/><span class="hl-7">   */</span><br/><span class="hl-1">  </span><span class="hl-4">checkSupport_</span><span class="hl-1">?: </span><span class="hl-9">boolean</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-7">/**</span><br/><span class="hl-7">   * Seperator of values. If checkSupport_ is true, the seperator will always be &#39; &#39;</span><br/><span class="hl-7">   * </span><span class="hl-5">@default</span><span class="hl-7"> </span><span class="hl-4">&#39;</span><span class="hl-4"> </span><span class="hl-4">&#39;</span><br/><span class="hl-7">   */</span><br/><span class="hl-1">  </span><span class="hl-4">sep_</span><span class="hl-1">?: </span><span class="hl-9">string</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-7">/**</span><br/><span class="hl-7">   * Convert all values to percent except deg.</span><br/><span class="hl-7">   * </span><span class="hl-5">@default</span><span class="hl-7"> </span><span class="hl-4">true</span><br/><span class="hl-7">   */</span><br/><span class="hl-1">  </span><span class="hl-4">percent_</span><span class="hl-1">?: </span><span class="hl-9">boolean</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-7">/**</span><br/><span class="hl-7">   * Argument for rounding values. Set false to disable rounding. true equials</span><br/><span class="hl-7">   * default value.</span><br/><span class="hl-7">   * </span><span class="hl-5">@default</span><span class="hl-7"> </span><span class="hl-4">2</span><br/><span class="hl-7">   */</span><br/><span class="hl-1">  </span><span class="hl-4">place_</span><span class="hl-1">?: </span><span class="hl-9">number</span><span class="hl-1"> | </span><span class="hl-9">boolean</span><br/><span class="hl-1">}</span>
+</code><button type="button">Copy</button></pre>
+
+<p>See also</p>
+<ul>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/color_value"><code>&lt;color&gt;</code></a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/color"><code>color()</code></a></li>
+</ul>
+</details>
+<details>
+<summary><code>rgbArraylize(rgb: readonly number[] | string): readonly number[]</code></summary>
+<p>Normalize RGB or HEX to array type.</p>
+</details>
+<details>
+<summary><code>alphaNormalize(alpha: number | undefined): number</code></summary>
+<p>Normalize alpha channel to interval [0, 1].</p>
+</details>
+<details>
+<summary><code>getAlpha(color: readonly number[]): number</code></summary>
+<p>Get and normalize the last element of array.</p>
+<p>Interim function. May be deprecated in future.</p>
+</details>
+<details>
+<summary><code>setReferenceWhite(white: 'D65' | 'D50'): void</code></summary>
+<p>Change the reference white of CIEXYZ space. This library only support sRGB for RGB model.
+This function will change <code>.max_</code> property of XYZ space.</p>
+</details>
+<h4 id="color-space-ranges">Color Space Ranges</h4>
+<p>Most values are referred to CSS definition.</p>
+<details>
+<summary>RGB</summary>
+<table>
+<thead>
+<tr>
+<th>channel</th>
+<th>description</th>
+<th>min</th>
+<th>max</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>r</td>
+<td>Red</td>
+<td>0</td>
+<td>255</td>
+</tr>
+<tr>
+<td>g</td>
+<td>Green</td>
+<td>0</td>
+<td>255</td>
+</tr>
+<tr>
+<td>b</td>
+<td>Blue</td>
+<td>0</td>
+<td>255</td>
+</tr>
+</tbody>
+</table>
+</details>
+<details>
+<summary>HSL</summary>
+<table>
+<thead>
+<tr>
+<th>channel</th>
+<th>description</th>
+<th>min</th>
+<th>max</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>h</td>
+<td>Hue</td>
+<td>0</td>
+<td>360</td>
+</tr>
+<tr>
+<td>s</td>
+<td>Saturation</td>
+<td>0</td>
+<td>100</td>
+</tr>
+<tr>
+<td>l</td>
+<td>Lightness</td>
+<td>0</td>
+<td>100</td>
+</tr>
+</tbody>
+</table>
+</details>
+<details>
+<summary>HSB</summary>
+<table>
+<thead>
+<tr>
+<th>channel</th>
+<th>description</th>
+<th>min</th>
+<th>max</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>h</td>
+<td>Hue</td>
+<td>0</td>
+<td>360</td>
+</tr>
+<tr>
+<td>s</td>
+<td>Saturation</td>
+<td>0</td>
+<td>100</td>
+</tr>
+<tr>
+<td>b</td>
+<td>Brightness</td>
+<td>0</td>
+<td>100</td>
+</tr>
+</tbody>
+</table>
+</details>
+<details>
+<summary>HWB</summary>
+<table>
+<thead>
+<tr>
+<th>channel</th>
+<th>description</th>
+<th>min</th>
+<th>max</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>h</td>
+<td>Hue</td>
+<td>0</td>
+<td>360</td>
+</tr>
+<tr>
+<td>w</td>
+<td>Whiteness</td>
+<td>0</td>
+<td>100</td>
+</tr>
+<tr>
+<td>b</td>
+<td>blackness</td>
+<td>0</td>
+<td>100</td>
+</tr>
+</tbody>
+</table>
+</details>
+<details>
+<summary>CMYK</summary>
+<table>
+<thead>
+<tr>
+<th>channel</th>
+<th>description</th>
+<th>min</th>
+<th>max</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>c</td>
+<td>Cyan</td>
+<td>0</td>
+<td>100</td>
+</tr>
+<tr>
+<td>m</td>
+<td>Magenta</td>
+<td>0</td>
+<td>100</td>
+</tr>
+<tr>
+<td>y</td>
+<td>Yellow</td>
+<td>0</td>
+<td>100</td>
+</tr>
+<tr>
+<td>k</td>
+<td>key/black</td>
+<td>0</td>
+<td>100</td>
+</tr>
+</tbody>
+</table>
+</details>
+<details>
+<summary>NAMED</summary>
+<table>
+<thead>
+<tr>
+<th>channel</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>key</td>
+<td><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/named-color">&lt;named-color&gt;</a></td>
+</tr>
+</tbody>
+</table>
+<p>Several keywords are <em>aliases</em> for each other, we only preserve one of alias:</p>
+<table>
+<thead>
+<tr>
+<th>preserved</th>
+<th>removed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cyan</td>
+<td>aqua</td>
+</tr>
+<tr>
+<td>magenta</td>
+<td>fuchsia</td>
+</tr>
+<tr>
+<td>gray</td>
+<td>grey</td>
+</tr>
+</tbody>
+</table>
+<p>and other 6 groups of alias that containing <code>'gray'</code> (preserved) or <code>'grey'</code> (removed).</p>
+</details>
+<details>
+<summary>XYZ</summary>
+<p>The maximum value is based on RGB model and reference white. y channel will be normalize to <code>100</code>.
+The library currently only supports <code>sRGB</code> as RGB model and <code>D65</code> (default) and <code>D50</code> as reference white.</p>
+<p>D65</p>
+<table>
+<thead>
+<tr>
+<th>channel</th>
+<th>description</th>
+<th>min</th>
+<th>max</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>x</td>
+<td></td>
+<td>0</td>
+<td>95.047</td>
+</tr>
+<tr>
+<td>y</td>
+<td></td>
+<td>0</td>
+<td>100</td>
+</tr>
+<tr>
+<td>z</td>
+<td></td>
+<td>0</td>
+<td>108.883</td>
+</tr>
+</tbody>
+</table>
+<p>D50</p>
+<table>
+<thead>
+<tr>
+<th>channel</th>
+<th>description</th>
+<th>min</th>
+<th>max</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>x</td>
+<td></td>
+<td>0</td>
+<td>96.422</td>
+</tr>
+<tr>
+<td>y</td>
+<td></td>
+<td>0</td>
+<td>100</td>
+</tr>
+<tr>
+<td>z</td>
+<td></td>
+<td>0</td>
+<td>82.521</td>
+</tr>
+</tbody>
+</table>
+</details>
+<details>
+<summary>LAB</summary>
+<p>The range of <code>a</code> and <code>b</code> follows the format of CSS. See: <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/lab">lab()</a>.</p>
+<table>
+<thead>
+<tr>
+<th>channel</th>
+<th>description</th>
+<th>min</th>
+<th>max</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>l</td>
+<td>Lightness</td>
+<td>0</td>
+<td>100</td>
+</tr>
+<tr>
+<td>a</td>
+<td>Chrominance</td>
+<td>-125</td>
+<td>125</td>
+</tr>
+<tr>
+<td>b</td>
+<td>Chrominance</td>
+<td>-125</td>
+<td>125</td>
+</tr>
+</tbody>
+</table>
+</details>
+<details>
+<summary>LCHab</summary>
+<p>The LCH space that converted from LAB.</p>
+<table>
+<thead>
+<tr>
+<th>channel</th>
+<th>description</th>
+<th>min</th>
+<th>max</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>l</td>
+<td>Lightness</td>
+<td>0</td>
+<td>100</td>
+</tr>
+<tr>
+<td>c</td>
+<td>Chroma</td>
+<td>0</td>
+<td>150</td>
+</tr>
+<tr>
+<td>h</td>
+<td>Hue</td>
+<td>0</td>
+<td>360</td>
+</tr>
+</tbody>
+</table>
+</details>
+<details>
+<summary>LUV</summary>
+<p>The range of <code>u</code> and <code>v</code> channels are the extreme values when converting from RGB to LUV.</p>
+<table>
+<thead>
+<tr>
+<th>channel</th>
+<th>description</th>
+<th>min</th>
+<th>max</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>l</td>
+<td>Lightness</td>
+<td>0</td>
+<td>100</td>
+</tr>
+<tr>
+<td>u</td>
+<td>Chrominance</td>
+<td>-134</td>
+<td>220</td>
+</tr>
+<tr>
+<td>v</td>
+<td>Chrominance</td>
+<td>-140</td>
+<td>122</td>
+</tr>
+</tbody>
+</table>
+</details>
+<details>
+<summary>LCHuv</summary>
+<p>The LCH space that converted from LUV.</p>
+<table>
+<thead>
+<tr>
+<th>channel</th>
+<th>description</th>
+<th>min</th>
+<th>max</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>l</td>
+<td>Lightness</td>
+<td>0</td>
+<td>100</td>
+</tr>
+<tr>
+<td>c</td>
+<td>Chroma</td>
+<td>0</td>
+<td>150</td>
+</tr>
+<tr>
+<td>h</td>
+<td>Hue</td>
+<td>0</td>
+<td>360</td>
+</tr>
+</tbody>
+</table>
+</details>
+<details>
+<summary>Oklab</summary>
+<p>The range of <code>a</code> and <code>b</code> follows the format of CSS. See: <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/oklab">oklab()</a>.</p>
+<table>
+<thead>
+<tr>
+<th>channel</th>
+<th>description</th>
+<th>min</th>
+<th>max</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>l</td>
+<td>Lightness</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>a</td>
+<td>Chrominance</td>
+<td>-0.4</td>
+<td>0.4</td>
+</tr>
+<tr>
+<td>b</td>
+<td>Chrominance</td>
+<td>-0.4</td>
+<td>0.4</td>
+</tr>
+</tbody>
+</table>
+</details>
+<details>
+<summary>Oklch</summary>
+<table>
+<thead>
+<tr>
+<th>channel</th>
+<th>description</th>
+<th>min</th>
+<th>max</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>l</td>
+<td>Lightness</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>c</td>
+<td>Chroma</td>
+<td>0</td>
+<td>0.4</td>
+</tr>
+<tr>
+<td>h</td>
+<td>Hue</td>
+<td>0</td>
+<td>360</td>
+</tr>
+</tbody>
+</table>
+</details>
+<h3>Analysis</h3>
+<details id="rgb2gray">
+<summary><code>rgb2gray(rgb: string | readonly number[]): number
+</code></summary>
+<p>Return the grayscale value (within <code>[0, 255]</code>) of an RGB color.
+See: <a href="https://www.w3.org/TR/AERT/#color-contrast">color brightness</a></p>
+<pre><code class="ts"><span class="hl-0">rgb2gray</span><span class="hl-1">([</span><span class="hl-8">1</span><span class="hl-1">, </span><span class="hl-8">100</span><span class="hl-1">, </span><span class="hl-8">255</span><span class="hl-1">]); </span><span class="hl-7">// 88.06899999999999</span>
+</code><button type="button">Copy</button></pre>
+
+</details>
+<details>
+<summary><code>isLight(rgb: readonly number[] | string): boolean</code></summary>
+<p>Return <code>true</code> if the grayscale value of an RGB array or a hex string is greater than 127.5. Otherwise, return <code>false</code>. <a href="#rgb2gray">rgb2gray</a></p>
+<pre><code class="ts"><span class="hl-0">rgb2gray</span><span class="hl-1">([</span><span class="hl-8">156</span><span class="hl-1">, </span><span class="hl-8">49</span><span class="hl-1">, </span><span class="hl-8">93</span><span class="hl-1">]); </span><span class="hl-7">// 86.009</span><br/><span class="hl-0">isLight</span><span class="hl-1">([</span><span class="hl-8">156</span><span class="hl-1">, </span><span class="hl-8">49</span><span class="hl-1">, </span><span class="hl-8">93</span><span class="hl-1">]);  </span><span class="hl-7">// false</span><br/><br/><span class="hl-0">rgb2gray</span><span class="hl-1">(</span><span class="hl-2">&#39;#E6ECB6&#39;</span><span class="hl-1">);     </span><span class="hl-7">// 228.04999999999995</span><br/><span class="hl-0">isLight</span><span class="hl-1">(</span><span class="hl-2">&#39;#E6ECB6&#39;</span><span class="hl-1">);      </span><span class="hl-7">// true</span>
+</code><button type="button">Copy</button></pre>
+
+</details>
+<details>
+<summary><code>rgb2hue(rgb: readonly number[]): number</code></summary>
+<p>Hue of RGB. Note that this value is different from hue of CIELCH.</p>
+<pre><code class="ts"><span class="hl-0">rgb2hue</span><span class="hl-1">([</span><span class="hl-8">1</span><span class="hl-1">, </span><span class="hl-8">100</span><span class="hl-1">, </span><span class="hl-8">255</span><span class="hl-1">]); </span><span class="hl-7">// 216.61417322834643</span>
+</code><button type="button">Copy</button></pre>
+
+</details>
+<details>
+<summary><code>rgb2luminance(rgb: readonly number[] | string): number</code></summary>
+<p>Return the relative luminance (within <code>[0, 1]</code>) of an RGB array or a hex string.
+See: <a href="https://www.w3.org/TR/WCAG20/#relativeluminancedef">WCAG2.0 relative luminance</a></p>
+<pre><code class="ts"><span class="hl-0">rgb2luminance</span><span class="hl-1">([</span><span class="hl-8">191</span><span class="hl-1">, </span><span class="hl-8">123</span><span class="hl-1">, </span><span class="hl-8">86</span><span class="hl-1">]);   </span><span class="hl-7">// 0.259141693330052</span><br/><span class="hl-0">rgb2luminance</span><span class="hl-1">([</span><span class="hl-8">0</span><span class="hl-1">, </span><span class="hl-8">0</span><span class="hl-1">, </span><span class="hl-8">0</span><span class="hl-1">]);        </span><span class="hl-7">// 0</span><br/><span class="hl-0">rgb2luminance</span><span class="hl-1">([</span><span class="hl-8">255</span><span class="hl-1">, </span><span class="hl-8">255</span><span class="hl-1">, </span><span class="hl-8">255</span><span class="hl-1">]);  </span><span class="hl-7">// 1</span>
+</code><button type="button">Copy</button></pre>
+
+</details>
+<details>
+<summary><code>getRelativeLuminance(rgb: readonly number[] | string): number</code></summary>
+<p><code>getRelativeLuminance</code> is deprecated. An alias of <code>rgb2luminance</code>.</p>
+</details>
+<details>
+<summary><code>rgb2contrast(rgb1: readonly number[] | string, rgb2: readonly number[] | string): number</code></summary>
+<p>Return the contrast ratio of two RGB colors.
+See: <a href="https://www.w3.org/TR/WCAG20/#contrast-ratiodef">WCAG2.0 contrast ratio</a></p>
+<pre><code class="ts"><span class="hl-0">rgb2contrast</span><span class="hl-1">([</span><span class="hl-8">191</span><span class="hl-1">, </span><span class="hl-8">123</span><span class="hl-1">, </span><span class="hl-8">86</span><span class="hl-1">], [</span><span class="hl-8">230</span><span class="hl-1">, </span><span class="hl-8">236</span><span class="hl-1">, </span><span class="hl-8">182</span><span class="hl-1">]); </span><span class="hl-7">// 2.759999999999999</span><br/><span class="hl-0">rgb2contrast</span><span class="hl-1">([</span><span class="hl-8">0</span><span class="hl-1">, </span><span class="hl-8">0</span><span class="hl-1">, </span><span class="hl-8">0</span><span class="hl-1">], </span><span class="hl-2">&#39;#FFF&#39;</span><span class="hl-1">);               </span><span class="hl-7">// 20.99999999999999</span><br/><span class="hl-0">rgb2contrast</span><span class="hl-1">(</span><span class="hl-2">&#39;FFF&#39;</span><span class="hl-1">, [</span><span class="hl-8">0</span><span class="hl-1">, </span><span class="hl-8">0</span><span class="hl-1">, </span><span class="hl-8">0</span><span class="hl-1">]);                </span><span class="hl-7">// 20.99999999999999</span>
+</code><button type="button">Copy</button></pre>
+
+</details>
+<details>
+<summary><code>getContrastRatio(rgb1: readonly number[] | string, rgb2: readonly number[] | string): number</code></summary>
+<p><code>getContrastRatio</code> is deprecated. An alias of <code>rgb2contrast</code>.</p>
+</details>
+<details>
+<summary><code>isReadable(rgb1: readonly number[] | string, rgb2: readonly number[] | string, options: ReadbleOptions): boolean</code></summary>
+<p>Check that the contrast ratio of two colors (background and text) is satisfing the WCAG standard.
+See: <a href="https://www.w3.org/TR/WCAG21/#contrast-minimum">WCAG2.1 contrast minimum</a></p>
+<pre><code class="ts"><span class="hl-5">type</span><span class="hl-1"> </span><span class="hl-9">ReadbleOptions</span><span class="hl-1"> = {</span><br/><span class="hl-1">  </span><span class="hl-7">/**</span><br/><span class="hl-7">   * Text size is large scale (`true`) or normal scale (`false`).</span><br/><span class="hl-7">   * </span><span class="hl-5">@default</span><span class="hl-7"> </span><span class="hl-4">false</span><br/><span class="hl-7">   */</span><br/><span class="hl-1">  </span><span class="hl-4">isLarge</span><span class="hl-1">?: </span><span class="hl-9">boolean</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-7">/**</span><br/><span class="hl-7">   * Required to satisfy WCAG level AAA (`true`) or level AA (`false`).</span><br/><span class="hl-7">   * </span><span class="hl-5">@default</span><span class="hl-7"> </span><span class="hl-4">false</span><br/><span class="hl-7">   */</span><br/><span class="hl-1">  </span><span class="hl-4">levelAAA</span><span class="hl-1">?: </span><span class="hl-9">boolean</span><br/><span class="hl-1">}</span>
+</code><button type="button">Copy</button></pre>
+
+<pre><code class="ts"><span class="hl-0">isReadable</span><span class="hl-1">([</span><span class="hl-8">191</span><span class="hl-1">, </span><span class="hl-8">123</span><span class="hl-1">, </span><span class="hl-8">86</span><span class="hl-1">], [</span><span class="hl-8">230</span><span class="hl-1">, </span><span class="hl-8">236</span><span class="hl-1">, </span><span class="hl-8">182</span><span class="hl-1">]);       </span><span class="hl-7">// false</span><br/><span class="hl-0">isReadable</span><span class="hl-1">(</span><span class="hl-2">&#39;000&#39;</span><span class="hl-1">, </span><span class="hl-2">&#39;#FFF&#39;</span><span class="hl-1">, { </span><span class="hl-4">levelAAA:</span><span class="hl-1"> </span><span class="hl-5">true</span><span class="hl-1"> });     </span><span class="hl-7">// true</span><br/><span class="hl-0">isReadable</span><span class="hl-1">(</span><span class="hl-2">&#39;987654&#39;</span><span class="hl-1">, </span><span class="hl-2">&#39;123456&#39;</span><span class="hl-1">);                    </span><span class="hl-7">// false</span><br/><span class="hl-0">isReadable</span><span class="hl-1">(</span><span class="hl-2">&#39;987654&#39;</span><span class="hl-1">, </span><span class="hl-2">&#39;123456&#39;</span><span class="hl-1">, { </span><span class="hl-4">isLarge:</span><span class="hl-1"> </span><span class="hl-5">true</span><span class="hl-1"> }); </span><span class="hl-7">// true</span><br/><span class="hl-0">isReadable</span><span class="hl-1">(</span><span class="hl-2">&#39;987654&#39;</span><span class="hl-1">, </span><span class="hl-2">&#39;123456&#39;</span><span class="hl-1">, { </span><span class="hl-4">isLarge:</span><span class="hl-1"> </span><span class="hl-5">true</span><span class="hl-1">, </span><span class="hl-4">levelAAA:</span><span class="hl-1"> </span><span class="hl-5">true</span><span class="hl-1"> }) </span><span class="hl-7">// false</span>
+</code><button type="button">Copy</button></pre>
+
+</details>
+<h3>Harmony</h3>
+Some function arguments naming hsb, but the method works in HSL or HWB space.
+<details>
+<summary><code>shiftHue(primary: readonly number[], degs: number[]): number[][]</code></summary>
+<p>Return a palette that each color is the hue shift of primary. The primary color should be HSB, HSL, HWB color, or color space that first channel represents hue.</p>
+<p>The return space is the <strong>same</strong> as the input space.</p>
+<pre><code class="ts"><span class="hl-0">shiftHue</span><span class="hl-1">([</span><span class="hl-8">65</span><span class="hl-1">, </span><span class="hl-8">56</span><span class="hl-1">, </span><span class="hl-8">92</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">], [</span><span class="hl-8">0</span><span class="hl-1">, </span><span class="hl-8">30</span><span class="hl-1">, </span><span class="hl-8">60</span><span class="hl-1">]);    </span><span class="hl-7">// [ [ 65, 56, 92, 1 ], [ 95, 56, 92, 1 ], [ 125, 56, 92, 1 ] ]</span><br/><span class="hl-0">shiftHue</span><span class="hl-1">([</span><span class="hl-8">209</span><span class="hl-1">, </span><span class="hl-8">36</span><span class="hl-1">, </span><span class="hl-8">87</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">], [</span><span class="hl-8">0</span><span class="hl-1">, </span><span class="hl-8">120</span><span class="hl-1">, </span><span class="hl-8">240</span><span class="hl-1">]); </span><span class="hl-7">// [ [ 209, 36, 87, 1 ], [ 329, 36, 87, 1 ], [ 449, 36, 87, 1 ] ]</span>
+</code><button type="button">Copy</button></pre>
+
+</details>
+<details>
+<summary><code>shades(hsb: readonly number[], num: number = 6): number[][]</code></summary>
+<p>Return a gradient that colors decreasing in brightness from <code>bri = hsb[2]</code> to <code>bri * (1-1/num)</code>.</p>
+<p>The return space is the <strong>same</strong> as the input space.</p>
+<pre><code class="ts"><span class="hl-0">shades</span><span class="hl-1">([</span><span class="hl-8">192</span><span class="hl-1">, </span><span class="hl-8">78</span><span class="hl-1">, </span><span class="hl-8">72</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">], </span><span class="hl-8">6</span><span class="hl-1">); </span><span class="hl-7">// [ [ 192, 78, 72, 1 ], [ 192, 78, 60, 1 ], [ 192, 78, 48.00000000000001, 1 ], [ 192, 78, 36, 1 ], [ 192, 78, 24.000000000000004, 1 ], [ 192, 78, 11.999999999999996, 1 ] ]</span><br/><span class="hl-0">shades</span><span class="hl-1">([</span><span class="hl-8">340</span><span class="hl-1">, </span><span class="hl-8">56</span><span class="hl-1">, </span><span class="hl-8">73</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">], </span><span class="hl-8">2</span><span class="hl-1">); </span><span class="hl-7">// [ [ 340, 56, 73, 1 ], [ 340, 56, 36.5, 1 ] ]</span>
+</code><button type="button">Copy</button></pre>
+
+</details>
+<details>
+<summary><code>tints(hsb: readonly number[], num: number = 6): number[][]</code></summary>
+<p>Return a gradient that colors decreasing in saturation from <code>sat = hsb[1]</code> to <code>sat * (1-1/num)</code>.</p>
+<p>The return space is the <strong>same</strong> as the input space.</p>
+<pre><code class="ts"><span class="hl-0">tints</span><span class="hl-1">([</span><span class="hl-8">55</span><span class="hl-1">, </span><span class="hl-8">53</span><span class="hl-1">, </span><span class="hl-8">91</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">], </span><span class="hl-8">6</span><span class="hl-1">);  </span><span class="hl-7">// [ [ 55, 53, 91, 1 ], [ 55, 44.16666666666667, 91, 1 ], [ 55, 35.333333333333336, 91, 1 ], [ 55, 26.5, 91, 1 ], [ 55, 17.666666666666668, 91, 1 ], [ 55, 8.833333333333332, 91, 1 ] ]</span><br/><span class="hl-0">tints</span><span class="hl-1">([</span><span class="hl-8">229</span><span class="hl-1">, </span><span class="hl-8">18</span><span class="hl-1">, </span><span class="hl-8">96</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">], </span><span class="hl-8">2</span><span class="hl-1">); </span><span class="hl-7">// [ [ 229, 18, 96, 1 ], [ 229, 9, 96, 1 ] ]</span>
+</code><button type="button">Copy</button></pre>
+
+</details>
+<details>
+<summary><code>tones(hsb: readonly number[], method: Harmony | number, num: number = 6): number[][]</code></summary>
+<p>Return a gradient that colors decreasing in both saturation (from <code>sat = hsb[1]</code> to <code>sat * (1-1/num)</code>) and brightness (from <code>bri = hsb[2]</code> to <code>bri * (1-1/num)</code>).</p>
+<p>The return space is the <strong>same</strong> as the input space.</p>
+<pre><code class="ts"><span class="hl-0">tones</span><span class="hl-1">([</span><span class="hl-8">203</span><span class="hl-1">, </span><span class="hl-8">87</span><span class="hl-1">, </span><span class="hl-8">98</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">], </span><span class="hl-8">6</span><span class="hl-1">); </span><span class="hl-7">// [ [ 203, 87, 98, 1 ], [ 203, 72.5, 81.66666666666667, 1 ], [ 203, 58.00000000000001, 65.33333333333334, 1 ], [ 203, 43.5, 49, 1 ], [ 203, 29.000000000000004, 32.66666666666667, 1 ], [ 203, 14.499999999999996, 16.33333333333333, 1 ] ]</span><br/><span class="hl-0">tones</span><span class="hl-1">([</span><span class="hl-8">16</span><span class="hl-1">, </span><span class="hl-8">100</span><span class="hl-1">, </span><span class="hl-8">27</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">], </span><span class="hl-8">2</span><span class="hl-1">); </span><span class="hl-7">// [ [ 16, 100, 27, 1 ], [ 16, 50, 13.5, 1 ] ]</span>
+</code><button type="button">Copy</button></pre>
+
+</details>
+<details>
+<summary><code>harmonize(hsb: readonly number[], num?: number): number[][]</code></summary>
+<p>Generate harmony palettes. The return space is <strong>RGB</strong>.</p>
+<pre><code class="ts"><span class="hl-0">harmonize</span><span class="hl-1">([</span><span class="hl-8">287</span><span class="hl-1">, </span><span class="hl-8">98</span><span class="hl-1">, </span><span class="hl-8">72</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">], </span><span class="hl-2">&#39;analogous&#39;</span><span class="hl-1">);    </span><span class="hl-7">// [ [ 54.65159999999997, 3.671999999999997, 183.6, 1 ], [ 144.61559999999997, 3.671999999999997, 183.6, 1 ], [ 183.6, 3.671999999999997, 132.62040000000002, 1 ] ]</span><br/><span class="hl-0">harmonize</span><span class="hl-1">([</span><span class="hl-8">88</span><span class="hl-1">, </span><span class="hl-8">14</span><span class="hl-1">, </span><span class="hl-8">83</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">], </span><span class="hl-2">&#39;shades&#39;</span><span class="hl-1">, </span><span class="hl-8">3</span><span class="hl-1">);     </span><span class="hl-7">// [ [ 197.82219999999998, 211.64999999999998, 182.01899999999998, 1 ], [ 131.88146666666668, 141.10000000000002, 121.34600000000002, 1 ], [ 65.94073333333334, 70.55000000000001, 60.67300000000001, 1 ] ]</span><br/><span class="hl-0">harmonize</span><span class="hl-1">([</span><span class="hl-8">97</span><span class="hl-1">, </span><span class="hl-8">94</span><span class="hl-1">, </span><span class="hl-8">73</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">], </span><span class="hl-2">&#39;complementary&#39;</span><span class="hl-1">); </span><span class="hl-7">// [ [ 78.24504999999992, 186.14999999999998, 11.169000000000011, 1 ], [ 119.07395000000007, 11.169000000000011, 186.14999999999998, 1 ] ]</span>
+</code><button type="button">Copy</button></pre>
+
+<p>Input a number as <code>method</code> argument will equals the order of method below. If the input is <strong>invalid</strong>, then it will use <code>'analogous'</code></p>
+<table>
+<thead>
+<tr>
+<th>method</th>
+<th>deg shift</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>shades</td>
+<td>none</td>
+</tr>
+<tr>
+<td>tints</td>
+<td>none</td>
+</tr>
+<tr>
+<td>shades</td>
+<td>none</td>
+</tr>
+<tr>
+<td>analogous</td>
+<td>[-30, 0, 30]</td>
+</tr>
+<tr>
+<td>triadic</td>
+<td>[0, 120, 240]</td>
+</tr>
+<tr>
+<td>square</td>
+<td>[0, 90, 180, 270]</td>
+</tr>
+<tr>
+<td>complementary</td>
+<td>[0, 180]</td>
+</tr>
+<tr>
+<td>split complementary</td>
+<td>[0, 150, 210]</td>
+</tr>
+<tr>
+<td>tetradic1</td>
+<td>[0, 30, 180, 210]</td>
+</tr>
+<tr>
+<td>tetradic2</td>
+<td>[0, 60, 180, 240]</td>
+</tr>
+<tr>
+<td>tetradic3</td>
+<td>[0, 30, 150, 180]</td>
+</tr>
+</tbody>
+</table>
+</details>
+<h3>Mixing</h3>
+<details>
+<summary><code>mix(color1: readonly number[], color2: readonly number[], weight1: number = 0.5, weight2: number= 1 - weight1): number[]</code></summary>
+<p>Mix two colors in the same color space. A JavaScript implementation of the CSS <code>color-mix()</code> function, excluding the <code>&lt;color-interpolation-method&gt;</code> parameter.</p>
+<h4 id="algorithm-overview" class="tsd-anchor-link">Algorithm Overview<a href="#algorithm-overview" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4>
+<ol>
+<li>Extract Alpha Values: <code>alpha1 = getAlpha(color1)</code> and <code>alpha2 = getAlpha(color2)</code>.</li>
+<li>Calculate weights and alpha multiplier:</li>
+</ol>
+<pre><code class="ts"><span class="hl-1">  </span><span class="hl-4">weightSum</span><span class="hl-1"> = </span><span class="hl-4">weight1</span><span class="hl-1"> + </span><span class="hl-4">weight2</span><br/><span class="hl-1">  </span><span class="hl-4">weight1p</span><span class="hl-1"> = </span><span class="hl-4">weight1</span><span class="hl-1"> / </span><span class="hl-4">weightSum</span><br/><span class="hl-1">  </span><span class="hl-4">weight2p</span><span class="hl-1"> = </span><span class="hl-4">weight2</span><span class="hl-1"> / </span><span class="hl-4">weightSum</span><br/><span class="hl-1">  </span><span class="hl-4">alphaMultipler</span><span class="hl-1"> = </span><span class="hl-4">weightSum</span><span class="hl-1"> &lt; </span><span class="hl-8">1</span><span class="hl-1"> ? </span><span class="hl-4">weightSum</span><span class="hl-1"> : </span><span class="hl-8">1</span>
+</code><button type="button">Copy</button></pre>
+
+<!-- markdownlint-disable MD029 MD032 -->
+<ol start="3">
+<li>Compute the premultiplied, interpolated result (<code>premul</code>):</li>
+</ol>
+<ul>
+<li>For non-alpha channels:<br/>
+<code>premul[nonAlpha] = weight1p * alpha1 * color1 + weight2p * alpha 2 * color2</code><br/></li>
+<li>For alpha channel: <br/>
+<code>weight1p * alpha1 + weight2p * alpha2</code></li>
+</ul>
+<!-- markdownlint-disable MD029 MD032 -->
+<ol start="4">
+<li>Produce the final mixed result:</li>
+</ol>
+<ul>
+<li>Non-alpha channels: <code>premul[nonAlpha] / premul[alpha]</code></li>
+<li>Alpha channel: <code>premul[alpha] * alphaMultiplier</code></li>
+</ul>
+<pre><code class="ts"><span class="hl-0">mix</span><span class="hl-1">([</span><span class="hl-8">42</span><span class="hl-1">, </span><span class="hl-8">62</span><span class="hl-1">, </span><span class="hl-8">206</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">], [</span><span class="hl-8">55</span><span class="hl-1">, </span><span class="hl-8">202</span><span class="hl-1">, </span><span class="hl-8">93</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">], </span><span class="hl-8">0.5</span><span class="hl-1">, </span><span class="hl-8">0.5</span><span class="hl-1">);     </span><span class="hl-7">// [ 48.5, 132, 149.5, 1 ]</span><br/><span class="hl-0">mix</span><span class="hl-1">([</span><span class="hl-8">42</span><span class="hl-1">, </span><span class="hl-8">62</span><span class="hl-1">, </span><span class="hl-8">206</span><span class="hl-1">, </span><span class="hl-8">0.5</span><span class="hl-1">], [</span><span class="hl-8">55</span><span class="hl-1">, </span><span class="hl-8">202</span><span class="hl-1">, </span><span class="hl-8">93</span><span class="hl-1">, </span><span class="hl-8">0.2</span><span class="hl-1">], </span><span class="hl-8">0.5</span><span class="hl-1">, </span><span class="hl-8">0.5</span><span class="hl-1">); </span><span class="hl-7">// [ 45.714285714285715, 102.00000000000001, 173.71428571428572, 0.35 ]</span><br/><span class="hl-0">mix</span><span class="hl-1">([</span><span class="hl-8">155</span><span class="hl-1">, </span><span class="hl-8">122</span><span class="hl-1">, </span><span class="hl-8">126</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">], [</span><span class="hl-8">211</span><span class="hl-1">, </span><span class="hl-8">243</span><span class="hl-1">, </span><span class="hl-8">242</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">], </span><span class="hl-8">0.2</span><span class="hl-1">);      </span><span class="hl-7">// [ 199.8, 218.8, 218.8, 1 ]</span><br/><span class="hl-0">mix</span><span class="hl-1">([</span><span class="hl-8">204</span><span class="hl-1">, </span><span class="hl-8">248</span><span class="hl-1">, </span><span class="hl-8">241</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">], [</span><span class="hl-8">149</span><span class="hl-1">, </span><span class="hl-8">241</span><span class="hl-1">, </span><span class="hl-8">118</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">], </span><span class="hl-8">3</span><span class="hl-1">, </span><span class="hl-8">2</span><span class="hl-1">);     </span><span class="hl-7">// [ 182, 245.2, 191.8, 1 ]</span><br/><span class="hl-0">mix</span><span class="hl-1">([</span><span class="hl-8">204</span><span class="hl-1">, </span><span class="hl-8">248</span><span class="hl-1">, </span><span class="hl-8">241</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">], [</span><span class="hl-8">149</span><span class="hl-1">, </span><span class="hl-8">241</span><span class="hl-1">, </span><span class="hl-8">118</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">], </span><span class="hl-8">0.6</span><span class="hl-1">, </span><span class="hl-8">0.4</span><span class="hl-1">); </span><span class="hl-7">// [ 182, 245.2, 191.8, 1 ]</span>
+</code><button type="button">Copy</button></pre>
+
+</details>
+<details>
+<summary><code>meanMix(color1: readonly number[], color2: readonly number[]): number[]</code></summary>
+<p>Mix two colors in same color space with <code>weight1 = weight2 = 0.5</code>:</p>
+<pre><code class="js"><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-0">meanMix</span><span class="hl-1"> = (</span><span class="hl-4">color1</span><span class="hl-1">, </span><span class="hl-4">color2</span><span class="hl-1">) </span><span class="hl-5">=&gt;</span><span class="hl-1"> </span><span class="hl-0">mix</span><span class="hl-1">(</span><span class="hl-4">color1</span><span class="hl-1">, </span><span class="hl-4">color2</span><span class="hl-1">)</span>
+</code><button type="button">Copy</button></pre>
+
+<pre><code class="ts"><span class="hl-0">meanMix</span><span class="hl-1">([</span><span class="hl-8">42</span><span class="hl-1">, </span><span class="hl-8">62</span><span class="hl-1">, </span><span class="hl-8">206</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">], [</span><span class="hl-8">55</span><span class="hl-1">, </span><span class="hl-8">202</span><span class="hl-1">, </span><span class="hl-8">93</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">]);     </span><span class="hl-7">// [ 48.5, 132, 149.5, 1 ]</span><br/><span class="hl-0">meanMix</span><span class="hl-1">([</span><span class="hl-8">42</span><span class="hl-1">, </span><span class="hl-8">62</span><span class="hl-1">, </span><span class="hl-8">206</span><span class="hl-1">, </span><span class="hl-8">0.5</span><span class="hl-1">], [</span><span class="hl-8">55</span><span class="hl-1">, </span><span class="hl-8">202</span><span class="hl-1">, </span><span class="hl-8">93</span><span class="hl-1">, </span><span class="hl-8">0.2</span><span class="hl-1">]); </span><span class="hl-7">// [ 45.714285714285715, 102.00000000000001, 173.71428571428572, 0.35 ]</span><br/><span class="hl-0">meanMix</span><span class="hl-1">([</span><span class="hl-8">155</span><span class="hl-1">, </span><span class="hl-8">122</span><span class="hl-1">, </span><span class="hl-8">126</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">], [</span><span class="hl-8">211</span><span class="hl-1">, </span><span class="hl-8">243</span><span class="hl-1">, </span><span class="hl-8">242</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">]); </span><span class="hl-7">// [ 183, 182.5, 184, 1 ]</span>
+</code><button type="button">Copy</button></pre>
+
+</details>
+<details>
+<summary><code>gammaMix(rgb1: readonly number[], rgb2: readonly number[], gamma: number): number[]</code></summary>
+<p>Mix two RGB colors and adjust mixed color using an exponential function in the HSL space.</p>
+<!-- markdownlint-disable MD024 -->
+<h4 id="algorithm-overview-1" class="tsd-anchor-link">Algorithm Overview<a href="#algorithm-overview-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4>
+<ol>
+<li>Compute the average RGB color: <code>mean = mix(rgb1, rgb2)</code></li>
+<li>Convert the mixed color to HSL: <code>hsl = rgb2hsl(mean)</code></li>
+<li>Adjust the saturation and lightness with the formula: <code>newVal = 100 * (val / 100)**gamma;</code>.</li>
+<li>Convert the adjusted HSL color back to RGB and return the result.</li>
+</ol>
+<h4 id="about" class="tsd-anchor-link">About <code>gamma</code><a href="#about" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4>
+<ul>
+<li>If <code>gamma &lt; 1</code>, the result will be <em><strong>brighter</strong></em> than <code>meanMix</code>.</li>
+<li>If <code>gamma &gt; 1</code>, the result will be <em><strong>darker</strong></em> than <code>meanMix</code>.</li>
+</ul>
+<pre><code class="ts"><span class="hl-0">gammaMix</span><span class="hl-1">([</span><span class="hl-8">42</span><span class="hl-1">, </span><span class="hl-8">62</span><span class="hl-1">, </span><span class="hl-8">206</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">], [</span><span class="hl-8">55</span><span class="hl-1">, </span><span class="hl-8">202</span><span class="hl-1">, </span><span class="hl-8">93</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">], </span><span class="hl-8">0.7</span><span class="hl-1">);     </span><span class="hl-7">// [ 54.39561213833193, 181.8755020626048, 208.5928442623028, 1 ]</span><br/><span class="hl-0">gammaMix</span><span class="hl-1">([</span><span class="hl-8">155</span><span class="hl-1">, </span><span class="hl-8">122</span><span class="hl-1">, </span><span class="hl-8">126</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">], [</span><span class="hl-8">211</span><span class="hl-1">, </span><span class="hl-8">243</span><span class="hl-1">, </span><span class="hl-8">242</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">], </span><span class="hl-8">1.2</span><span class="hl-1">); </span><span class="hl-7">// [ 171.41502723522638, 171.18140357959763, 171.8822745464839, 1 ]</span>
+</code><button type="button">Copy</button></pre>
+
+</details>
+<details>
+<summary><code>brighterMix(rgb1: readonly number[], rgb2: readonly number[]): number[]</code></summary>
+<p><code>gammaMix</code> with <code>gamma = 0.3</code>.</p>
+<pre><code class="ts"><span class="hl-0">brighterMix</span><span class="hl-1">([</span><span class="hl-8">42</span><span class="hl-1">, </span><span class="hl-8">62</span><span class="hl-1">, </span><span class="hl-8">206</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">], [</span><span class="hl-8">55</span><span class="hl-1">, </span><span class="hl-8">202</span><span class="hl-1">, </span><span class="hl-8">93</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">]);     </span><span class="hl-7">// [ 140.49399108764436, 225.63360346857013, 243.47723480588996, 1 ]</span><br/><span class="hl-0">brighterMix</span><span class="hl-1">([</span><span class="hl-8">155</span><span class="hl-1">, </span><span class="hl-8">122</span><span class="hl-1">, </span><span class="hl-8">126</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">], [</span><span class="hl-8">211</span><span class="hl-1">, </span><span class="hl-8">243</span><span class="hl-1">, </span><span class="hl-8">242</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">]); </span><span class="hl-7">// [ 228.89399229092203, 224.81031497062733, 237.06134693151145, 1 ]</span>
+</code><button type="button">Copy</button></pre>
+
+</details>
+<details>
+<summary><code>deeperMix(rgb1: readonly number[], rgb2: readonly number[]): number[]</code></summary>
+<p><code>gammaMix</code> with <code>gamma = 1.5</code>.</p>
+<pre><code class="ts"><span class="hl-0">deeperMix</span><span class="hl-1">([</span><span class="hl-8">42</span><span class="hl-1">, </span><span class="hl-8">62</span><span class="hl-1">, </span><span class="hl-8">206</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">], [</span><span class="hl-8">55</span><span class="hl-1">, </span><span class="hl-8">202</span><span class="hl-1">, </span><span class="hl-8">93</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">]);     </span><span class="hl-7">// [ 39.21213833570636, 76.37097203065198, 84.15875154755679, 1 ]</span><br/><span class="hl-0">deeperMix</span><span class="hl-1">([</span><span class="hl-8">155</span><span class="hl-1">, </span><span class="hl-8">122</span><span class="hl-1">, </span><span class="hl-8">126</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">], [</span><span class="hl-8">211</span><span class="hl-1">, </span><span class="hl-8">243</span><span class="hl-1">, </span><span class="hl-8">242</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">]); </span><span class="hl-7">// [ 155.3090002573382, 155.23799850857594, 155.45100375486268, 1 ]</span>
+</code><button type="button">Copy</button></pre>
+
+</details>
+<details>
+<summary><code>blendAndComposite(rgbDst: readonly number[], rgbSrc: readonly number[], blendFn: (dst: number, src: number) => number): number[]</code></summary>
+<p>Blends and composites the RGBs by a given separable blend mode.</p>
+<p>The formula is described in Section 10 of the CSS <a href="https://www.w3.org/TR/compositing-1/#blendingseparable">Compositing and Blending Level 1</a></p>
+<pre><code class="ts"><span class="hl-0">softLightBlend</span><span class="hl-1">([</span><span class="hl-8">42</span><span class="hl-1">, </span><span class="hl-8">62</span><span class="hl-1">, </span><span class="hl-8">206</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">], [</span><span class="hl-8">55</span><span class="hl-1">, </span><span class="hl-8">202</span><span class="hl-1">, </span><span class="hl-8">93</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">], </span><span class="hl-2">&#39;RGB&#39;</span><span class="hl-1">);              </span><span class="hl-7">// [ 22.051211072664362, 99.24922945171917, 195.2889504036909, 1 ]</span><br/><span class="hl-0">softLightBlend</span><span class="hl-1">([</span><span class="hl-8">42</span><span class="hl-1">, </span><span class="hl-8">62</span><span class="hl-1">, </span><span class="hl-8">206</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">], [</span><span class="hl-8">55</span><span class="hl-1">, </span><span class="hl-8">202</span><span class="hl-1">, </span><span class="hl-8">93</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">], </span><span class="hl-2">&#39;RGB&#39;</span><span class="hl-1">, </span><span class="hl-2">&#39;photoshop&#39;</span><span class="hl-1">); </span><span class="hl-7">// [ 22.051211072664362, 99.24922945171917, 195.2889504036909, 1 ]</span><br/><span class="hl-0">softLightBlend</span><span class="hl-1">([</span><span class="hl-8">55</span><span class="hl-1">, </span><span class="hl-8">202</span><span class="hl-1">, </span><span class="hl-8">93</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">], [</span><span class="hl-8">42</span><span class="hl-1">, </span><span class="hl-8">62</span><span class="hl-1">, </span><span class="hl-8">206</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">], </span><span class="hl-2">&#39;RGB&#39;</span><span class="hl-1">, </span><span class="hl-2">&#39;photoshop&#39;</span><span class="hl-1">); </span><span class="hl-7">// [ 26.07266435986159, 180.43158785082662, 130.55486374261477, 1 ]</span>
+</code><button type="button">Copy</button></pre>
+
+</details>
+<details>
+<summary><code>softLightBlend(rgbDst: readonly number[], rgbSrc: readonly number[], formula: 'photoshop' | 'pegtop' | 'illusions.hu' | 'w3c' = 'w3c'): number[]</code></summary>
+<p>Blending two colors by soft light mode. The details of the formulas, see <a href="https://en.wikipedia.org/wiki/Blend_modes#Soft_Light">wiki blend modes</a>.</p>
+<p>The algorithm follows the <a href="https://www.w3.org/TR/compositing-1/#blending">CSS Compositing and Blending Level 1</a>.</p>
+<pre><code class="ts"><span class="hl-0">softLightBlend</span><span class="hl-1">([</span><span class="hl-8">42</span><span class="hl-1">, </span><span class="hl-8">62</span><span class="hl-1">, </span><span class="hl-8">206</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">], [</span><span class="hl-8">55</span><span class="hl-1">, </span><span class="hl-8">202</span><span class="hl-1">, </span><span class="hl-8">93</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">], </span><span class="hl-2">&#39;RGB&#39;</span><span class="hl-1">);              </span><span class="hl-7">// [ 22.051211072664362, 99.24922945171917, 195.2889504036909, 1 ]</span><br/><span class="hl-0">softLightBlend</span><span class="hl-1">([</span><span class="hl-8">42</span><span class="hl-1">, </span><span class="hl-8">62</span><span class="hl-1">, </span><span class="hl-8">206</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">], [</span><span class="hl-8">55</span><span class="hl-1">, </span><span class="hl-8">202</span><span class="hl-1">, </span><span class="hl-8">93</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">], </span><span class="hl-2">&#39;RGB&#39;</span><span class="hl-1">, </span><span class="hl-2">&#39;photoshop&#39;</span><span class="hl-1">); </span><span class="hl-7">// [ 22.051211072664362, 99.24922945171917, 195.2889504036909, 1 ]</span><br/><span class="hl-0">softLightBlend</span><span class="hl-1">([</span><span class="hl-8">55</span><span class="hl-1">, </span><span class="hl-8">202</span><span class="hl-1">, </span><span class="hl-8">93</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">], [</span><span class="hl-8">42</span><span class="hl-1">, </span><span class="hl-8">62</span><span class="hl-1">, </span><span class="hl-8">206</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">], </span><span class="hl-2">&#39;RGB&#39;</span><span class="hl-1">, </span><span class="hl-2">&#39;photoshop&#39;</span><span class="hl-1">); </span><span class="hl-7">// [ 26.07266435986159, 180.43158785082662, 130.55486374261477, 1 ]</span>
+</code><button type="button">Copy</button></pre>
+
+</details>
+<details>
+<summary><code>additive(rgb1: readonly number[], rgb2: readonly number[]): number[]</code></summary>
+<p>Add colors in premultiplied form. Returns non-premultiplied color.</p>
+<pre><code class="ts"><span class="hl-0">additive</span><span class="hl-1">([</span><span class="hl-8">42</span><span class="hl-1">, </span><span class="hl-8">62</span><span class="hl-1">, </span><span class="hl-8">206</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">], [</span><span class="hl-8">55</span><span class="hl-1">, </span><span class="hl-8">202</span><span class="hl-1">, </span><span class="hl-8">93</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">]);           </span><span class="hl-7">// [ 97, 255, 255, 1 ]</span><br/><span class="hl-0">additive</span><span class="hl-1">([</span><span class="hl-8">155</span><span class="hl-1">, </span><span class="hl-8">122</span><span class="hl-1">, </span><span class="hl-8">126</span><span class="hl-1">, </span><span class="hl-8">0.45</span><span class="hl-1">], [</span><span class="hl-8">211</span><span class="hl-1">, </span><span class="hl-8">243</span><span class="hl-1">, </span><span class="hl-8">242</span><span class="hl-1">, </span><span class="hl-8">0.37</span><span class="hl-1">]); </span><span class="hl-7">// [ 180.2682926829268, 176.59756097560975, 178.34146341463415, 0.8200000000000001 ]</span>
+</code><button type="button">Copy</button></pre>
+
+</details>
+<details>
+<summary><code>mixColors(rgbs: readonly number[][], method: Mixing | number = 'mean', ...args: unknown[]): number[]</code></summary>
+<p>Mix array of RGB colors.</p>
+<pre><code class="ts"><span class="hl-5">type</span><span class="hl-1"> </span><span class="hl-9">Mixing</span><span class="hl-1"> = </span><span class="hl-2">&quot;mean&quot;</span><span class="hl-1"> | </span><span class="hl-2">&quot;brighter&quot;</span><span class="hl-1"> | </span><span class="hl-2">&quot;deeper&quot;</span><span class="hl-1"> | </span><span class="hl-2">&quot;soft light&quot;</span><span class="hl-1"> | </span><span class="hl-2">&quot;additive&quot;</span><span class="hl-1"> | </span><span class="hl-2">&quot;weighted&quot;</span><span class="hl-1">;</span>
+</code><button type="button">Copy</button></pre>
+
+<pre><code class="ts"><span class="hl-0">mixColors</span><span class="hl-1">([[</span><span class="hl-8">42</span><span class="hl-1">, </span><span class="hl-8">62</span><span class="hl-1">, </span><span class="hl-8">206</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">], [</span><span class="hl-8">55</span><span class="hl-1">, </span><span class="hl-8">202</span><span class="hl-1">, </span><span class="hl-8">93</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">]], </span><span class="hl-2">&#39;weighted&#39;</span><span class="hl-1">);               </span><span class="hl-7">// [ 48.5, 132, 149.5, 1 ]</span><br/><span class="hl-0">mixColors</span><span class="hl-1">([[</span><span class="hl-8">42</span><span class="hl-1">, </span><span class="hl-8">62</span><span class="hl-1">, </span><span class="hl-8">206</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">], [</span><span class="hl-8">55</span><span class="hl-1">, </span><span class="hl-8">202</span><span class="hl-1">, </span><span class="hl-8">93</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">]], </span><span class="hl-2">&#39;additive&#39;</span><span class="hl-1">);               </span><span class="hl-7">// [ 97, 255, 255, 1 ]</span><br/><span class="hl-0">mixColors</span><span class="hl-1">([[</span><span class="hl-8">204</span><span class="hl-1">, </span><span class="hl-8">248</span><span class="hl-1">, </span><span class="hl-8">241</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">], [</span><span class="hl-8">149</span><span class="hl-1">, </span><span class="hl-8">241</span><span class="hl-1">, </span><span class="hl-8">118</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">]], </span><span class="hl-2">&#39;weighted&#39;</span><span class="hl-1">, </span><span class="hl-8">0.3</span><span class="hl-1">, </span><span class="hl-8">0.4</span><span class="hl-1">); </span><span class="hl-7">// [ 172.57142857142858, 244, 170.71428571428572, 0.7 ]</span>
+</code><button type="button">Copy</button></pre>
+
+</details>
+<h3>Contrast</h3>
+<p>The functions for adjusting contrast of colors.</p>
+<details>
+<summary><code>scaling(rgbs: readonly number[][], c: number = 1): number[][]</code></summary>
+<p>Scale ths values of RGBs by multiplying <code>c</code>. The values will be clipped to [0, 255].</p>
+<pre><code class="ts"><span class="hl-0">scaling</span><span class="hl-1">([[</span><span class="hl-8">17</span><span class="hl-1">, </span><span class="hl-8">111</span><span class="hl-1">, </span><span class="hl-8">81</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">]], </span><span class="hl-8">1.2</span><span class="hl-1">); </span><span class="hl-7">// [ [ 20.4, 133.2, 97.2, 1 ] ]</span><br/><span class="hl-0">scaling</span><span class="hl-1">([[</span><span class="hl-8">41</span><span class="hl-1">, </span><span class="hl-8">85</span><span class="hl-1">, </span><span class="hl-8">4</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">]], </span><span class="hl-8">0.7</span><span class="hl-1">);   </span><span class="hl-7">// [ [ 28.7, 59.49999999999999, 2.8, 1 ] ]</span>
+</code><button type="button">Copy</button></pre>
+
+</details>
+<details>
+<summary><code>gammaCorrection(rgbs: readonly number[][], gamma: number = 1): number[][]</code></summary>
+<p>Calculate the new value of RGBs by the formula <code>newVal = 255 * (val / 255)**gamma</code>.
+If <code>gamma &lt; 1</code>, the returns will brighter than original color.
+If <code>gamma &gt; 1</code>, the returns will deeper than original color.</p>
+<pre><code class="ts"><span class="hl-0">gammaCorrection</span><span class="hl-1">([[</span><span class="hl-8">144</span><span class="hl-1">, </span><span class="hl-8">106</span><span class="hl-1">, </span><span class="hl-8">201</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">]], </span><span class="hl-8">2</span><span class="hl-1">);  </span><span class="hl-7">// [ [ 81.31764705882352, 44.062745098039215, 158.43529411764703, 1 ] ]</span><br/><span class="hl-0">gammaCorrection</span><span class="hl-1">([[</span><span class="hl-8">234</span><span class="hl-1">, </span><span class="hl-8">105</span><span class="hl-1">, </span><span class="hl-8">90</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">]], </span><span class="hl-8">0.7</span><span class="hl-1">); </span><span class="hl-7">// [ [ 240.11160697162225, 137.02334443635377, 123.00756195341665, 1 ] ]</span>
+</code><button type="button">Copy</button></pre>
+
+</details>
+<details>
+<summary><code>autoEnhancement(rgbs: readonly number[][]): number[][]</code></summary>
+<p>Enhance the contrast by the following steps:</p>
+<ol>
+<li>Find minimum lightness and maximum lightness in LAB space.</li>
+<li>Scaling from <code>[minimum, maximum]</code> to <code>[0, 100]</code></li>
+<li>Convert new color to RGB space and return.</li>
+</ol>
+<pre><code class="ts"><span class="hl-0">autoEnhancement</span><span class="hl-1">([</span><br/><span class="hl-1">  [</span><span class="hl-8">5</span><span class="hl-1">, </span><span class="hl-8">163</span><span class="hl-1">, </span><span class="hl-8">233</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">],</span><br/><span class="hl-1">  [</span><span class="hl-8">194</span><span class="hl-1">, </span><span class="hl-8">37</span><span class="hl-1">, </span><span class="hl-8">77</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">],</span><br/><span class="hl-1">  [</span><span class="hl-8">145</span><span class="hl-1">, </span><span class="hl-8">232</span><span class="hl-1">, </span><span class="hl-8">125</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">]</span><br/><span class="hl-1">]);</span><br/><span class="hl-7">// [</span><br/><span class="hl-7">//    [ 0, 125.02543829567696, 191.690724478888, 1 ],</span><br/><span class="hl-7">//    [ 69.86371869062802, 0, 0, 1 ],</span><br/><span class="hl-7">//    [ 188.8852777955841, 254.99999999999997, 166.51817892633122, 1 ]</span><br/><span class="hl-7">// ]</span><br/><span class="hl-0">autoEnhancement</span><span class="hl-1">([</span><br/><span class="hl-1">  [</span><span class="hl-8">171</span><span class="hl-1">, </span><span class="hl-8">63</span><span class="hl-1">, </span><span class="hl-8">230</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">],</span><br/><span class="hl-1">  [</span><span class="hl-8">90</span><span class="hl-1">, </span><span class="hl-8">200</span><span class="hl-1">, </span><span class="hl-8">208</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">],</span><br/><span class="hl-1">  [</span><span class="hl-8">71</span><span class="hl-1">, </span><span class="hl-8">26</span><span class="hl-1">, </span><span class="hl-8">50</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">],</span><br/><span class="hl-1">  [</span><span class="hl-8">92</span><span class="hl-1">, </span><span class="hl-8">163</span><span class="hl-1">, </span><span class="hl-8">219</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">],</span><br/><span class="hl-1">  [</span><span class="hl-8">29</span><span class="hl-1">, </span><span class="hl-8">106</span><span class="hl-1">, </span><span class="hl-8">122</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">]</span><br/><span class="hl-1">]);</span><br/><span class="hl-7">// [</span><br/><span class="hl-7">//    [ 190.4097722619165, 82.15204189909133, 249.2232976106147, 1 ],</span><br/><span class="hl-7">//    [ 165.2445276181483, 254.99999999999997, 254.99999999999997, 1 ],</span><br/><span class="hl-7">//    [ 36.03888710573066, 0, 13.533818394557295, 1 ],</span><br/><span class="hl-7">//    [ 144.10595642936374, 211.30225758500936, 254.99999999999997, 1 ],</span><br/><span class="hl-7">//    [ 31.121144762147622, 107.45232793770546, 123.48232834193126, 1 ]</span><br/><span class="hl-7">// ]</span>
+</code><button type="button">Copy</button></pre>
+
+</details>
+<details>
+<summary><code>autoBrightness(rgbs: readonly number[][], coeff: number = 0.7): number[][]</code></summary>
+<p>Adjust the brightness of input RGBs.
+The outputs become darker when coeff close to 0 and become brighter when coeff close to 1</p>
+<ol>
+<li>Find mean lightness <code>meanL</code> in LAB space.</li>
+<li>Calculate <code>gamma = log(coeff) / log(meanL / 100);</code>.</li>
+<li>Do gamma correction to L channel with <code>gamma</code>.</li>
+<li>Convert new color to RGB space and return.</li>
+</ol>
+<pre><code class="ts"><span class="hl-0">autoBrightness</span><span class="hl-1">([</span><br/><span class="hl-1">  [</span><span class="hl-8">83</span><span class="hl-1">, </span><span class="hl-8">52</span><span class="hl-1">, </span><span class="hl-8">58</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">],</span><br/><span class="hl-1">  [</span><span class="hl-8">195</span><span class="hl-1">, </span><span class="hl-8">252</span><span class="hl-1">, </span><span class="hl-8">65</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">],</span><br/><span class="hl-1">  [</span><span class="hl-8">6</span><span class="hl-1">, </span><span class="hl-8">222</span><span class="hl-1">, </span><span class="hl-8">72</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">]</span><br/><span class="hl-1">]);</span><br/><span class="hl-7">// [</span><br/><span class="hl-7">//    [ 98.8893374729874, 66.65471023272066, 72.65877939106208, 1 ],</span><br/><span class="hl-7">//    [ 198.6060106283326, 254.99999999999997, 68.92627267774058, 1 ],</span><br/><span class="hl-7">//    [ 38.455276648225585, 231.63632627615166, 81.16402784964014, 1 ]</span><br/><span class="hl-7">// ]</span><br/><span class="hl-0">autoBrightness</span><span class="hl-1">([</span><br/><span class="hl-1">  [</span><span class="hl-8">186</span><span class="hl-1">, </span><span class="hl-8">97</span><span class="hl-1">, </span><span class="hl-8">92</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">],</span><br/><span class="hl-1">  [</span><span class="hl-8">215</span><span class="hl-1">, </span><span class="hl-8">131</span><span class="hl-1">, </span><span class="hl-8">15</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">],</span><br/><span class="hl-1">  [</span><span class="hl-8">157</span><span class="hl-1">, </span><span class="hl-8">126</span><span class="hl-1">, </span><span class="hl-8">184</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">],</span><br/><span class="hl-1">  [</span><span class="hl-8">225</span><span class="hl-1">, </span><span class="hl-8">134</span><span class="hl-1">, </span><span class="hl-8">216</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">],</span><br/><span class="hl-1">  [</span><span class="hl-8">171</span><span class="hl-1">, </span><span class="hl-8">66</span><span class="hl-1">, </span><span class="hl-8">54</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">]</span><br/><span class="hl-1">], </span><span class="hl-8">0.2</span><span class="hl-1">);</span><br/><span class="hl-7">// [</span><br/><span class="hl-7">//    [ 84.66604273846562, 3.229276435554995, 11.960918529971233, 1 ],</span><br/><span class="hl-7">//    [ 109.25947183319748, 43.64365315837561, 0, 1 ],</span><br/><span class="hl-7">//    [ 64.51271668789535, 39.229167645706745, 89.7076130465058, 1 ],</span><br/><span class="hl-7">//    [ 129.21558756279447, 44.197582710447534, 123.84066718653253, 1 ],</span><br/><span class="hl-7">//    [ 76.32684162830617, 0, 0, 1 ]</span><br/><span class="hl-7">// ]</span>
+</code><button type="button">Copy</button></pre>
+
+</details>
+<details>
+<summary><code>adjContrast(rgbs: number[][], method: ContrastMethod | number, space: ColorSpace | string, ...args: number[]): number[][]</code></summary>
+<p>Adjust the contrast of array of RGB colors by specifying the method.</p>
+<p>The inputs and output are in RGB space.</p>
+<pre><code class="ts"><span class="hl-5">type</span><span class="hl-1"> </span><span class="hl-9">ContrastMethod</span><span class="hl-1"> = </span><span class="hl-2">&quot;linear&quot;</span><span class="hl-1"> | </span><span class="hl-2">&quot;gamma&quot;</span><span class="hl-1"> | </span><span class="hl-2">&quot;auto enhancement&quot;</span><span class="hl-1"> | </span><span class="hl-2">&quot;auto brightness&quot;</span><span class="hl-1">;</span>
+</code><button type="button">Copy</button></pre>
+
+<pre><code class="ts"><span class="hl-4">adjContrast</span><br/><span class="hl-0">adjContrast</span><span class="hl-1">([</span><br/><span class="hl-1">  [</span><span class="hl-8">200</span><span class="hl-1">, </span><span class="hl-8">0</span><span class="hl-1">, </span><span class="hl-8">0</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">],</span><br/><span class="hl-1">  [</span><span class="hl-8">127</span><span class="hl-1">, </span><span class="hl-8">127</span><span class="hl-1">, </span><span class="hl-8">127</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">],</span><br/><span class="hl-1">  [</span><span class="hl-8">210</span><span class="hl-1">, </span><span class="hl-8">0</span><span class="hl-1">, </span><span class="hl-8">230</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">]</span><br/><span class="hl-1">], </span><span class="hl-2">&#39;linear&#39;</span><span class="hl-1">, </span><span class="hl-8">1.2</span><span class="hl-1">);</span><br/><span class="hl-7">// [ [ 240, 0, 0, 1 ], [ 152.4, 152.4, 152.4, 1 ], [ 252, 0, 255, 1 ] ]</span><br/><span class="hl-0">adjContrast</span><span class="hl-1">([</span><br/><span class="hl-1">  [</span><span class="hl-8">200</span><span class="hl-1">, </span><span class="hl-8">0</span><span class="hl-1">, </span><span class="hl-8">0</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">],</span><br/><span class="hl-1">  [</span><span class="hl-8">127</span><span class="hl-1">, </span><span class="hl-8">127</span><span class="hl-1">, </span><span class="hl-8">127</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">],</span><br/><span class="hl-1">  [</span><span class="hl-8">210</span><span class="hl-1">, </span><span class="hl-8">0</span><span class="hl-1">, </span><span class="hl-8">230</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">]</span><br/><span class="hl-1">], </span><span class="hl-2">&#39;auto enhancement&#39;</span><span class="hl-1">);</span><br/><span class="hl-7">// [</span><br/><span class="hl-7">//    [ 80.39493796300214, 0, 0, 1 ],</span><br/><span class="hl-7">//    [ 254.99999999999997, 254.99999999999997, 254.99999999999997, 1 ],</span><br/><span class="hl-7">//    [ 254.99999999999997, 131.07345360749287, 254.99999999999997, 1 ]</span><br/><span class="hl-7">// ]</span>
+</code><button type="button">Copy</button></pre>
+
+</details>
+<h3>Sorting</h3>
+<p>Except the <code>distE76</code> function, the other color difference function is not symmetry (<code>f(a,b)</code> may not equal to <code>f(b,a)</code>).</p>
+<details>
+<summary><code>diffBrightness(rgb1: readonly number[], rgb2: readonly number[]): number[][]</code></summary>
+<p>Return the difference of grayscales <code>rgb2gray(rgb1) - rgb2gray(rgb2)</code>.</p>
+<pre><code class="ts"><span class="hl-0">rgb2gray</span><span class="hl-1">([</span><span class="hl-8">19</span><span class="hl-1">, </span><span class="hl-8">23</span><span class="hl-1">, </span><span class="hl-8">163</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">]);                           </span><span class="hl-7">// 37.763999999999996</span><br/><span class="hl-0">rgb2gray</span><span class="hl-1">([</span><span class="hl-8">209</span><span class="hl-1">, </span><span class="hl-8">126</span><span class="hl-1">, </span><span class="hl-8">194</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">]);                         </span><span class="hl-7">// 158.56899999999996</span><br/><span class="hl-0">diffBrightness</span><span class="hl-1">([</span><span class="hl-8">19</span><span class="hl-1">, </span><span class="hl-8">23</span><span class="hl-1">, </span><span class="hl-8">163</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">], [</span><span class="hl-8">209</span><span class="hl-1">, </span><span class="hl-8">126</span><span class="hl-1">, </span><span class="hl-8">194</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">]); </span><span class="hl-7">// -120.80499999999996</span>
+</code><button type="button">Copy</button></pre>
+
+</details>
+<details>
+<summary><code>distE76(lab1: readonly number[], lab2: readonly number[]): number</code></summary>
+<p>Return the CIE 1976 color difference (CIE76 or E76).
+Same as the L2-distance of two LAB colors.</p>
+<pre><code class="ts"><span class="hl-0">distE76</span><span class="hl-1">([</span><span class="hl-8">78</span><span class="hl-1">, -</span><span class="hl-8">51</span><span class="hl-1">, </span><span class="hl-8">75</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">], [</span><span class="hl-8">40</span><span class="hl-1">, </span><span class="hl-8">27</span><span class="hl-1">, -</span><span class="hl-8">28</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">]); </span><span class="hl-7">// 134.67367968537877</span><br/><span class="hl-0">distE76</span><span class="hl-1">([</span><span class="hl-8">34</span><span class="hl-1">, </span><span class="hl-8">32</span><span class="hl-1">, -</span><span class="hl-8">57</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">], [</span><span class="hl-8">57</span><span class="hl-1">, </span><span class="hl-8">26</span><span class="hl-1">, -</span><span class="hl-8">6</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">]);  </span><span class="hl-7">// 56.2672195865408</span>
+</code><button type="button">Copy</button></pre>
+
+</details>
+<details>
+<summary><code>distE94(lab1: readonly number[], lab2: readonly number[]): number</code></summary>
+<p>Return the CIE 1994 color difference (CIE94 or E94).</p>
+<pre><code class="ts"><span class="hl-0">distE94</span><span class="hl-1">([</span><span class="hl-8">78</span><span class="hl-1">, -</span><span class="hl-8">51</span><span class="hl-1">, </span><span class="hl-8">75</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">], [</span><span class="hl-8">40</span><span class="hl-1">, </span><span class="hl-8">27</span><span class="hl-1">, -</span><span class="hl-8">28</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">]); </span><span class="hl-7">// 63.73647361780924</span><br/><span class="hl-0">distE94</span><span class="hl-1">([</span><span class="hl-8">34</span><span class="hl-1">, </span><span class="hl-8">32</span><span class="hl-1">, -</span><span class="hl-8">57</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">], [</span><span class="hl-8">57</span><span class="hl-1">, </span><span class="hl-8">26</span><span class="hl-1">, -</span><span class="hl-8">6</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">]);  </span><span class="hl-7">// 30.266846871553767</span>
+</code><button type="button">Copy</button></pre>
+
+</details>
+<details>
+<summary><code>distE00(lab1: readonly number[], lab2: readonly number[]): number</code></summary>
+<p>Return CIEDE2000 color difference (CIEDE2000 or E00).</p>
+<pre><code class="ts"><span class="hl-0">distE00</span><span class="hl-1">([</span><span class="hl-8">78</span><span class="hl-1">, -</span><span class="hl-8">51</span><span class="hl-1">, </span><span class="hl-8">75</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">], [</span><span class="hl-8">40</span><span class="hl-1">, </span><span class="hl-8">27</span><span class="hl-1">, -</span><span class="hl-8">28</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">]); </span><span class="hl-7">// 78.6644910780545</span><br/><span class="hl-0">distE00</span><span class="hl-1">([</span><span class="hl-8">34</span><span class="hl-1">, </span><span class="hl-8">32</span><span class="hl-1">, -</span><span class="hl-8">57</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">], [</span><span class="hl-8">57</span><span class="hl-1">, </span><span class="hl-8">26</span><span class="hl-1">, -</span><span class="hl-8">6</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">]);  </span><span class="hl-7">// 31.97512156573645</span>
+</code><button type="button">Copy</button></pre>
+
+</details>
+<details>
+<summary><code>shuffle&lt;T>(arr: T[]): T[]</code></summary>
+<p>In-place shuffle an array by Fisher-Yates shuffle.</p>
+<pre><code class="ts"><span class="hl-0">shuffle</span><span class="hl-1">([</span><span class="hl-8">0</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">, </span><span class="hl-8">2</span><span class="hl-1">, </span><span class="hl-8">3</span><span class="hl-1">, </span><span class="hl-8">4</span><span class="hl-1">, </span><span class="hl-8">5</span><span class="hl-1">, </span><span class="hl-8">6</span><span class="hl-1">, </span><span class="hl-8">7</span><span class="hl-1">, </span><span class="hl-8">8</span><span class="hl-1">, </span><span class="hl-8">9</span><span class="hl-1">]); </span><span class="hl-7">// [ 5, 9, 6, 1, 7, 4, 8, 0, 2, 3 ]</span>
+</code><button type="button">Copy</button></pre>
+
+</details>
+<details>
+<summary><code>tspGreedy&lt;T>(arr: T[], rgbGetter: (color: T) => number[], diffOp: CIEDifferenceFn, copy: boolean = false): T[]</code></summary>
+<p>Sort by Greedy algorithm.
+The first item will be fixed. The second is the closest item to the first and so on.</p>
+<p>The argument <code>rgbGetter</code> make this function can handle the object such as
+<code>{ color : number[], otherProperty: unknown }</code>.</p>
+<pre><code class="ts"><span class="hl-0">tspGreedy</span><span class="hl-1">(</span><br/><span class="hl-1">  [</span><span class="hl-2">&#39;White&#39;</span><span class="hl-1">, </span><span class="hl-2">&#39;Black&#39;</span><span class="hl-1">, </span><span class="hl-2">&#39;Magenta&#39;</span><span class="hl-1">, </span><span class="hl-2">&#39;Red&#39;</span><span class="hl-1">, </span><span class="hl-2">&#39;Green&#39;</span><span class="hl-1">],</span><br/><span class="hl-1">  (</span><span class="hl-4">name</span><span class="hl-1">) </span><span class="hl-5">=&gt;</span><span class="hl-1"> </span><span class="hl-0">named2rgb</span><span class="hl-1">(</span><span class="hl-4">name</span><span class="hl-1">),</span><br/><span class="hl-1">  </span><span class="hl-4">distE00</span><br/><span class="hl-1">);</span><br/><span class="hl-7">// [ &quot;White&quot;, &quot;Magenta&quot;, &quot;Red&quot;, &quot;Black&quot;, &quot;Green&quot; ]</span>
+</code><button type="button">Copy</button></pre>
+
+</details>
+<details>
+<summary><code>sortColors&lt;T>(colors: readonly T[], method: Sort | number, rgbGetter: (color: T) => number[]): T[]</code></summary>
+<p>Return a sorted and copied (<a href="#clone-deep">cloneDeep</a>) array of objects.</p>
+<p>The argument <code>rgbGetter</code> make this function can handle the object such as
+<code>{ color : number[], otherProperty: unknown }</code>.</p>
+<pre><code class="ts"><span class="hl-5">type</span><span class="hl-1"> </span><span class="hl-9">Sort</span><span class="hl-1"> =  </span><span class="hl-2">&quot;luminance&quot;</span><span class="hl-1"> | </span><span class="hl-2">&quot;random&quot;</span><span class="hl-1"> | </span><span class="hl-2">&quot;reversion&quot;</span><span class="hl-1"> | </span><span class="hl-2">&quot;CIE76&quot;</span><span class="hl-1"> | </span><span class="hl-2">&quot;CIE94&quot;</span><span class="hl-1"> | </span><span class="hl-2">&quot;CIEDE2000&quot;</span><span class="hl-1">;</span>
+</code><button type="button">Copy</button></pre>
+
+<table>
+<thead>
+<tr>
+<th>method</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>luminance</td>
+<td>Ascending in brightness (grayscale)</td>
+</tr>
+<tr>
+<td>random</td>
+<td>Shuffle.</td>
+</tr>
+<tr>
+<td>reversion</td>
+<td>Reverse the order of input array.</td>
+</tr>
+<tr>
+<td>CIE76</td>
+<td><code>tspGreedy</code> with <code>diffOp = distE76</code>.</td>
+</tr>
+<tr>
+<td>CIE94</td>
+<td><code>tspGreedy</code> with <code>diffOp = distE94</code>.</td>
+</tr>
+<tr>
+<td>CIEDE2000</td>
+<td><code>tspGreedy</code> with <code>diffOp = distE00</code>.</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="ts"><span class="hl-0">sortColors</span><span class="hl-1">(</span><br/><span class="hl-1">  [</span><span class="hl-2">&#39;White&#39;</span><span class="hl-1">, </span><span class="hl-2">&#39;Black&#39;</span><span class="hl-1">, </span><span class="hl-2">&#39;Magenta&#39;</span><span class="hl-1">, </span><span class="hl-2">&#39;Red&#39;</span><span class="hl-1">, </span><span class="hl-2">&#39;Green&#39;</span><span class="hl-1">],</span><br/><span class="hl-1">  </span><span class="hl-2">&#39;CIE00&#39;</span><span class="hl-1">,</span><br/><span class="hl-1">  (</span><span class="hl-4">name</span><span class="hl-1">) </span><span class="hl-5">=&gt;</span><span class="hl-1"> </span><span class="hl-4">colors</span><span class="hl-1">.</span><span class="hl-0">named2rgb</span><span class="hl-1">(</span><span class="hl-4">name</span><span class="hl-1">)</span><br/><span class="hl-1">); </span><span class="hl-7">// [ &quot;White&quot;, &quot;Magenta&quot;, &quot;Red&quot;, &quot;Black&quot;, &quot;Green&quot; ]</span>
+</code><button type="button">Copy</button></pre>
+
+</details>
+<details>
+<summary><code>sortRgbs(rgbs: readonly number[][], method: Sort | number): number[][]</code></summary>
+<p>Return a sorted and copied array of RGB colors. Similar to <code>sortColors</code> but input arrays directly.</p>
+<pre><code class="ts"><span class="hl-5">type</span><span class="hl-1"> </span><span class="hl-9">Sort</span><span class="hl-1"> =  </span><span class="hl-2">&quot;brightness&quot;</span><span class="hl-1"> | </span><span class="hl-2">&quot;random&quot;</span><span class="hl-1"> | </span><span class="hl-2">&quot;reversion&quot;</span><span class="hl-1"> | </span><span class="hl-2">&quot;CIE76&quot;</span><span class="hl-1"> | </span><span class="hl-2">&quot;CIE94&quot;</span><span class="hl-1"> | </span><span class="hl-2">&quot;CIEDE2000&quot;</span><span class="hl-1">;</span>
+</code><button type="button">Copy</button></pre>
+
+<table>
+<thead>
+<tr>
+<th>method</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>brightness</td>
+<td>Ascending in brightness (grayscale)</td>
+</tr>
+<tr>
+<td>random</td>
+<td>Shuffle.</td>
+</tr>
+<tr>
+<td>reversion</td>
+<td>Reverse the order of input array.</td>
+</tr>
+<tr>
+<td>CIE76</td>
+<td><code>tspGreedy</code> with <code>diffOp = distE76</code>.</td>
+</tr>
+<tr>
+<td>CIE94</td>
+<td><code>tspGreedy</code> with <code>diffOp = distE94</code>.</td>
+</tr>
+<tr>
+<td>CIEDE2000</td>
+<td><code>tspGreedy</code> with <code>diffOp = distE00</code>.</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="ts"><span class="hl-0">sortRgbs</span><span class="hl-1">([</span><br/><span class="hl-1">  [</span><span class="hl-8">255</span><span class="hl-1">, </span><span class="hl-8">255</span><span class="hl-1">, </span><span class="hl-8">255</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">],</span><br/><span class="hl-1">  [</span><span class="hl-8">0</span><span class="hl-1">, </span><span class="hl-8">0</span><span class="hl-1">, </span><span class="hl-8">0</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">],</span><br/><span class="hl-1">  [</span><span class="hl-8">255</span><span class="hl-1">, </span><span class="hl-8">0</span><span class="hl-1">, </span><span class="hl-8">255</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">],</span><br/><span class="hl-1">  [</span><span class="hl-8">255</span><span class="hl-1">, </span><span class="hl-8">0</span><span class="hl-1">, </span><span class="hl-8">0</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">],</span><br/><span class="hl-1">  [</span><span class="hl-8">0</span><span class="hl-1">, </span><span class="hl-8">128</span><span class="hl-1">, </span><span class="hl-8">0</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">]</span><br/><span class="hl-1">], </span><span class="hl-2">&#39;CIE00&#39;</span><span class="hl-1">);</span><br/><span class="hl-7">// [</span><br/><span class="hl-7">//    [ 255, 255, 255, 1 ],</span><br/><span class="hl-7">//    [ 255, 0, 255, 1 ],</span><br/><span class="hl-7">//    [ 255, 0, 0, 1 ],</span><br/><span class="hl-7">//    [ 0, 0, 0, 1 ],</span><br/><span class="hl-7">//    [ 0, 128, 0, 1 ]</span><br/><span class="hl-7">// ]</span>
+</code><button type="button">Copy</button></pre>
+
+</details>
+<h3>Helpers</h3>
+<p>Other functions that you may re-use in your code to reduce the total file size.</p>
+<details>
+<summary><code>srgb2linearRgb(val: number): number</code></summary>
+<p>The input is a channel/value of RGB, not array.</p>
+<p>The full-scale value of linear-RGB is 1 due to the calculation of CIEXYZ and relative luminance.</p>
+<pre><code class="ts"><span class="hl-0">srgb2linearRgb</span><span class="hl-1">(</span><span class="hl-8">127</span><span class="hl-1">);                 </span><span class="hl-7">// 0.21223075741405512</span><br/><span class="hl-0">linearRgb2srgb</span><span class="hl-1">(</span><span class="hl-0">srgb2linearRgb</span><span class="hl-1">(</span><span class="hl-8">127</span><span class="hl-1">)); </span><span class="hl-7">// 127</span><br/><span class="hl-0">linearRgb2srgb</span><span class="hl-1">(</span><span class="hl-8">0.5</span><span class="hl-1">);                 </span><span class="hl-7">// 187.5160306783746</span>
+</code><button type="button">Copy</button></pre>
+
+</details>
+<details>
+<summary><code>cieTrans(lab: number): number</code></summary>
+<p>The input is a channel/value of LAB, not array.</p>
+<p>This function is part of the conversion between CIEXYZ and CIELAB. I do not know the formal name.</p>
+<pre><code class="ts"><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-0">cieTrans</span><span class="hl-1"> = (</span><span class="hl-4">val</span><span class="hl-1">: </span><span class="hl-9">number</span><span class="hl-1">): </span><span class="hl-9">number</span><span class="hl-1"> </span><span class="hl-5">=&gt;</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-3">return</span><span class="hl-1"> </span><span class="hl-4">val</span><span class="hl-1"> &gt; (</span><span class="hl-8">6</span><span class="hl-1">/</span><span class="hl-8">29</span><span class="hl-1">)**</span><span class="hl-8">3</span><span class="hl-1"> ? </span><span class="hl-4">Math</span><span class="hl-1">.</span><span class="hl-0">cbrt</span><span class="hl-1">(</span><span class="hl-4">val</span><span class="hl-1">) : (</span><span class="hl-8">903.3</span><span class="hl-1"> * </span><span class="hl-4">x</span><span class="hl-1"> + </span><span class="hl-8">16</span><span class="hl-1">) / </span><span class="hl-8">116</span><span class="hl-1">;</span><br/><span class="hl-1">};</span><br/><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-0">cieTransInv</span><span class="hl-1"> = (</span><span class="hl-4">val</span><span class="hl-1">: </span><span class="hl-9">number</span><span class="hl-1">) </span><span class="hl-5">=&gt;</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-3">return</span><span class="hl-1"> </span><span class="hl-4">val</span><span class="hl-1"> &gt; (</span><span class="hl-8">6</span><span class="hl-1">/</span><span class="hl-8">29</span><span class="hl-1">) ? </span><span class="hl-4">val</span><span class="hl-1">**</span><span class="hl-8">3</span><span class="hl-1"> : (</span><span class="hl-4">val</span><span class="hl-1"> - </span><span class="hl-8">16</span><span class="hl-1">/</span><span class="hl-8">116</span><span class="hl-1">) / (</span><span class="hl-8">903.3</span><span class="hl-1">/</span><span class="hl-8">116</span><span class="hl-1">) ;</span><br/><span class="hl-1">};</span>
+</code><button type="button">Copy</button></pre>
+
+<p>and <code>cieTransInv</code> is the inverse function of <code>cieTrans</code>.</p>
+</details>
+<details id="clone-deep">
+<summary><code>cloneDeep&lt;T>(obj: T): DeepWriteable&lt;T></code></summary>
+<p>Deeply clone object.</p>
+<p>The following types will be handle:</p>
+<ul>
+<li>primitive type</li>
+<li><code>Number</code>, <code>String</code>, <code>Boolean</code> (convert to primitive type)</li>
+<li><code>Date</code></li>
+<li>built-in object</li>
+</ul>
+<p>If other type with <code>typeof obj === 'object'</code> will turn into built-in object.
+The other types will not be copied.</p>
+</details>
+<details>
+<summary><code>map(arr, callback, len)</code></summary>
+<pre><code class="ts"><span class="hl-5">type</span><span class="hl-1"> </span><span class="hl-9">map</span><span class="hl-1"> = {</span><br/><span class="hl-1">  </span><span class="hl-7">/**</span><br/><span class="hl-7">   * Generate an array with specific length.</span><br/><span class="hl-7">   */</span><br/><span class="hl-1">  &lt;</span><span class="hl-9">R</span><span class="hl-1">&gt;(</span><br/><span class="hl-1">    </span><span class="hl-4">len</span><span class="hl-1">: </span><span class="hl-9">number</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-0">callback</span><span class="hl-1">: (</span><span class="hl-4">i</span><span class="hl-1">: </span><span class="hl-9">number</span><span class="hl-1">) </span><span class="hl-5">=&gt;</span><span class="hl-1"> </span><span class="hl-9">R</span><br/><span class="hl-1">  ): </span><span class="hl-9">R</span><span class="hl-1">[];</span><br/><span class="hl-1">  </span><span class="hl-7">/**</span><br/><span class="hl-7">   * Similar to Array.prototype.map but this can control the length of output array .</span><br/><span class="hl-7">   */</span><br/><span class="hl-1">  &lt;</span><span class="hl-9">R</span><span class="hl-1">, </span><span class="hl-9">T</span><span class="hl-1">&gt;(</span><br/><span class="hl-1">    </span><span class="hl-4">arr</span><span class="hl-1">: </span><span class="hl-5">readonly</span><span class="hl-1"> </span><span class="hl-9">T</span><span class="hl-1">[],</span><br/><span class="hl-1">    </span><span class="hl-0">callback</span><span class="hl-1">: (</span><span class="hl-4">val</span><span class="hl-1">: </span><span class="hl-9">T</span><span class="hl-1">, </span><span class="hl-4">i</span><span class="hl-1">: </span><span class="hl-9">number</span><span class="hl-1">) </span><span class="hl-5">=&gt;</span><span class="hl-1"> </span><span class="hl-9">R</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-4">len</span><span class="hl-1">?: </span><span class="hl-9">number</span><span class="hl-1">,</span><br/><span class="hl-1">  ): </span><span class="hl-9">R</span><span class="hl-1">[]</span><br/><span class="hl-1">}</span>
+</code><button type="button">Copy</button></pre>
+
+<pre><code class="ts"><span class="hl-0">map</span><span class="hl-1">(</span><span class="hl-8">10</span><span class="hl-1">, (</span><span class="hl-4">i</span><span class="hl-1">) </span><span class="hl-5">=&gt;</span><span class="hl-1"> </span><span class="hl-4">i</span><span class="hl-1">);                            </span><span class="hl-7">// [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ]</span><br/><span class="hl-0">map</span><span class="hl-1">([</span><span class="hl-8">167</span><span class="hl-1">, </span><span class="hl-8">96</span><span class="hl-1">, </span><span class="hl-8">101</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">], (</span><span class="hl-4">val</span><span class="hl-1">, </span><span class="hl-4">i</span><span class="hl-1">) </span><span class="hl-5">=&gt;</span><span class="hl-1"> [</span><span class="hl-4">i</span><span class="hl-1">, </span><span class="hl-4">val</span><span class="hl-1">]); </span><span class="hl-7">// [ [ 0, 167 ], [ 1, 96 ], [ 2, 101 ], [ 3, 1 ] ]</span>
+</code><button type="button">Copy</button></pre>
+
+<p>In most cases, replace <code>Array.prototype.map</code> with this function can improve the performance and file size.</p>
+</details>
+<h4>Numeric</h4>
+<details>
+<summary><code>pow(x: number, y: number): number</code></summary>
+<p>Equivalent to <code>x**y</code>. Much more faster than <code>x**y</code> and <code>Math.pow(x,y)</code> if <code>y</code> is uncertain.</p>
+<pre><code class="ts"><span class="hl-3">if</span><span class="hl-1"> (!</span><span class="hl-4">y</span><span class="hl-1">) </span><span class="hl-3">return</span><span class="hl-1"> </span><span class="hl-8">1</span><span class="hl-1">;</span><br/><span class="hl-3">if</span><span class="hl-1"> (!</span><span class="hl-4">x</span><span class="hl-1">) </span><span class="hl-3">return</span><span class="hl-1"> </span><span class="hl-8">0</span><span class="hl-1">;</span><br/><span class="hl-3">return</span><span class="hl-1"> </span><span class="hl-4">Math</span><span class="hl-1">.</span><span class="hl-0">exp</span><span class="hl-1">(</span><span class="hl-4">y</span><span class="hl-1"> * </span><span class="hl-4">Math</span><span class="hl-1">.</span><span class="hl-0">log</span><span class="hl-1">(</span><span class="hl-4">x</span><span class="hl-1">));</span>
+</code><button type="button">Copy</button></pre>
+
+</details>
+<details>
+<summary><code>randInt(max: number): number</code></summary>
+<p>Generate a random (positive) integer in [0, <code>max</code>].</p>
+</details>
+<details>
+<summary><code>round(num: number, place: number = 0): number</code></summary>
+<p>Rounding a number to specific <code>place</code> value. Positive <code>place</code> means decimal places and negative means whole number places.</p>
+<pre><code class="ts"><span class="hl-4">Math</span><span class="hl-1">.</span><span class="hl-0">round</span><span class="hl-1">(</span><span class="hl-8">10</span><span class="hl-1">**</span><span class="hl-4">place</span><span class="hl-1"> * </span><span class="hl-4">num</span><span class="hl-1">) / </span><span class="hl-8">10</span><span class="hl-1">**</span><span class="hl-4">place</span><span class="hl-1">;</span>
+</code><button type="button">Copy</button></pre>
+
+</details>
+<details>
+<summary><code>clip(num: number, min?: number, max?: number): number</code></summary>
+<p>Limit the number in the interval [<code>min</code>, <code>max</code>]. If <code>min</code> and/or <code>max</code> is <code>undefined</code>,
+it will be regarded as unbound.</p>
+<pre><code class="ts"><span class="hl-3">if</span><span class="hl-1"> (</span><span class="hl-4">num</span><span class="hl-1"> &lt; </span><span class="hl-4">min</span><span class="hl-1">!) </span><span class="hl-4">num</span><span class="hl-1"> = </span><span class="hl-4">min</span><span class="hl-1">!; </span><span class="hl-7">// max &lt; min return min</span><br/><span class="hl-3">else</span><span class="hl-1"> </span><span class="hl-3">if</span><span class="hl-1"> (</span><span class="hl-4">num</span><span class="hl-1"> &gt; </span><span class="hl-4">max</span><span class="hl-1">!) </span><span class="hl-4">num</span><span class="hl-1"> = </span><span class="hl-4">max</span><span class="hl-1">!;</span><br/><span class="hl-3">return</span><span class="hl-1"> </span><span class="hl-4">num</span><span class="hl-1">;</span>
+</code><button type="button">Copy</button></pre>
+
+</details>
+<details>
+<summary><code>rangeMapping(val: number, min: number, max: number, newMin: number, newMax: number, place?: number,): number</code></summary>
+<p>Scaling and shift to new range. If <code>place</code> is given, then round new value.</p>
+<pre><code class="ts"><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-0">rangeMapping</span><span class="hl-1"> = (</span><br/><span class="hl-1">  </span><span class="hl-4">val</span><span class="hl-1">: </span><span class="hl-9">number</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-4">min</span><span class="hl-1">: </span><span class="hl-9">number</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-4">max</span><span class="hl-1">: </span><span class="hl-9">number</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-4">newMin</span><span class="hl-1">: </span><span class="hl-9">number</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-4">newMax</span><span class="hl-1">: </span><span class="hl-9">number</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-4">place</span><span class="hl-1">?: </span><span class="hl-9">number</span><span class="hl-1">,</span><br/><span class="hl-1">) </span><span class="hl-5">=&gt;</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">ratio</span><span class="hl-1"> = </span><span class="hl-0">clip</span><span class="hl-1">((</span><span class="hl-4">val</span><span class="hl-1"> - </span><span class="hl-4">min</span><span class="hl-1">) / (</span><span class="hl-4">max</span><span class="hl-1"> - </span><span class="hl-4">min</span><span class="hl-1">), </span><span class="hl-8">0</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">); </span><span class="hl-7">// avoid floating problem.</span><br/><span class="hl-1">  </span><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">newVal</span><span class="hl-1"> = </span><span class="hl-4">newMin</span><span class="hl-1"> + </span><span class="hl-4">ratio</span><span class="hl-1"> * (</span><span class="hl-4">newMax</span><span class="hl-1"> - </span><span class="hl-4">newMin</span><span class="hl-1">);</span><br/><span class="hl-1">  </span><span class="hl-3">return</span><span class="hl-1"> </span><span class="hl-4">place</span><span class="hl-1"> == </span><span class="hl-5">null</span><span class="hl-1"> ? </span><span class="hl-4">newVal</span><span class="hl-1"> : </span><span class="hl-0">round</span><span class="hl-1">(</span><span class="hl-4">newVal</span><span class="hl-1">, </span><span class="hl-4">place</span><span class="hl-1">);</span><br/><span class="hl-1">};</span>
+</code><button type="button">Copy</button></pre>
+
+<pre><code class="ts"><span class="hl-0">rangeMapping</span><span class="hl-1">(</span><span class="hl-8">0</span><span class="hl-1">, -</span><span class="hl-8">1</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">, </span><span class="hl-8">0</span><span class="hl-1">, </span><span class="hl-8">100</span><span class="hl-1">);  </span><span class="hl-7">// 50</span><br/><span class="hl-0">rangeMapping</span><span class="hl-1">(</span><span class="hl-8">0</span><span class="hl-1">, </span><span class="hl-8">0</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">, </span><span class="hl-8">100</span><span class="hl-1">, </span><span class="hl-8">200</span><span class="hl-1">); </span><span class="hl-7">// 100</span><br/><span class="hl-0">rangeMapping</span><span class="hl-1">(</span><span class="hl-8">0</span><span class="hl-1">, -</span><span class="hl-8">1</span><span class="hl-1">, </span><span class="hl-8">0</span><span class="hl-1">, </span><span class="hl-8">0</span><span class="hl-1">, </span><span class="hl-8">100</span><span class="hl-1">);  </span><span class="hl-7">// 100</span><br/><span class="hl-0">rangeMapping</span><span class="hl-1">(</span><span class="hl-8">0</span><span class="hl-1">, </span><span class="hl-8">0</span><span class="hl-1">, </span><span class="hl-8">1</span><span class="hl-1">, </span><span class="hl-8">100</span><span class="hl-1">, </span><span class="hl-8">0</span><span class="hl-1">);   </span><span class="hl-7">// 100</span>
+</code><button type="button">Copy</button></pre>
+
+</details>
+<details>
+<summary><code>deg2rad(deg: number): number</code> and <code>rad2deg(rad: number): number</code></summary>
+<p>Conversions between degree and radian.</p>
+</details>
+<details>
+<summary><code>elementwiseMean(arr1: readonly number[], arr2: readonly number[]): number[]</code></summary>
+<p>Elementwise mean of two array. The length of output is <code>Math.min(arr1.length, arr2.length)</code>.</p>
+</details>
+<p>Notice that some function only deal with fixed length.</p>
+<details>
+<summary><code>dot3(arr1: readonly number[], arr2: readonly number[]): number</code></summary>
+<p>Dot two arrays with length = 3.</p>
+<pre><code class="ts"><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-0">dot3</span><span class="hl-1"> = (</span><span class="hl-4">arr1</span><span class="hl-1">: </span><span class="hl-5">readonly</span><span class="hl-1"> </span><span class="hl-9">number</span><span class="hl-1">[], </span><span class="hl-4">arr2</span><span class="hl-1">: </span><span class="hl-5">readonly</span><span class="hl-1"> </span><span class="hl-9">number</span><span class="hl-1">[]): </span><span class="hl-9">number</span><span class="hl-1"> </span><span class="hl-5">=&gt;</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-3">return</span><span class="hl-1"> </span><span class="hl-4">arr1</span><span class="hl-1">[</span><span class="hl-8">0</span><span class="hl-1">] * </span><span class="hl-4">arr2</span><span class="hl-1">[</span><span class="hl-8">0</span><span class="hl-1">] + </span><span class="hl-4">arr1</span><span class="hl-1">[</span><span class="hl-8">1</span><span class="hl-1">] * </span><span class="hl-4">arr2</span><span class="hl-1">[</span><span class="hl-8">1</span><span class="hl-1">] + </span><span class="hl-4">arr1</span><span class="hl-1">[</span><span class="hl-8">2</span><span class="hl-1">] * </span><span class="hl-4">arr2</span><span class="hl-1">[</span><span class="hl-8">2</span><span class="hl-1">];</span><br/><span class="hl-1">};</span>
+</code><button type="button">Copy</button></pre>
+
+</details>
+<details>
+<summary><code>squareSum4(a: number, b: number, c: number = 0, d: number = 0): number</code></summary>
+<p>Return <code>a * a + b * b + c * c + d * d</code>.</p>
+</details>
+<details>
+<summary><code>l2Norm3(a: number, b: number, c: number = 0): number</code></summary>
+<p>Return <code>Math.sqrt(squareSum(a, b, c))</code>.</p>
+</details>
+<details>
+<summary><code>l2Dist3(a: number, b: number): number</code></summary>
+<pre><code class="ts"><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-0">l2Dist3</span><span class="hl-1"> = (</span><span class="hl-4">color1</span><span class="hl-1">: </span><span class="hl-5">readonly</span><span class="hl-1"> </span><span class="hl-9">number</span><span class="hl-1">[], </span><span class="hl-4">color2</span><span class="hl-1">: </span><span class="hl-5">readonly</span><span class="hl-1"> </span><span class="hl-9">number</span><span class="hl-1">[]): </span><span class="hl-9">number</span><span class="hl-1"> </span><span class="hl-5">=&gt;</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-3">return</span><span class="hl-1"> </span><span class="hl-0">l2Norm3</span><span class="hl-1">(</span><br/><span class="hl-1">    </span><span class="hl-4">color1</span><span class="hl-1">[</span><span class="hl-8">0</span><span class="hl-1">] - </span><span class="hl-4">color2</span><span class="hl-1">[</span><span class="hl-8">0</span><span class="hl-1">],</span><br/><span class="hl-1">    </span><span class="hl-4">color1</span><span class="hl-1">[</span><span class="hl-8">1</span><span class="hl-1">] - </span><span class="hl-4">color2</span><span class="hl-1">[</span><span class="hl-8">1</span><span class="hl-1">],</span><br/><span class="hl-1">    </span><span class="hl-4">color1</span><span class="hl-1">[</span><span class="hl-8">2</span><span class="hl-1">] - </span><span class="hl-4">color2</span><span class="hl-1">[</span><span class="hl-8">2</span><span class="hl-1">]</span><br/><span class="hl-1">  );</span><br/><span class="hl-1">};</span>
+</code><button type="button">Copy</button></pre>
+
+</details>
+<h2 id="tests">Tests</h2>
+<p>Run command <code>npm run test</code>.</p>
+<ul>
+<li><code>test/benchmark/**.perf.js</code>: benchmark files.</li>
+<li><code>test/unit/**.test.js</code>: unit tests and comparison testing.</li>
+<li><code>test/unit/cmyk-formula-test.js</code>: test whether 3 different formulas have same results.</li>
+<li><code>test-utils/</code>: helpers for test.<br/></li>
+</ul>
+<h2 id="benchmark">Benchmark</h2>
+<p>Run command <code>npm run benchmark</code> (conversions only-).</p>
+<ul>
+<li>Node version: v22.11.0.</li>
+<li>CPU: Intel(R) Core(TM) i7-7700HQ CPU @ 2.80GHz</li>
+<li><code>tinybench</code> 3.1.1</li>
+<li>libraries:
+<ul>
+<li>colord: 2.9.3</li>
+<li>color: 5.0.0</li>
+<li>color-convert: 3.1.0</li>
+</ul>
+</li>
+</ul>
+<p>Only list some benchmaks since some conversions have similar formula and performance.</p>
+<details>
+<summary>XYZ</summary>
+<ul>
+<li>10 colors/sampling</li>
+</ul>
+<p><code>rgb2xyz</code></p>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Latency avg (ns)</th>
+<th>Throughput avg (ops/s)</th>
+<th>Comparison</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>color-utils</td>
+<td>1851.1 ± 0.37%</td>
+<td>557289 ± 0.03%</td>
+<td>fastest</td>
+</tr>
+<tr>
+<td>colord</td>
+<td>4297.6 ± 2.40%</td>
+<td>242237 ± 0.03%</td>
+<td>57% slower</td>
+</tr>
+<tr>
+<td>color</td>
+<td>7611.4 ± 1.77%</td>
+<td>137102 ± 0.06%</td>
+<td>75% slower</td>
+</tr>
+<tr>
+<td>color-convert</td>
+<td>2476.3 ± 0.30%</td>
+<td>412369 ± 0.03%</td>
+<td>26% slower</td>
+</tr>
+</tbody>
+</table>
+<p><code>xyz2rgb</code></p>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Latency avg (ns)</th>
+<th>Throughput avg (ops/s)</th>
+<th>Comparison</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>color-utils</td>
+<td>1589.6 ± 0.24%</td>
+<td>646723  ± 0.03%</td>
+<td>91% slower</td>
+</tr>
+<tr>
+<td>colord</td>
+<td>5092.7 ± 0.47%</td>
+<td>204191  ± 0.06%</td>
+<td>97% slower</td>
+</tr>
+<tr>
+<td>color</td>
+<td>9046.1 ± 2.39%</td>
+<td>116507  ± 0.07%</td>
+<td>98% slower</td>
+</tr>
+<tr>
+<td>color-convert</td>
+<td>181.59 ± 1.91%</td>
+<td>7264901 ± 0.03%</td>
+<td>fastest</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>500 colors/sampling</li>
+</ul>
+<p><code>rgb2xyz</code></p>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Latency avg (ns)</th>
+<th>Throughput avg (ops/s)</th>
+<th>Comparison</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>color-utils</td>
+<td>91271  ± 0.43%</td>
+<td>11218 ± 0.20%</td>
+<td>fastest</td>
+</tr>
+<tr>
+<td>colord</td>
+<td>254042 ± 0.52%</td>
+<td>4008  ± 0.34%</td>
+<td>64% slower</td>
+</tr>
+<tr>
+<td>color</td>
+<td>373180 ± 0.56%</td>
+<td>2721  ± 0.39%</td>
+<td>76% slower</td>
+</tr>
+<tr>
+<td>color-convert</td>
+<td>119002 ± 1.08%</td>
+<td>8553  ± 0.19%</td>
+<td>24% slower</td>
+</tr>
+</tbody>
+</table>
+<p><code>xyz2rgb</code></p>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Latency avg (ns)</th>
+<th>Throughput avg (ops/s)</th>
+<th>Comparison</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>color-utils</td>
+<td>80381  ± 0.32%</td>
+<td>12626  ± 0.15%</td>
+<td>96% slower</td>
+</tr>
+<tr>
+<td>colord</td>
+<td>262667 ± 0.56%</td>
+<td>3885   ± 0.37%</td>
+<td>99% slower</td>
+</tr>
+<tr>
+<td>color</td>
+<td>433858 ± 0.57%</td>
+<td>2335   ± 0.38%</td>
+<td>99% slower</td>
+</tr>
+<tr>
+<td>color-convert</td>
+<td>3769.0 ± 0.88%</td>
+<td>315952 ± 0.07%</td>
+<td>fastest</td>
+</tr>
+</tbody>
+</table>
+</details>
+<details>
+<summary>CMYK</summary>
+<ul>
+<li>10 colors/sampling</li>
+</ul>
+<p><code>rgb2cmyk</code></p>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Latency avg (ns)</th>
+<th>Throughput avg (ops/s)</th>
+<th>Comparison</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>color-utils</td>
+<td>129.85 ± 0.26%</td>
+<td>8664019 ± 0.02%</td>
+<td>fastest</td>
+</tr>
+<tr>
+<td>colord</td>
+<td>1129.7 ± 0.24%</td>
+<td>908981  ± 0.02%</td>
+<td>90% slower</td>
+</tr>
+<tr>
+<td>color</td>
+<td>4630.8 ± 0.67%</td>
+<td>230182  ± 0.06%</td>
+<td>97% slower</td>
+</tr>
+<tr>
+<td>color-convert</td>
+<td>176.06 ± 0.93%</td>
+<td>7481406 ± 0.03%</td>
+<td>14% slower</td>
+</tr>
+</tbody>
+</table>
+<p><code>cmyk2rgb</code></p>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Latency avg (ns)</th>
+<th>Throughput avg (ops/s)</th>
+<th>Comparison</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>color-utils</td>
+<td>116.87 ± 0.51%</td>
+<td>9347401 ± 0.01%</td>
+<td>fastest</td>
+</tr>
+<tr>
+<td>colord</td>
+<td>1205.9 ± 3.18%</td>
+<td>979420  ± 0.05%</td>
+<td>90% slower</td>
+</tr>
+<tr>
+<td>color</td>
+<td>5833.9 ± 6.70%</td>
+<td>192073  ± 0.07%</td>
+<td>98% slower</td>
+</tr>
+<tr>
+<td>color-convert</td>
+<td>222.79 ± 13.63%</td>
+<td>6733098 ± 0.04%</td>
+<td>28% slower</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>500 colors/sampling</li>
+</ul>
+<p><code>rgb2cmyk</code></p>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Latency avg (ns)</th>
+<th>Throughput avg (ops/s)</th>
+<th>Comparison</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>color-utils</td>
+<td>1470.3 ± 10.16%</td>
+<td>799148 ± 0.05%</td>
+<td>fastest</td>
+</tr>
+<tr>
+<td>colord</td>
+<td>65055  ± 0.49%</td>
+<td>15888  ± 0.22%</td>
+<td>98% slower</td>
+</tr>
+<tr>
+<td>color</td>
+<td>284322 ± 2.55%</td>
+<td>4028   ± 0.90%</td>
+<td>99% slower</td>
+</tr>
+<tr>
+<td>color-convert</td>
+<td>3674.3 ± 0.82%</td>
+<td>321108 ± 0.07%</td>
+<td>60% slower</td>
+</tr>
+</tbody>
+</table>
+<p><code>rgb2cmyk</code></p>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Latency avg (ns)</th>
+<th>Throughput avg (ops/s)</th>
+<th>Comparison</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>color-utils</td>
+<td>1313.2 ± 0.25%</td>
+<td>789127 ± 0.03%</td>
+<td>fastest</td>
+</tr>
+<tr>
+<td>colord</td>
+<td>65766  ± 5.52%</td>
+<td>17096  ± 0.35%</td>
+<td>98% slower</td>
+</tr>
+<tr>
+<td>color</td>
+<td>265675 ± 0.77%</td>
+<td>3887   ± 0.44%</td>
+<td>100% slower</td>
+</tr>
+<tr>
+<td>color-convert</td>
+<td>3715.7 ± 0.82%</td>
+<td>314867 ± 0.07%</td>
+<td>60% slower</td>
+</tr>
+</tbody>
+</table>
+</details>
+<details>
+<summary>HEX</summary>
+<ul>
+<li>10 colors/sampling</li>
+</ul>
+<p><code>rgb2hex</code></p>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Latency avg (ns)</th>
+<th>Throughput avg (ops/s)</th>
+<th>Comparison</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>color-utils</td>
+<td>1380.4 ± 0.43%</td>
+<td>749729 ± 0.03%</td>
+<td>fastest</td>
+</tr>
+<tr>
+<td>colord</td>
+<td>1460.9 ± 3.29%</td>
+<td>732326 ± 0.03%</td>
+<td>2% slower</td>
+</tr>
+<tr>
+<td>color-convert</td>
+<td>1975.8 ± 5.27%</td>
+<td>562771 ± 0.05%</td>
+<td>25% slower</td>
+</tr>
+</tbody>
+</table>
+<p><code>rgb2hex</code> with alpha</p>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Latency avg (ns)</th>
+<th>Throughput avg (ops/s)</th>
+<th>Comparison</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>color-utils</td>
+<td>1986.1 ± 0.51%</td>
+<td>542164 ± 0.05%</td>
+<td>fastest</td>
+</tr>
+<tr>
+<td>colord</td>
+<td>2039.2 ± 0.49%</td>
+<td>516249 ± 0.04%</td>
+<td>5% slower</td>
+</tr>
+</tbody>
+</table>
+<p><code>hex2rgb</code> 8-digit code</p>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Latency avg (ns)</th>
+<th>Throughput avg (ops/s)</th>
+<th>Comparison</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>color-utils</td>
+<td>1854.5 ± 0.36%</td>
+<td>558168 ± 0.03%</td>
+<td>fastest</td>
+</tr>
+<tr>
+<td>colord</td>
+<td>2966.4 ± 1.56%</td>
+<td>367006 ± 0.06%</td>
+<td>34% slower</td>
+</tr>
+</tbody>
+</table>
+<p><code>hex2rgb</code> 4-digit code</p>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Latency avg (ns)</th>
+<th>Throughput avg (ops/s)</th>
+<th>Comparison</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>color-utils</td>
+<td>1589.4 ± 0.36%</td>
+<td>660329 ± 0.03%</td>
+<td>fastest</td>
+</tr>
+<tr>
+<td>colord</td>
+<td>2994.4 ± 0.76%</td>
+<td>367012 ± 0.07%</td>
+<td>44% slower</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>500 colors/sampling</li>
+</ul>
+<p><code>rgb2hex</code></p>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Latency avg (ns)</th>
+<th>Throughput avg (ops/s)</th>
+<th>Comparison</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>color-utils</td>
+<td>83161  ± 0.41%</td>
+<td>12315 ± 0.20%</td>
+<td>0.54% slower</td>
+</tr>
+<tr>
+<td>colord</td>
+<td>83120  ± 0.47%</td>
+<td>12382 ± 0.21%</td>
+<td>fastest</td>
+</tr>
+<tr>
+<td>color-convert</td>
+<td>102251 ± 0.41%</td>
+<td>9980  ± 0.20%</td>
+<td>19% slower</td>
+</tr>
+</tbody>
+</table>
+<p><code>rgb2hex</code> with alpha</p>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Latency avg (ns)</th>
+<th>Throughput avg (ops/s)</th>
+<th>Comparison</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>color-utils</td>
+<td>120211 ± 0.81%</td>
+<td>8697 ± 0.32%</td>
+<td>fastest</td>
+</tr>
+<tr>
+<td>colord</td>
+<td>131973 ± 0.51%</td>
+<td>7780 ± 0.27%</td>
+<td>11% slower</td>
+</tr>
+</tbody>
+</table>
+<p><code>hex2rgb</code> 8-digit code</p>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Latency avg (ns)</th>
+<th>Throughput avg (ops/s)</th>
+<th>Comparison</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>color-utils</td>
+<td>112794 ± 0.51%</td>
+<td>9125 ± 0.26%</td>
+<td>fastest</td>
+</tr>
+<tr>
+<td>colord</td>
+<td>133952 ± 0.75%</td>
+<td>7917 ± 0.41%</td>
+<td>13% slower</td>
+</tr>
+</tbody>
+</table>
+<p><code>hex2rgb</code> 4-digit code</p>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Latency avg (ns)</th>
+<th>Throughput avg (ops/s)</th>
+<th>Comparison</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>color-utils</td>
+<td>76974  ± 0.58%</td>
+<td>13528 ± 0.23%</td>
+<td>fastest</td>
+</tr>
+<tr>
+<td>colord</td>
+<td>160052 ± 1.14%</td>
+<td>7078  ± 0.69%</td>
+<td>48% slower</td>
+</tr>
+</tbody>
+</table>
+</details>
+<details>
+<summary>HSB</summary>
+<ul>
+<li>10 colors/sampling</li>
+</ul>
+<p><code>rgb2hsb</code></p>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Latency avg (ns)</th>
+<th>Throughput avg (ops/s)</th>
+<th>Comparison</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>color-utils</td>
+<td>184.07 ± 0.22%</td>
+<td>6132417 ± 0.03%</td>
+<td>fastest</td>
+</tr>
+<tr>
+<td>colord</td>
+<td>402.23 ± 0.25%</td>
+<td>2549048 ± 0.02%</td>
+<td>58% slower</td>
+</tr>
+<tr>
+<td>color</td>
+<td>5301.1 ± 7.57%</td>
+<td>210845  ± 0.05%</td>
+<td>97% slower</td>
+</tr>
+<tr>
+<td>color-convert</td>
+<td>448.84 ± 0.97%</td>
+<td>2468662 ± 0.02%</td>
+<td>60% slower</td>
+</tr>
+</tbody>
+</table>
+<p><code>hsb2rgb</code></p>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Latency avg (ns)</th>
+<th>Throughput avg (ops/s)</th>
+<th>Comparison</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>color-utils</td>
+<td>144.36 ± 0.37%</td>
+<td>8069004 ± 0.02%</td>
+<td>fastest</td>
+</tr>
+<tr>
+<td>colord</td>
+<td>1532.0 ± 16.83%</td>
+<td>836192  ± 0.05%</td>
+<td>90% slower</td>
+</tr>
+<tr>
+<td>color</td>
+<td>6647.3 ± 0.73%</td>
+<td>161576  ± 0.08%</td>
+<td>98% slower</td>
+</tr>
+<tr>
+<td>color-convert</td>
+<td>246.41 ± 0.86%</td>
+<td>4666442 ± 0.02%</td>
+<td>42% slower</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>500 colors/sampling</li>
+</ul>
+<p><code>rgb2hsb</code></p>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Latency avg (ns)</th>
+<th>Throughput avg (ops/s)</th>
+<th>Comparison</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>color-utils</td>
+<td>4229.8 ± 0.31%</td>
+<td>250072 ± 0.06%</td>
+<td>fastest</td>
+</tr>
+<tr>
+<td>colord</td>
+<td>15124  ± 0.18%</td>
+<td>67135  ± 0.07%</td>
+<td>73% slower</td>
+</tr>
+<tr>
+<td>color</td>
+<td>267355 ± 5.67%</td>
+<td>4124   ± 0.51%</td>
+<td>98% slower</td>
+</tr>
+<tr>
+<td>color-convert</td>
+<td>15716  ± 0.54%</td>
+<td>67010  ± 0.10%</td>
+<td>73% slower</td>
+</tr>
+</tbody>
+</table>
+<p><code>hsb2rgb</code></p>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Latency avg (ns)</th>
+<th>Throughput avg (ops/s)</th>
+<th>Comparison</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>color-utils</td>
+<td>2164.3 ± 0.38%</td>
+<td>479900 ± 0.04%</td>
+<td>fastest</td>
+</tr>
+<tr>
+<td>colord</td>
+<td>61351  ± 0.81%</td>
+<td>17598  ± 0.27%</td>
+<td>96% slower</td>
+</tr>
+<tr>
+<td>color</td>
+<td>324795 ± 0.89%</td>
+<td>3196   ± 0.54%</td>
+<td>99% slower</td>
+</tr>
+<tr>
+<td>color-convert</td>
+<td>18926  ± 1.04%</td>
+<td>58795  ± 0.16%</td>
+<td>88% slower</td>
+</tr>
+</tbody>
+</table>
+</details>
+<details>
+<summary>NAMED</summary>
+<ul>
+<li>10 colors/sampling</li>
+</ul>
+<p><code>rgb2named</code></p>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Latency avg (ns)</th>
+<th>Throughput avg (ops/s)</th>
+<th>Comparison</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>color-utils</td>
+<td>29979  ± 0.85%</td>
+<td>37930 ± 0.22%</td>
+<td>fastest</td>
+</tr>
+<tr>
+<td>colord</td>
+<td>786384 ± 2.16%</td>
+<td>1372  ± 1.17%</td>
+<td>96% slower</td>
+</tr>
+<tr>
+<td>color</td>
+<td>91712  ± 0.95%</td>
+<td>11934 ± 0.39%</td>
+<td>69% slower</td>
+</tr>
+<tr>
+<td>color-convert</td>
+<td>94868  ± 8.01%</td>
+<td>12105 ± 0.36%</td>
+<td>68% slower</td>
+</tr>
+</tbody>
+</table>
+<p><code>named2rgb</code></p>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Latency avg (ns)</th>
+<th>Throughput avg (ops/s)</th>
+<th>Comparison</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>color-utils</td>
+<td>394.26 ± 1.58%</td>
+<td>2733943 ± 0.02%</td>
+<td>fastest</td>
+</tr>
+<tr>
+<td>colord</td>
+<td>9224.9 ± 5.77%</td>
+<td>124649  ± 0.12%</td>
+<td>95% slower</td>
+</tr>
+<tr>
+<td>color</td>
+<td>8343.4 ± 1.21%</td>
+<td>136053  ± 0.13%</td>
+<td>95% slower</td>
+</tr>
+<tr>
+<td>color-convert</td>
+<td>580.41 ± 0.76%</td>
+<td>1965209 ± 0.04%</td>
+<td>28% slower</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>500 colors/sampling</li>
+</ul>
+<p><code>rgb2named</code></p>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Latency avg (ns)</th>
+<th>Throughput avg (ops/s)</th>
+<th>Comparison</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>color-utils</td>
+<td>1494846  ± 1.61%</td>
+<td>689 ± 1.06%</td>
+<td>fastest</td>
+</tr>
+<tr>
+<td>colord</td>
+<td>40092764 ± 4.57%</td>
+<td>26  ± 3.49%</td>
+<td>96% slower</td>
+</tr>
+<tr>
+<td>color</td>
+<td>4001711  ± 1.34%</td>
+<td>252 ± 1.07%</td>
+<td>63% slower</td>
+</tr>
+<tr>
+<td>color-convert</td>
+<td>4092342  ± 1.49%</td>
+<td>247 ± 1.13%</td>
+<td>64% slower</td>
+</tr>
+</tbody>
+</table>
+<p><code>named2rgb</code></p>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Latency avg (ns)</th>
+<th>Throughput avg (ops/s)</th>
+<th>Comparison</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>color-utils</td>
+<td>20613  ± 0.49%</td>
+<td>51361 ± 0.14%</td>
+<td>fastest</td>
+</tr>
+<tr>
+<td>colord</td>
+<td>426264 ± 1.00%</td>
+<td>2436  ± 0.63%</td>
+<td>95% slower</td>
+</tr>
+<tr>
+<td>color</td>
+<td>359488 ± 1.05%</td>
+<td>2884  ± 0.54%</td>
+<td>94% slower</td>
+</tr>
+<tr>
+<td>color-convert</td>
+<td>41986  ± 0.64%</td>
+<td>25262 ± 0.21%</td>
+<td>51% slower</td>
+</tr>
+</tbody>
+</table>
+</details>
+<details>
+<summary>Oklab</summary>
+<ul>
+<li>10 colors/sampling</li>
+</ul>
+<p><code>rgb2oklab</code></p>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Latency avg (ns)</th>
+<th>Throughput avg (ops/s)</th>
+<th>Comparison</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>color-utils</td>
+<td>2091.1 ± 0.87%</td>
+<td>515221 ± 0.04%</td>
+<td>fastest</td>
+</tr>
+</tbody>
+</table>
+<p><code>oklab2rgb</code></p>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Latency avg (ns)</th>
+<th>Throughput avg (ops/s)</th>
+<th>Comparison</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>color-utils</td>
+<td>1985.7 ± 1.13%</td>
+<td>520353 ± 0.03%</td>
+<td>fastest</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>500 colors/sampling</li>
+</ul>
+<p><code>rgb2oklab</code></p>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Latency avg (ns)</th>
+<th>Throughput avg (ops/s)</th>
+<th>Comparison</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>color-utils</td>
+<td>109435 ± 1.22%</td>
+<td>9961 ± 0.44%</td>
+<td>fastest</td>
+</tr>
+</tbody>
+</table>
+<p><code>oklab2rgb</code></p>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Latency avg (ns)</th>
+<th>Throughput avg (ops/s)</th>
+<th>Comparison</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>color-utils</td>
+<td>102899 ± 0.56%</td>
+<td>10081 ± 0.28%</td>
+<td>fastest</td>
+</tr>
+</tbody>
+</table>
+</details>
+<details>
+<summary><code>getCSSColor</code></summary>
+<p>Our function handle more checks.<br/></p>
+<p><code>'color-utils'</code>: Default option.<br/>
+<code>'color-utils (number)'</code>: Pass <code>{ percent_: false }</code>.</p>
+<ul>
+<li>10 colors/sampling</li>
+</ul>
+<p>To RGB string</p>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Latency avg (ns)</th>
+<th>Throughput avg (ops/s)</th>
+<th>Comparison</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>color-utils</td>
+<td>6018.5 ± 0.71%</td>
+<td>174172  ± 0.12%</td>
+<td>95% slower</td>
+</tr>
+<tr>
+<td>color-utils (number)</td>
+<td>3191.5 ± 0.92%</td>
+<td>334829  ± 0.10%</td>
+<td>91% slower</td>
+</tr>
+<tr>
+<td>colord</td>
+<td>290.57 ± 0.96%</td>
+<td>3756317 ± 0.05%</td>
+<td>fastest</td>
+</tr>
+<tr>
+<td>color</td>
+<td>38882  ± 6.43%</td>
+<td>33738   ± 0.82%</td>
+<td>99% slower</td>
+</tr>
+</tbody>
+</table>
+<p><code>rgb2hsl</code> + to HSL string</p>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Latency avg (ns)</th>
+<th>Throughput avg (ops/s)</th>
+<th>Comparison</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>color-utils</td>
+<td>5375.8 ± 0.85%</td>
+<td>195076  ± 0.10%</td>
+<td>88% slower</td>
+</tr>
+<tr>
+<td>color-utils (number)</td>
+<td>5045.2 ± 0.61%</td>
+<td>206123  ± 0.11%</td>
+<td>88% slower</td>
+</tr>
+<tr>
+<td>colord</td>
+<td>620.55 ± 0.36%</td>
+<td>1659794 ± 0.03%</td>
+<td>fastest</td>
+</tr>
+<tr>
+<td>color</td>
+<td>35389  ± 0.89%</td>
+<td>29402   ± 0.28%</td>
+<td>98% slower</td>
+</tr>
+</tbody>
+</table>
+<p><code>rgb2xyz</code> + to XYZ string</p>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Latency avg (ns)</th>
+<th>Throughput avg (ops/s)</th>
+<th>Comparison</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>color-utils</td>
+<td>9963.4 ± 0.76%</td>
+<td>104127 ± 0.13%</td>
+<td>5% slower</td>
+</tr>
+<tr>
+<td>color-utils (number)</td>
+<td>9776.7 ± 2.98%</td>
+<td>107502 ± 0.13%</td>
+<td>2% slower</td>
+</tr>
+<tr>
+<td>colord</td>
+<td>9341.9 ± 1.38%</td>
+<td>109684 ± 0.11%</td>
+<td>fastest</td>
+</tr>
+<tr>
+<td>color</td>
+<td>44828  ± 1.68%</td>
+<td>23190  ± 0.28%</td>
+<td>79% slower</td>
+</tr>
+</tbody>
+</table>
+<p><code>rgb2lab</code> + to LAB string</p>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Latency avg (ns)</th>
+<th>Throughput avg (ops/s)</th>
+<th>Comparison</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>color-utils</td>
+<td>11020 ± 0.87%</td>
+<td>94895  ± 0.15%</td>
+<td>8% slower</td>
+</tr>
+<tr>
+<td>color-utils (number)</td>
+<td>10614 ± 0.95%</td>
+<td>97590  ± 0.12%</td>
+<td>5% slower</td>
+</tr>
+<tr>
+<td>colord</td>
+<td>10011 ± 0.70%</td>
+<td>103238 ± 0.13%</td>
+<td>fastest</td>
+</tr>
+<tr>
+<td>color</td>
+<td>54261 ± 1.75%</td>
+<td>19497  ± 0.42%</td>
+<td>81% slower</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>500 colors/sampling</li>
+</ul>
+<p>To RGB string</p>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Latency avg (ns)</th>
+<th>Throughput avg (ops/s)</th>
+<th>Comparison</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>color-utils</td>
+<td>466996  ± 2.13%</td>
+<td>2236   ± 1.28%</td>
+<td>98% slower</td>
+</tr>
+<tr>
+<td>color-utils (number)</td>
+<td>147629  ± 1.10%</td>
+<td>7009   ± 0.60%</td>
+<td>94% slower</td>
+</tr>
+<tr>
+<td>colord</td>
+<td>8732.8  ± 0.19%</td>
+<td>116532 ± 0.10%</td>
+<td>fastest</td>
+</tr>
+<tr>
+<td>color</td>
+<td>1683490 ± 5.91%</td>
+<td>673    ± 4.59%</td>
+<td>99% slower</td>
+</tr>
+</tbody>
+</table>
+<p><code>rgb2hsl</code> + to HSL string</p>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Latency avg (ns)</th>
+<th>Throughput avg (ops/s)</th>
+<th>Comparison</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>color-utils</td>
+<td>556784  ± 2.23%</td>
+<td>1874  ± 1.40%</td>
+<td>94% slower</td>
+</tr>
+<tr>
+<td>color-utils (number)</td>
+<td>511215  ± 1.73%</td>
+<td>2013  ± 1.10%</td>
+<td>94% slower</td>
+</tr>
+<tr>
+<td>colord</td>
+<td>32317   ± 0.39%</td>
+<td>31506 ± 0.21%</td>
+<td>fastest</td>
+</tr>
+<tr>
+<td>color</td>
+<td>1854376 ± 2.88%</td>
+<td>551   ± 1.89%</td>
+<td>98% slower</td>
+</tr>
+</tbody>
+</table>
+<p><code>rgb2xyz</code> + to XYZ string</p>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Latency avg (ns)</th>
+<th>Throughput avg (ops/s)</th>
+<th>Comparison</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>color-utils</td>
+<td>632035  ± 1.91%</td>
+<td>1621 ± 1.10%</td>
+<td>4% slower</td>
+</tr>
+<tr>
+<td>color-utils (number)</td>
+<td>660439  ± 2.42%</td>
+<td>1580 ± 1.51%</td>
+<td>6% slower</td>
+</tr>
+<tr>
+<td>colord</td>
+<td>611214  ± 2.01%</td>
+<td>1684 ± 1.20%</td>
+<td>fastest</td>
+</tr>
+<tr>
+<td>color</td>
+<td>2190144 ± 1.91%</td>
+<td>461  ± 1.45%</td>
+<td>73% slower</td>
+</tr>
+</tbody>
+</table>
+<p><code>rgb2lab</code> + to LAB string</p>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Latency avg (ns)</th>
+<th>Throughput avg (ops/s)</th>
+<th>Comparison</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>color-utils</td>
+<td>729195  ± 1.21%</td>
+<td>1388 ± 0.91%</td>
+<td>7% slower</td>
+</tr>
+<tr>
+<td>color-utils (number)</td>
+<td>698240  ± 2.53%</td>
+<td>1488 ± 1.44%</td>
+<td>fastest</td>
+</tr>
+<tr>
+<td>colord</td>
+<td>698107  ± 2.23%</td>
+<td>1484 ± 1.47%</td>
+<td>0.27% slower</td>
+</tr>
+<tr>
+<td>color</td>
+<td>2532094 ± 1.79%</td>
+<td>398  ± 1.60%</td>
+<td>73% slower</td>
+</tr>
+</tbody>
+</table>
+</details>
+<details>
+<summary>manipulation</summary>
+<ul>
+<li>10 times/sampling</li>
+</ul>
+<p>Adjust 10 colors per sampling</p>
+<table>
+<thead>
+<tr>
+<th>Contrast</th>
+<th>Latency avg (ns)</th>
+<th>Throughput avg (ops/s)</th>
+<th>Comparison</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>linear</td>
+<td>1025.1 ± 1.06%</td>
+<td>1077923 ± 0.03%</td>
+<td>fastest</td>
+</tr>
+<tr>
+<td>gamma</td>
+<td>3220.9 ± 8.49%</td>
+<td>350958  ± 0.05%</td>
+<td>67% slower</td>
+</tr>
+<tr>
+<td>auto enhancement</td>
+<td>5087.3 ± 0.49%</td>
+<td>201488  ± 0.03%</td>
+<td>81% slower</td>
+</tr>
+<tr>
+<td>auto brightness</td>
+<td>5280.8 ± 0.25%</td>
+<td>191545  ± 0.03%</td>
+<td>82% slower</td>
+</tr>
+</tbody>
+</table>
+<p>Harmony: analogous. Generate 3 colors for 10 times</p>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Latency avg (ns)</th>
+<th>Throughput avg (ops/s)</th>
+<th>Comparison</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>color-utils</td>
+<td>3907.0 ± 0.94%</td>
+<td>276206 ± 0.04%</td>
+<td>fastest</td>
+</tr>
+<tr>
+<td>colord</td>
+<td>6293.9 ± 0.66%</td>
+<td>170207 ± 0.07%</td>
+<td>38% slower</td>
+</tr>
+</tbody>
+</table>
+<p>Harmony: shades. Generate 6 colors for 10 times</p>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Latency avg (ns)</th>
+<th>Throughput avg (ops/s)</th>
+<th>Comparison</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>color-utils</td>
+<td>7509.4 ± 0.45%</td>
+<td>137697 ± 0.04%</td>
+<td>fastest</td>
+</tr>
+<tr>
+<td>colord</td>
+<td>112589 ± 1.21%</td>
+<td>9072   ± 0.18%</td>
+<td>93% slower</td>
+</tr>
+</tbody>
+</table>
+<p>Mix index <code>i</code> and index <code>i-1</code> for i = 1, 2, ..., 9.</p>
+<table>
+<thead>
+<tr>
+<th>Mixing</th>
+<th>Latency avg (ns)</th>
+<th>Throughput avg (ops/s)</th>
+<th>Comparison</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>mean</td>
+<td>2557.6 ± 0.47%</td>
+<td>410112 ± 0.03%</td>
+<td>23% slower</td>
+</tr>
+<tr>
+<td>brighter</td>
+<td>5644.8 ± 0.53%</td>
+<td>187776 ± 0.06%</td>
+<td>65% slower</td>
+</tr>
+<tr>
+<td>deeper</td>
+<td>5167.1 ± 1.89%</td>
+<td>203618 ± 0.04%</td>
+<td>62% slower</td>
+</tr>
+<tr>
+<td>soft light</td>
+<td>2986.2 ± 0.51%</td>
+<td>348301 ± 0.03%</td>
+<td>35% slower</td>
+</tr>
+<tr>
+<td>additive</td>
+<td>2054.4 ± 6.31%</td>
+<td>533152 ± 0.03%</td>
+<td>fastest</td>
+</tr>
+<tr>
+<td>weighted</td>
+<td>2664.4 ± 0.61%</td>
+<td>392661 ± 0.03%</td>
+<td>26% slower</td>
+</tr>
+</tbody>
+</table>
+<p>Sort 5 colors for 6 times</p>
+<table>
+<thead>
+<tr>
+<th>Sorting</th>
+<th>Latency avg (ns)</th>
+<th>Throughput avg (ops/s)</th>
+<th>Comparison</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>luminance</td>
+<td>24254 ± 0.52%</td>
+<td>43674 ± 0.12%</td>
+<td>13% slower</td>
+</tr>
+<tr>
+<td>random</td>
+<td>20884 ± 0.51%</td>
+<td>50126 ± 0.10%</td>
+<td>fastest</td>
+</tr>
+<tr>
+<td>reversion</td>
+<td>21663 ± 1.23%</td>
+<td>49685 ± 0.15%</td>
+<td>0.88% slower</td>
+</tr>
+<tr>
+<td>CIE76</td>
+<td>36281 ± 0.51%</td>
+<td>28604 ± 0.14%</td>
+<td>43% slower</td>
+</tr>
+<tr>
+<td>CIE94</td>
+<td>36974 ± 0.47%</td>
+<td>27938 ± 0.13%</td>
+<td>44% slower</td>
+</tr>
+<tr>
+<td>CIEDE2000</td>
+<td>74629 ± 0.41%</td>
+<td>13667 ± 0.16%</td>
+<td>73% slower</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>500 times/sampling</li>
+</ul>
+<p>Adjust 500 colors per sampling</p>
+<table>
+<thead>
+<tr>
+<th>Contrast</th>
+<th>Latency avg (ns)</th>
+<th>Throughput avg (ops/s)</th>
+<th>Comparison</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>linear</td>
+<td>40253  ± 0.73%</td>
+<td>26648 ± 0.18%</td>
+<td>fastest</td>
+</tr>
+<tr>
+<td>gamma</td>
+<td>148119 ± 0.46%</td>
+<td>6863  ± 0.22%</td>
+<td>74% slower</td>
+</tr>
+<tr>
+<td>auto enhancement</td>
+<td>245359 ± 0.51%</td>
+<td>4125  ± 0.24%</td>
+<td>85% slower</td>
+</tr>
+<tr>
+<td>auto brightness</td>
+<td>282041 ± 2.13%</td>
+<td>3624  ± 0.27%</td>
+<td>86% slower</td>
+</tr>
+</tbody>
+</table>
+<p>Harmony: analogous. Generate 3 colors for 500 times.</p>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Latency avg (ns)</th>
+<th>Throughput avg (ops/s)</th>
+<th>Comparison</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>color-utils</td>
+<td>346802 ± 8.85%</td>
+<td>3725 ± 1.13%</td>
+<td>fastest</td>
+</tr>
+<tr>
+<td>colord</td>
+<td>355089 ± 2.22%</td>
+<td>3243 ± 1.00%</td>
+<td>13% slower</td>
+</tr>
+</tbody>
+</table>
+<p>Harmony: shades. Generate 6 colors for 500 times.</p>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Latency avg (ns)</th>
+<th>Throughput avg (ops/s)</th>
+<th>Comparison</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>color-utils</td>
+<td>460044  ± 3.19%</td>
+<td>2493 ± 1.02%</td>
+<td>fastest</td>
+</tr>
+<tr>
+<td>colord</td>
+<td>6900347 ± 4.51%</td>
+<td>152  ± 2.75%</td>
+<td>94% slower</td>
+</tr>
+</tbody>
+</table>
+<p>Mix index <code>i</code> and index <code>i-1</code> for i = 1, 2, ..., 499.</p>
+<table>
+<thead>
+<tr>
+<th>Mixing</th>
+<th>Latency avg (ns)</th>
+<th>Throughput avg (ops/s)</th>
+<th>Comparison</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>mean</td>
+<td>119549 ± 0.47%</td>
+<td>8594  ± 0.27%</td>
+<td>37% slower</td>
+</tr>
+<tr>
+<td>brighter</td>
+<td>237917 ± 0.39%</td>
+<td>4252  ± 0.27%</td>
+<td>69% slower</td>
+</tr>
+<tr>
+<td>deeper</td>
+<td>284104 ± 0.52%</td>
+<td>3575  ± 0.34%</td>
+<td>74% slower</td>
+</tr>
+<tr>
+<td>soft light</td>
+<td>159288 ± 0.46%</td>
+<td>6417  ± 0.29%</td>
+<td>53% slower</td>
+</tr>
+<tr>
+<td>additive</td>
+<td>75697  ± 0.51%</td>
+<td>13711 ± 0.22%</td>
+<td>fastest</td>
+</tr>
+<tr>
+<td>weighted</td>
+<td>123320 ± 0.38%</td>
+<td>8249  ± 0.21%</td>
+<td>40% slower</td>
+</tr>
+</tbody>
+</table>
+<p>Sort 500 colors per sampling.</p>
+<table>
+<thead>
+<tr>
+<th>Sorting</th>
+<th>Latency avg (ns)</th>
+<th>Throughput avg (ops/s)</th>
+<th>Comparison</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>brightness</td>
+<td>591173   ± 0.65%</td>
+<td>1714 ± 0.47%</td>
+<td>40% slower</td>
+</tr>
+<tr>
+<td>random</td>
+<td>363527   ± 0.56%</td>
+<td>2787 ± 0.33%</td>
+<td>2% slower</td>
+</tr>
+<tr>
+<td>reversion</td>
+<td>358122   ± 0.59%</td>
+<td>2834 ± 0.35%</td>
+<td>fastest</td>
+</tr>
+<tr>
+<td>CIE76</td>
+<td>3701331  ± 1.22%</td>
+<td>272  ± 0.92%</td>
+<td>90% slower</td>
+</tr>
+<tr>
+<td>CIE94</td>
+<td>5516852  ± 2.07%</td>
+<td>184  ± 1.36%</td>
+<td>94% slower</td>
+</tr>
+<tr>
+<td>CIEDE2000</td>
+<td>47501561 ± 0.86%</td>
+<td>21   ± 0.78%</td>
+<td>99% slower</td>
+</tr>
+</tbody>
+</table>
+</details>
+<details>
+<summary>some other fcuntions</summary>
+<ul>
+<li>10 colors/sampling</li>
+</ul>
+<p><code>rgb2hue</code></p>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Latency avg (ns)</th>
+<th>Throughput avg (ops/s)</th>
+<th>Comparison</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>color-utils</td>
+<td>177.53 ± 0.23%</td>
+<td>6435262 ± 0.03%</td>
+<td>fastest</td>
+</tr>
+<tr>
+<td>colord</td>
+<td>220.86 ± 0.22%</td>
+<td>4706358 ± 0.01%</td>
+<td>27% slower</td>
+</tr>
+<tr>
+<td>color</td>
+<td>5044.5 ± 5.06%</td>
+<td>214733  ± 0.04%</td>
+<td>97% slower</td>
+</tr>
+</tbody>
+</table>
+<p><code>isReadable</code></p>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Latency avg (ns)</th>
+<th>Throughput avg (ops/s)</th>
+<th>Comparison</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>color-utils</td>
+<td>2941.2 ± 0.11%</td>
+<td>345725 ± 0.03%</td>
+<td>34% slower</td>
+</tr>
+<tr>
+<td>colord</td>
+<td>1942.5 ± 2.46%</td>
+<td>526095 ± 0.02%</td>
+<td>fastest</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>500 colors/sampling</li>
+</ul>
+<p><code>rgb2hue</code></p>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Latency avg (ns)</th>
+<th>Throughput avg (ops/s)</th>
+<th>Comparison</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>color-utils</td>
+<td>4711.2 ± 0.87%</td>
+<td>223607 ± 0.06%</td>
+<td>fastest</td>
+</tr>
+<tr>
+<td>colord</td>
+<td>5920.9 ± 0.16%</td>
+<td>174818 ± 0.06%</td>
+<td>22% slower</td>
+</tr>
+<tr>
+<td>color</td>
+<td>251684 ± 0.89%</td>
+<td>4116   ± 0.43%</td>
+<td>98% slower</td>
+</tr>
+</tbody>
+</table>
+<p><code>isReadable</code></p>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Latency avg (ns)</th>
+<th>Throughput avg (ops/s)</th>
+<th>Comparison</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>color-utils</td>
+<td>170644 ± 0.46%</td>
+<td>5961  ± 0.26%</td>
+<td>80% slower</td>
+</tr>
+<tr>
+<td>colord</td>
+<td>34777  ± 0.24%</td>
+<td>29229 ± 0.11%</td>
+<td>fastest</td>
+</tr>
+</tbody>
+</table>
+</details>
+<h2>Others</h2>
+<div id="mangle">
+<p>:grey_question: Some properties with underscore <code>_</code> at the end of name.<br/>
+:speech_balloon: Theese properties can be mangled by minifier, such as <code>terser</code>, by setting <code>mangle.properties.regex = /[^_]_$/</code>.</p>
+<p>:grey_exclamation: The <code>mangle.properties</code> may cause error when minifying multiple files.<br/>
+:speech_balloon: Because the mangled names are different in different files.<br/>
+This can be solved by setting <code>nameCache: {}</code> (terser) or create a <a href="#terser-plugin">custom plugin</a> for bundler (if <code>nameCache</code> in @rollup/plugin-terser or vite.config does not work).</p>
+<p>:exclamation: <code>nameCache</code> may <strong>not</strong> work in Nuxt.</p>
+  <details id="terser-plugin">
+  <summary>custom rollup plugin</summary>
+<p>In this repository <a href="https://github.com/johnny95731/color-utils/blob/main/terser-plugin.ts">github terser-plugin.ts</a></p>
+<pre><code class="ts"><span class="hl-3">import</span><span class="hl-1"> { </span><span class="hl-4">minify</span><span class="hl-1"> } </span><span class="hl-3">from</span><span class="hl-1"> </span><span class="hl-2">&#39;terser&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">defaultOptions</span><span class="hl-1"> = {</span><br/><span class="hl-1">  </span><span class="hl-4">compress:</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-4">toplevel:</span><span class="hl-1"> </span><span class="hl-5">true</span><span class="hl-1">,</span><br/><span class="hl-1">  },</span><br/><span class="hl-1">  </span><span class="hl-4">mangle:</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-4">toplevel:</span><span class="hl-1"> </span><span class="hl-5">true</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-4">properties:</span><span class="hl-1"> {</span><br/><span class="hl-1">      </span><span class="hl-4">regex:</span><span class="hl-10"> /</span><span class="hl-11">[^</span><span class="hl-10">_</span><span class="hl-11">]</span><span class="hl-10">_</span><span class="hl-12">$</span><span class="hl-10">/</span><br/><span class="hl-1">    }</span><br/><span class="hl-1">  },</span><br/><span class="hl-1">  </span><span class="hl-4">nameCache:</span><span class="hl-1"> </span><span class="hl-5">undefined</span><br/><span class="hl-1">};</span>
+</code><button type="button">Copy</button></pre>
+
+<p>Plugin:</p>
+<pre><code class="ts"><br/><span class="hl-3">export</span><span class="hl-1"> </span><span class="hl-3">default</span><span class="hl-1"> (</span><br/><span class="hl-1">  </span><span class="hl-4">options</span><br/><span class="hl-1">) </span><span class="hl-5">=&gt;</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">mergedOption</span><span class="hl-1"> = </span><span class="hl-0">mergeDeep</span><span class="hl-1">({}, </span><span class="hl-4">defaultOptions</span><span class="hl-1">, </span><span class="hl-4">options</span><span class="hl-1">);</span><br/><span class="hl-1">  </span><span class="hl-3">return</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-4">name:</span><span class="hl-1"> </span><span class="hl-2">&#39;terser&#39;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-4">renderChunk:</span><span class="hl-1"> {</span><br/><span class="hl-1">      </span><span class="hl-4">order:</span><span class="hl-1"> </span><span class="hl-2">&#39;post&#39;</span><span class="hl-1">,</span><br/><span class="hl-1">      </span><span class="hl-5">async</span><span class="hl-1"> </span><span class="hl-0">handler</span><span class="hl-1">(</span><span class="hl-4">code</span><span class="hl-1">) {</span><br/><span class="hl-1">        </span><span class="hl-3">if</span><span class="hl-1"> (!</span><span class="hl-10">/</span><span class="hl-11">(</span><span class="hl-10">m</span><span class="hl-12">|</span><span class="hl-10">c</span><span class="hl-11">)</span><span class="hl-13">?</span><span class="hl-10">js</span><span class="hl-12">$</span><span class="hl-10">/</span><span class="hl-1">.</span><span class="hl-0">test</span><span class="hl-1">(</span><span class="hl-4">chunk</span><span class="hl-1">.</span><span class="hl-4">fileName</span><span class="hl-1">)) </span><span class="hl-3">return</span><span class="hl-1">;</span><br/><span class="hl-1">        </span><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">result</span><span class="hl-1"> = </span><span class="hl-3">await</span><span class="hl-1"> </span><span class="hl-0">minify</span><span class="hl-1">(</span><span class="hl-4">code</span><span class="hl-1">, </span><span class="hl-4">mergedOption</span><span class="hl-1">);</span><br/><span class="hl-1">        </span><span class="hl-3">return</span><span class="hl-1"> {</span><br/><span class="hl-1">          </span><span class="hl-4">code:</span><span class="hl-1"> </span><span class="hl-4">result</span><span class="hl-1">.</span><span class="hl-4">code</span><span class="hl-1">!</span><br/><span class="hl-1">        };</span><br/><span class="hl-1">      },</span><br/><span class="hl-1">    }</span><br/><span class="hl-1">  };</span><br/><span class="hl-1">};</span>
+</code><button type="button">Copy</button></pre>
+
+<p>or</p>
+<pre><code class="ts"><span class="hl-3">export</span><span class="hl-1"> </span><span class="hl-3">default</span><span class="hl-1"> (</span><br/><span class="hl-1">  </span><span class="hl-4">outDir</span><span class="hl-1"> = [</span><span class="hl-2">&#39;./dist&#39;</span><span class="hl-1">],</span><br/><span class="hl-1">  </span><span class="hl-4">options</span><br/><span class="hl-1">) </span><span class="hl-5">=&gt;</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">mergedOption</span><span class="hl-1"> = </span><span class="hl-0">mergeDeep</span><span class="hl-1">({}, </span><span class="hl-4">defaultOptions</span><span class="hl-1">, </span><span class="hl-4">options</span><span class="hl-1">);</span><br/><span class="hl-1">  </span><span class="hl-3">return</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-4">name:</span><span class="hl-1"> </span><span class="hl-2">&#39;terser&#39;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-4">closeBundle:</span><span class="hl-1"> {</span><br/><span class="hl-1">      </span><span class="hl-4">order:</span><span class="hl-1"> </span><span class="hl-2">&#39;post&#39;</span><span class="hl-1">,</span><br/><span class="hl-1">      </span><span class="hl-4">sequential:</span><span class="hl-1"> </span><span class="hl-5">true</span><span class="hl-1">,</span><br/><span class="hl-1">      </span><span class="hl-5">async</span><span class="hl-1"> </span><span class="hl-0">handler</span><span class="hl-1">() {</span><br/><span class="hl-1">        </span><span class="hl-3">for</span><span class="hl-1"> (</span><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">path</span><span class="hl-1"> </span><span class="hl-5">of</span><span class="hl-1"> </span><span class="hl-4">outDir</span><span class="hl-1">) {</span><br/><span class="hl-1">          </span><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">files</span><span class="hl-1"> = </span><span class="hl-4">fs</span><span class="hl-1">.</span><span class="hl-0">readdirSync</span><span class="hl-1">(</span><span class="hl-4">path</span><span class="hl-1">)</span><br/><span class="hl-1">            .</span><span class="hl-0">filter</span><span class="hl-1">((</span><span class="hl-4">filename</span><span class="hl-1">) </span><span class="hl-5">=&gt;</span><span class="hl-10"> /</span><span class="hl-14">\.</span><span class="hl-11">(</span><span class="hl-10">js</span><span class="hl-12">|</span><span class="hl-10">mjs</span><span class="hl-12">|</span><span class="hl-10">cjs</span><span class="hl-11">)</span><span class="hl-12">$</span><span class="hl-10">/</span><span class="hl-1">.</span><span class="hl-0">test</span><span class="hl-1">(</span><span class="hl-4">filename</span><span class="hl-1">));</span><br/><span class="hl-1">          </span><span class="hl-3">for</span><span class="hl-1"> (</span><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">filename</span><span class="hl-1"> </span><span class="hl-5">of</span><span class="hl-1"> </span><span class="hl-4">files</span><span class="hl-1">) {</span><br/><span class="hl-1">            </span><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">filePath</span><span class="hl-1"> = </span><span class="hl-2">`</span><span class="hl-5">${</span><span class="hl-4">path</span><span class="hl-5">}</span><span class="hl-2">/</span><span class="hl-5">${</span><span class="hl-4">filename</span><span class="hl-5">}</span><span class="hl-2">`</span><span class="hl-1">;</span><br/><span class="hl-1">            </span><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">code</span><span class="hl-1"> = </span><span class="hl-4">fs</span><span class="hl-1">.</span><span class="hl-0">readFileSync</span><span class="hl-1">(</span><span class="hl-4">filePath</span><span class="hl-1">, </span><span class="hl-2">&#39;utf-8&#39;</span><span class="hl-1">);</span><br/><span class="hl-1">            </span><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">result</span><span class="hl-1"> = </span><span class="hl-3">await</span><span class="hl-1"> </span><span class="hl-0">minify</span><span class="hl-1">(</span><span class="hl-4">code</span><span class="hl-1">, </span><span class="hl-4">mergedOption</span><span class="hl-1">);</span><br/><span class="hl-1">            </span><span class="hl-3">if</span><span class="hl-1"> (</span><span class="hl-4">result</span><span class="hl-1">.</span><span class="hl-4">code</span><span class="hl-1">) </span><span class="hl-4">fs</span><span class="hl-1">.</span><span class="hl-0">writeFileSync</span><span class="hl-1">(</span><span class="hl-4">filePath</span><span class="hl-1">, </span><span class="hl-4">result</span><span class="hl-1">.</span><span class="hl-4">code</span><span class="hl-1">, </span><span class="hl-2">&#39;utf8&#39;</span><span class="hl-1">);</span><br/><span class="hl-1">          }</span><br/><span class="hl-1">        }</span><br/><span class="hl-1">      },</span><br/><span class="hl-1">    },</span><br/><span class="hl-1">  }</span><br/><span class="hl-1">}</span>
+</code><button type="button">Copy</button></pre>
+
+  </details>
+</div></div></div><div class="col-sidebar"><div class="page-menu"><div class="tsd-navigation settings"><details class="tsd-accordion"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-chevronDown"></use></svg><h3>Settings</h3></summary><div class="tsd-accordion-details"><div class="tsd-filter-visibility"><span class="settings-label">Member Visibility</span><ul id="tsd-filter-options"><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></div><div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div><details open class="tsd-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-chevronDown"></use></svg><h3>On This Page</h3></summary><div class="tsd-accordion-details"><a href="#algorithm-overview"><span>Algorithm <wbr/>Overview</span></a><a href="#algorithm-overview-1"><span>Algorithm <wbr/>Overview</span></a><a href="#about"><span>About </span></a></div></details></div><div class="site-menu"><nav class="tsd-navigation"><a href="modules.html">@johnny95731/color-utils</a><ul class="tsd-small-nested-navigation" id="tsd-nav-container"><li>Loading...</li></ul></nav></div></div></div><footer><p class="tsd-generator">Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></footer><div class="overlay"></div></body></html>

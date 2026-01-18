@@ -1,0 +1,29 @@
+markdown-helper
+rollup.config.pkg.ts
+colord.pkg.ts
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+.DS_Store
+dist*/
+coverage
+*.local
+
+# Editor directories and files
+.vscode/settings.json
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+*.tsbuildinfo
