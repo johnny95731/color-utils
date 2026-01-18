@@ -1,15 +1,16 @@
-import { colord } from 'colord';
 import convert from 'color-convert';
+import { colord } from 'colord';
 
+import { rgb2hex, hex2rgb, map } from '../../../dist/index.js';
 import { randInt, randRgbGen } from '../../../test-utils/helpers.js';
 import { performanceTest } from '../../../test-utils/perf.js';
 import { SampleGenerator } from '../../../test-utils/sample.js';
-import { rgb2hex, hex2rgb, map } from '../../../dist/index.js';
+
 
 const { rgbs, hex: hex6, colords, length } = SampleGenerator.defaults;
 
 const hexChar = '0123456789ABCDEF';
-const hexGenerator = (num) => map(num, () => hexChar[randInt(15)]).join('');
+const hexGenerator = num => map(num, () => hexChar[randInt(15)]).join('');
 
 function toHex() {
   const colord_ = () => {
@@ -32,16 +33,16 @@ function toHex() {
   return performanceTest(
     'RGB to HEX',
     [
-      ['color-utils',  custom_],
+      ['color-utils', custom_],
       ['colord', colord_],
       ['color-convert', convert_],
-    ]
+    ],
   );
 }
 
 function toHexWithAlpha() {
   const rgbas = map(length, () => randRgbGen(true));
-  const colords = map(rgbas, ([r,g,b,a]) => colord({ r,g,b,a }));
+  const colords = map(rgbas, ([r, g, b, a]) => colord({ r, g, b, a }));
 
   const colord_ = () => {
     for (let i = 0; i < length; i++) {
@@ -57,9 +58,9 @@ function toHexWithAlpha() {
   return performanceTest(
     'RGB to HEX with alpha',
     [
-      ['color-utils',  custom_],
+      ['color-utils', custom_],
       ['colord', colord_],
-    ]
+    ],
   );
 }
 
@@ -79,9 +80,9 @@ function fromHex8() {
   return performanceTest(
     '8-digit HEX to RGB',
     [
-      ['color-utils',  custom_],
+      ['color-utils', custom_],
       ['colord', colord_],
-    ]
+    ],
   );
 };
 
@@ -106,10 +107,10 @@ function fromHex6() {
   return performanceTest(
     '6-digit HEX to RGB',
     [
-      ['color-utils',  custom_],
+      ['color-utils', custom_],
       ['colord', colord_],
       ['color-convert', convert_],
-    ]
+    ],
   );
 };
 
@@ -130,9 +131,9 @@ function fromHex4() {
   return performanceTest(
     '4-digit HEX to RGB',
     [
-      ['color-utils',  custom_],
+      ['color-utils', custom_],
       ['colord', colord_],
-    ]
+    ],
   );
 };
 
@@ -159,10 +160,10 @@ function fromHex3() {
   return performanceTest(
     '3-digit HEX to RGB',
     [
-      ['color-utils',  custom_],
+      ['color-utils', custom_],
       ['colord', colord_],
       ['color-convert', convert_],
-    ]
+    ],
   );
 };
 

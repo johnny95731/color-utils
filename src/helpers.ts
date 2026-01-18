@@ -7,21 +7,22 @@ export type DeepReadonly<T> = Readonly<{
   // Is it a primitive? Then make it readonly
   T[K] extends (number | string | symbol) ? Readonly<T[K]>
   // Is it an array of items? Then make the array readonly and the item as well
-  : T[K] extends Array<infer A> ? Readonly<Array<DeepReadonly<A>>>
-  // It is some other object, make it readonly as well
-  : DeepReadonly<T[K]>;
-}>
+    : T[K] extends Array<infer A> ? Readonly<Array<DeepReadonly<A>>>
+    // It is some other object, make it readonly as well
+      : DeepReadonly<T[K]>;
+}>;
 /**
  * Deeply write-able object.
  * @category Utility
  */
-export type DeepWriteable<T> = { -readonly [P in keyof T]: DeepWriteable<T[P]> };
+export type DeepWriteable<T>
+  = { -readonly [P in keyof T]: DeepWriteable<T[P]> };
 
 /**
  * Clone object deeply. Object that is neither Array nor Date will become
  * standard object.
- * @param obj 
- * @returns 
+ * @param obj
+ * @returns
  * @category Utility
  */
 export const cloneDeep = <T>(obj: T): DeepWriteable<T> => {
@@ -40,15 +41,18 @@ export const cloneDeep = <T>(obj: T): DeepWriteable<T> => {
     if (Array.isArray(obj)) {
       result = [];
       for (const val of obj) result.push(cloneDeep(val));
-    } else if (obj instanceof Date) {
+    }
+    else if (obj instanceof Date) {
       result = new Date(obj);
-    } else if (typeof obj === 'object') {
+    }
+    else if (typeof obj === 'object') {
       result = {} as T;
       for (const key in obj) {
         // @ts-expect-error
         result[key] = cloneDeep(obj[key]);
       }
-    } else {
+    }
+    else {
       result = obj;
     }
   }
@@ -59,9 +63,9 @@ export const cloneDeep = <T>(obj: T): DeepWriteable<T> => {
 
 type map = {
   /**
-   * @overload 
+   * @overload
    * Similar to Array.prototype.map, but this can control the length of output
-   * array by 
+   * array by
    * @typeParam R Returned type of elements in the array.
    * @param len Length of the output array.
    * @param callback Generate elements by indices.
@@ -71,11 +75,11 @@ type map = {
   <R>(
     len: number,
     callback: (i: number) => R
-  ): R[];
+  ): R[]
   /**
-   * @overload 
+   * @overload
    * Similar to Array.prototype.map, but this can control the length of output
-   * array by 
+   * array by
    * @typeParam R Returned type of callback function.
    * @typeParam T Input type of elements in the array `arr`.
    * @param arr Array of elements.
@@ -89,14 +93,14 @@ type map = {
     callback: (val: T[number], i: number) => R,
     len?: number,
   ): R[]
-}
+};
 /** @function */
 export const map: map = <R, T extends readonly unknown[]>(
   arr: number | T,
   callback:
-    typeof arr extends number ?
-    ((i: number) => R) :
-    ((val: T[number], i: number) => R),
+    typeof arr extends number
+      ? ((i: number) => R)
+      : ((val: T[number], i: number) => R),
   len?: number,
 ): R[] => {
   // @ts-expect-error
@@ -107,7 +111,8 @@ export const map: map = <R, T extends readonly unknown[]>(
       // @ts-expect-error
       result[i] = callback(i++);
     }
-  } else {
+  }
+  else {
     for (; i < len!;) {
       // @ts-expect-error
       result[i] = callback(arr[i], i++);

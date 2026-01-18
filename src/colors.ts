@@ -1,15 +1,18 @@
-import { map } from './helpers';
-import { clip, dot3, pow, randInt, round } from './numeric';
-import { hex2rgb } from './colorModels/hex';
-import { rgb2xyz, xyz2rgb } from './colorModels/ciexyz';
-import { hsl2rgb, rgb2hsl } from './colorModels/hsl';
-import { hsb2rgb, hsbHelper, rgb2hsb } from './colorModels/hsb';
-import { hwb2rgb, rgb2hwb } from './colorModels/hwb';
-import { cmyk2rgb, rgb2cmyk } from './colorModels/cmyk';
+import { xyzSpace } from './colorModels/cie-utils';
 import { lab2rgb, lchab2rgb, rgb2lab, rgb2lchab } from './colorModels/cielab';
 import { lchuv2rgb, luv2rgb, rgb2lchuv, rgb2luv } from './colorModels/cieluv';
-import { xyzSpace } from './colorModels/cie-utils';
-import { oklab2rgb, oklch2rgb, rgb2oklab, rgb2oklch } from './colorModels/oklab';
+import { rgb2xyz, xyz2rgb } from './colorModels/ciexyz';
+import { cmyk2rgb, rgb2cmyk } from './colorModels/cmyk';
+import { hex2rgb } from './colorModels/hex';
+import { hsb2rgb, hsbHelper, rgb2hsb } from './colorModels/hsb';
+import { hsi2rgb, rgb2hsi } from './colorModels/hsi';
+import { hsl2rgb, rgb2hsl } from './colorModels/hsl';
+import { hwb2rgb, rgb2hwb } from './colorModels/hwb';
+import {
+  oklab2rgb, oklch2rgb, rgb2oklab, rgb2oklch,
+} from './colorModels/oklab';
+import { map } from './helpers';
+import { clip, dot3, pow, randInt, round } from './numeric';
 
 /**
  * @category Color
@@ -18,15 +21,15 @@ export type ColorSpace = {
   /**
    * Name of the color space.
    */
-  name_: string,
+  name_: string
   /**
    * Browser support.
    */
-  isSupported_: boolean,
+  isSupported_: boolean
   /**
    * Label of channels
    */
-  labels_: string[],
+  labels_: string[]
   /**
    * Range of each channel of a color spaces.
    *
@@ -47,18 +50,18 @@ export type ColorSpace = {
    * @param x RGB values.
    * @returns specified color space values.
    */
-  fromRgb_: (x: readonly number[]) => number[],
+  fromRgb_: (x: readonly number[]) => number[]
   /**
    * Convert specified color space to RGB space.
    * @param x specified color space values.
    * @returns RGB values.
    */
-  toRgb_: (x: readonly number[]) => number[],
+  toRgb_: (x: readonly number[]) => number[]
   /**
    * White point. The property only exists in XYZ space.
    */
   white_?: 'd65' | 'd50'
-}
+};
 /**
  * Support color spaces.
  * @category Color
@@ -76,6 +79,14 @@ export const COLOR_SPACES: ColorSpace[] = (() => {
       labels_: ['Red', 'Green', 'Blue'],
       max_: map(3, () => [0, 255]),
       isSupported_: true,
+    },
+    {
+      name_: 'HSI',
+      fromRgb_: rgb2hsi,
+      toRgb_: hsi2rgb,
+      labels_: ['Hue', 'Saturation', 'Intensity'],
+      max_: HCL_MAX,
+      isSupported_: false,
     },
     {
       name_: 'HSL',
@@ -165,8 +176,8 @@ export const COLOR_SPACES: ColorSpace[] = (() => {
       isSupported_: true,
     },
   ] satisfies (
-    Omit<ColorSpace, 'max_'> &
-    { 'max_'?: ColorSpace['max_'] | number }
+    Omit<ColorSpace, 'max_'>
+    & { max_?: ColorSpace['max_'] | number }
   )[];
 
   if (typeof CSS !== 'undefined') {
@@ -175,9 +186,9 @@ export const COLOR_SPACES: ColorSpace[] = (() => {
       const vals = map(obj.labels_, () => 0).join(' ');
       obj.isSupported_ = CSS.supports(
         'color',
-        css === 'XYZ' ?
-          `color(xyz ${vals})` :
-          `${css}(${vals})`
+        css === 'XYZ'
+          ? `color(xyz ${vals})`
+          : `${css}(${vals})`,
       );
     }
   }
@@ -186,17 +197,18 @@ export const COLOR_SPACES: ColorSpace[] = (() => {
 
 const SPACE_INDEX_MAP: Record<string, number> = {
   RGB: 0,
-  HSL: 1,
-  HSB: 2,
-  HWB: 3,
-  CMYK: 4,
-  XYZ: 5,
-  LAB: 6,
-  LUV: 7,
-  LCHAB: 8,
-  LCHUV: 9,
-  OKLAB: 10,
-  OKLCH: 11,
+  HSI: 1,
+  HSL: 2,
+  HSB: 3,
+  HWB: 4,
+  CMYK: 5,
+  XYZ: 6,
+  LAB: 7,
+  LUV: 8,
+  LCHAB: 9,
+  LCHUV: 10,
+  OKLAB: 11,
+  OKLCH: 12,
 };
 
 /**
@@ -205,7 +217,7 @@ const SPACE_INDEX_MAP: Record<string, number> = {
  * @category Color
  */
 export const getColorSpace = (
-  space: ColorSpace | string = COLOR_SPACES[0]
+  space: ColorSpace | string = COLOR_SPACES[0],
 ): ColorSpace => {
   if (typeof space === 'string') {
     space = space.toUpperCase();
@@ -220,7 +232,7 @@ export const getColorSpace = (
  * @category Color
  */
 export const getSpaceRange = (
-  space: ColorSpace | string
+  space: ColorSpace | string,
 ): [number, number][] => {
   return map(getColorSpace(space).max_, r => [r[0], r[1]]);
 };
@@ -233,7 +245,7 @@ export const getSpaceRange = (
 export const toSpace = (
   color: readonly number[],
   space: ColorSpace | string,
-  to: ColorSpace | string
+  to: ColorSpace | string,
 ): number[] => {
   space = getColorSpace(space);
   to = getColorSpace(to);
@@ -241,7 +253,6 @@ export const toSpace = (
   if (space.name_ === 'RGB') return to.fromRgb_(color);
   if (to.name_ === 'RGB') return space.toRgb_(color);
   return to.fromRgb_(space.toRgb_(color));
-
 };
 
 
@@ -254,25 +265,25 @@ export type CssColorOptions = {
    * supported, return a fallback string in RGB format.
    * @default false
    */
-  checkSupport_?: boolean,
+  checkSupport_?: boolean
   /**
    * Separator between values.
    * If `checkSupport_` is `true`, the separator is always a space `' '`.
    * @default ' '
    */
-  sep_?: string,
+  sep_?: string
   /**
    * Convert all values (except degrees) to percentages.
    * @default true
    */
-  percent_?: boolean,
+  percent_?: boolean
   /**
    * Number of decimal places for rounding values.
    * Set to `false` to disable rounding, or `true` to use the default.
    * @default 2
    */
   place_?: number | boolean
-}
+};
 
 /**
  * Return CSS `<color>` value format:
@@ -307,7 +318,7 @@ export const getCssColor = (
     checkSupport_ = false, // eslint-disable-line
     sep_ = ' ',
     percent_ = true, // eslint-disable-line
-    place_ = 2
+    place_ = 2,
   } = options;
 
   space = getColorSpace(space);
@@ -315,7 +326,7 @@ export const getCssColor = (
     return getCssColor(
       space.toRgb_(color),
       COLOR_SPACES[0],
-      options
+      options,
     );
   }
   sep_ = checkSupport_ ? ' ' : sep_;
@@ -331,7 +342,8 @@ export const getCssColor = (
     suffix = percent_ && max !== 360 ? '%' : '';
     if (isXyz && !percent_ && checkSupport_) {
       val /= 100;
-    } else if (!isXyz && suffix) { // to percentage
+    }
+    else if (!isXyz && suffix) { // to percentage
       val *= 100 / max;
     }
     if (strVal) strVal += sep_; // Add a seprator before 2nd, 3rd, ..., values.
@@ -341,23 +353,22 @@ export const getCssColor = (
   // Alpha
   val = alphaNormalize(color[i]); // i = space.max_.length
   strVal += (
-    val < 1 ?
-      ' / ' + (
-        percent_ ?
+    val < 1
+      ? ' / ' + (
+        percent_
           // @ts-expect-error
-          rounder(val * 100, place_) + '%' :
+          ? rounder(val * 100, place_) + '%'
           // @ts-expect-error
-          rounder(val, place_)
-      ) :
-      ''
+          : rounder(val, place_)
+      )
+      : ''
   );
   // Ignore checking `space.isSupported_` here.
   // Because `checkSupport_ && !space.isSupported_` will try RGB format
   // by calling this function recursively (the first if condition).
-  return isXyz && checkSupport_ ?
-    `color(xyz-${space.white_ ?? 'd65'} ${strVal})` :
-    `${css}(${strVal})`;
-
+  return isXyz && checkSupport_
+    ? `color(xyz-${space.white_ ?? 'd65'} ${strVal})`
+    : `${css}(${strVal})`;
 };
 
 /**
@@ -366,7 +377,7 @@ export const getCssColor = (
  * @category Color
  */
 export const rgbArraylize = (
-  rgb: readonly number[] | string
+  rgb: readonly number[] | string,
 ): readonly number[] => {
   return typeof rgb === 'string' ? hex2rgb(rgb) : rgb;
 };
@@ -400,11 +411,11 @@ export const getAlpha = (color: readonly number[]): number => {
  */
 export const mapNonAlpha = (
   rgb: readonly number[],
-  fn: (val: number, i: number) => number
+  fn: (val: number, i: number) => number,
 ): number[] => {
   return map(
     rgb,
-    (val, i) => i < 3 ? fn(val, i) : val
+    (val, i) => i < 3 ? fn(val, i) : val,
   );
 };
 
@@ -426,9 +437,9 @@ export const rgb2hue = (rgb: readonly number[] | string): number => {
  * @category Color
  */
 export const srgb2linearRgb = (val: number) => {
-  return val < 10.31475 ? // 10.31475 = 0.04045 * 255
-    val / 3294.6 : // 3294.6 = 12.92 * 255
-    pow((val + 14.025) / 269.025, 2.4);
+  return val < 10.31475 // 10.31475 = 0.04045 * 255
+    ? val / 3294.6 // 3294.6 = 12.92 * 255
+    : pow((val + 14.025) / 269.025, 2.4);
 };
 /**
  * Gamma correction a sRGB-linear channel
@@ -436,9 +447,9 @@ export const srgb2linearRgb = (val: number) => {
  * @category Color
  */
 export const linearRgb2srgb = (val: number) => {
-  return val < 0.0031308 ?
-    val * 3294.6 :
-    pow(val, 1 / 2.4) * 269.025 - 14.025;
+  return val < 0.0031308
+    ? val * 3294.6
+    : pow(val, 1 / 2.4) * 269.025 - 14.025;
 };
 
 
@@ -451,7 +462,7 @@ export const linearRgb2srgb = (val: number) => {
 export const rgb2gray = (rgb: string | readonly number[]): number => (
   dot3(
     rgbArraylize(rgb),
-    [0.299, 0.587, 0.114]
+    [0.299, 0.587, 0.114],
   )
 );
 
@@ -472,9 +483,9 @@ export const isLight = (rgb: readonly number[] | string): boolean => {
 export const rgb2luminance = (rgb: string | readonly number[]): number => {
   rgb = rgbArraylize(rgb);
   return (
-    0.2126 * srgb2linearRgb(rgb[0]) +
-    0.7152 * srgb2linearRgb(rgb[1]) +
-    0.0722 * srgb2linearRgb(rgb[2])
+    0.2126 * srgb2linearRgb(rgb[0])
+    + 0.7152 * srgb2linearRgb(rgb[1])
+    + 0.0722 * srgb2linearRgb(rgb[2])
   );
 };
 
@@ -502,9 +513,9 @@ export const rgb2contrast = (
   rgb1: string | readonly number[],
   rgb2: string | readonly number[],
 ) => {
-  const ratio =
-    (rgb2luminance(rgb1) + 0.05) /
-    (rgb2luminance(rgb2) + 0.05);
+  const ratio
+    = (rgb2luminance(rgb1) + 0.05)
+      / (rgb2luminance(rgb2) + 0.05);
   return round(ratio < 1 ? 1 / ratio : ratio, 2);
 };
 
@@ -543,26 +554,28 @@ export type ReadbleOptions = {
    * @default false
    */
   levelAAA?: boolean
-}
+};
 /**
  * Check two RGB colors satisfies the WCAG contrast ratio
  * @param rgb1 RGB color 1.
  * @param rgb2 RGB color 1.
  * @param options Conditions. level AA or level AAA. Large text size or
  * normal text size.
- * @returns 
+ * @returns
  * @category Color
  */
 export const isReadable = (
   rgb1: string | readonly number[],
   rgb2: string | readonly number[],
-  options: ReadbleOptions = {}
+  options: ReadbleOptions = {},
 ) => {
   const { levelAAA, isLarge } = options;
   const threshold = (
-    levelAAA && !isLarge ? 7 :
-      !levelAAA && isLarge ? 3 :
-        4.5
+    levelAAA && !isLarge
+      ? 7
+      : !levelAAA && isLarge
+        ? 3
+        : 4.5
   );
   // Equals to
   // if (levelAAA && !isLarge) threshold = 7;
@@ -584,5 +597,5 @@ export const randRgbGen = (randAlpha: boolean = false) => [
   randInt(255),
   randInt(255),
   randInt(255),
-  randAlpha ? Math.random() : 1
+  randAlpha ? Math.random() : 1,
 ];

@@ -2,41 +2,42 @@ import { describe, expect, test } from '@jest/globals';
 
 import { COLOR_SPACES, getColorSpace, getCssColor } from '../../dist/index.js';
 
+
 describe('getCssColor', () => {
   const blackRgb = [0, 0, 0, 1];
 
   const defaultCases = [
     {
       space: 'RGB',
-      expected: 'rgb(0% 0% 0%)'
+      expected: 'rgb(0% 0% 0%)',
     },
     {
       space: 'HSL',
-      expected: 'hsl(0 0% 0%)'
+      expected: 'hsl(0 0% 0%)',
     },
     {
       space: 'HSB',
-      expected: 'hsb(0 0% 0%)'
+      expected: 'hsb(0 0% 0%)',
     },
     {
       space: 'XYZ',
-      expected: 'xyz(0% 0% 0%)'
+      expected: 'xyz(0% 0% 0%)',
     },
     {
       space: 'LAB',
-      expected: 'lab(0% 0% 0%)'
+      expected: 'lab(0% 0% 0%)',
     },
     {
       space: 'Lchab',
-      expected: 'lch(0% 0% 0)'
+      expected: 'lch(0% 0% 0)',
     },
     {
       space: 'oklab',
-      expected: 'oklab(0% 0% 0%)'
+      expected: 'oklab(0% 0% 0%)',
     },
     {
       space: 'oklch',
-      expected: 'oklch(0% 0% 0)'
+      expected: 'oklch(0% 0% 0)',
     },
   ];
 
@@ -54,39 +55,39 @@ describe('getCssColor', () => {
     const cases = [
       {
         space: 'RGB',
-        expected: 'rgb(0% 0% 0%)'
+        expected: 'rgb(0% 0% 0%)',
       },
       {
         space: 'HSL',
-        expected: 'hsl(0 0% 0%)'
+        expected: 'hsl(0 0% 0%)',
       },
       {
         space: 'HSB',
-        expected: 'rgb(0% 0% 0%)'
+        expected: 'rgb(0% 0% 0%)',
       },
       {
         space: 'CMYK',
-        expected: 'rgb(0% 0% 0%)'
+        expected: 'rgb(0% 0% 0%)',
       },
       {
         space: 'XYZ',
-        expected: 'color(xyz-d65 0% 0% 0%)'
+        expected: 'color(xyz-d65 0% 0% 0%)',
       },
       {
         space: 'LAB',
-        expected: 'lab(0% 0% 0%)'
+        expected: 'lab(0% 0% 0%)',
       },
       {
         space: 'Lchab',
-        expected: 'lch(0% 0% 0)'
+        expected: 'lch(0% 0% 0)',
       },
       {
         space: 'oklab',
-        expected: 'oklab(0% 0% 0%)'
+        expected: 'oklab(0% 0% 0%)',
       },
       {
         space: 'oklch',
-        expected: 'oklch(0% 0% 0)'
+        expected: 'oklch(0% 0% 0)',
       },
     ];
 
@@ -96,7 +97,11 @@ describe('getCssColor', () => {
     }
 
     expect(
-      getCssColor([95, 100, 108], 'XYZ', { checkSupport_: true, percent_: false })
+      getCssColor(
+        [95, 100, 108],
+        'XYZ',
+        { checkSupport_: true, percent_: false },
+      ),
     )
       .toBe('color(xyz-d65 0.95 1 1.08)');
   });
@@ -150,7 +155,10 @@ describe('getCssColor', () => {
       const range = space.max_;
 
       const name = /^LCH/.test(space.name_) ? 'lch' : space.name_.toLowerCase();
-      const vals = range.reduce((acc, [, max], i) => valHandler(acc, color[i], i, max), '');
+      const vals = range.reduce(
+        (acc, [, max], i) => valHandler(acc, color[i], i, max),
+        '',
+      );
       expect(getCssColor(color, space, option)).toBe(`${name}(${vals})`);
     }
   });
@@ -175,35 +183,35 @@ describe('getCssColor', () => {
     const defaultCases = [
       {
         space: 'RGB',
-        expected: `rgb(0 0 0 / ${alpha})`
+        expected: `rgb(0 0 0 / ${alpha})`,
       },
       {
         space: 'HSL',
-        expected: `hsl(0 0 0 / ${alpha})`
+        expected: `hsl(0 0 0 / ${alpha})`,
       },
       {
         space: 'HSB',
-        expected: `hsb(0 0 0 / ${alpha})`
+        expected: `hsb(0 0 0 / ${alpha})`,
       },
       {
         space: 'XYZ',
-        expected: `xyz(0 0 0 / ${alpha})`
+        expected: `xyz(0 0 0 / ${alpha})`,
       },
       {
         space: 'LAB',
-        expected: `lab(0 0 0 / ${alpha})`
+        expected: `lab(0 0 0 / ${alpha})`,
       },
       {
         space: 'Lchab',
-        expected: `lch(0 0 0 / ${alpha})`
+        expected: `lch(0 0 0 / ${alpha})`,
       },
       {
         space: 'oklab',
-        expected: `oklab(0 0 0 / ${alpha})`
+        expected: `oklab(0 0 0 / ${alpha})`,
       },
       {
         space: 'oklch',
-        expected: `oklch(0 0 0 / ${alpha})`
+        expected: `oklch(0 0 0 / ${alpha})`,
       },
     ];
 

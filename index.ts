@@ -1,4 +1,3 @@
-
 export { cloneDeep, map } from 'src/helpers.ts';
 export type { DeepWriteable, DeepReadonly } from 'src/helpers.ts';
 export * from 'src/numeric';
@@ -9,13 +8,16 @@ export * from 'src/manipulation/harmony';
 export * from 'src/manipulation/contrast';
 export * from 'src/manipulation/sorting';
 
-export { setReferenceWhite, cieTrans, cieTransInv } from 'src/colorModels/cie-utils';
+export {
+  setReferenceWhite, cieTrans, cieTransInv,
+} from 'src/colorModels/cie-utils';
 export * from 'src/colorModels/cielab';
 export * from 'src/colorModels/cieluv';
 export * from 'src/colorModels/ciexyz';
 export * from 'src/colorModels/cmyk';
 export * from 'src/colorModels/hex';
 export * from 'src/colorModels/hsb';
+export * from 'src/colorModels/hsi';
 export * from 'src/colorModels/hsl';
 export * from 'src/colorModels/hwb';
 export * from 'src/colorModels/lch';

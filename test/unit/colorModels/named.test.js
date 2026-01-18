@@ -1,4 +1,5 @@
 import { expect, test } from '@jest/globals';
+
 import { rgb2named, namedColor, named2rgb } from '../../../dist/index.js';
 
 

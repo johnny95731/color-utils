@@ -1,6 +1,10 @@
 import typescript from '@rollup/plugin-typescript';
+
+import watchConfig, {
+  outDir, input, terserOption,
+} from './rollup.config.watch.ts';
 import terser from './terser-plugin.ts';
-import watchConfig, { outDir, input, terserOption } from './rollup.config.watch.ts';
+
 import type { RollupOptions } from 'rollup';
 
 
@@ -18,7 +22,7 @@ const config = [
       entryFileNames: '[name].cjs',
       format: 'cjs',
       generatedCode: {
-        constBindings: true
+        constBindings: true,
       },
     },
   },

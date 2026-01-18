@@ -1,11 +1,12 @@
-import { colord, extend } from 'colord';
 import Color from 'color';
-import namesPlugin from 'colord/plugins/names';
 import convert from 'color-convert';
+import { colord, extend } from 'colord';
+import namesPlugin from 'colord/plugins/names';
 
+import { named2rgb, rgb2named } from '../../../dist/index.js';
 import { performanceTest } from '../../../test-utils/perf.js';
 import { SampleGenerator } from '../../../test-utils/sample.js';
-import { named2rgb, rgb2named } from '../../../dist/index.js';
+
 
 extend([namesPlugin]);
 
@@ -38,11 +39,11 @@ function toNamed() {
   return performanceTest(
     'RGB to NAMED',
     [
-      ['color-utils',  custom_],
+      ['color-utils', custom_],
       ['colord', colord_],
       ['color', color_],
       ['color-convert', convert_],
-    ]
+    ],
   );
 }
 
@@ -82,18 +83,18 @@ function fromNamed() {
   return performanceTest(
     'NAMED to RGB',
     [
-      ['color-utils',  custom_],
+      ['color-utils', custom_],
       ['colord', colord_],
       ['color', color_],
       ['color-convert', convert_],
-    ]
+    ],
   );
 }
 
 
 const fns = [
   toNamed,
-  fromNamed
+  fromNamed,
 ];
 for (const fn of fns) {
   await fn();

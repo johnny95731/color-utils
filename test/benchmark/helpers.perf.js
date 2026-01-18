@@ -1,5 +1,6 @@
-import { performanceTest } from '../../test-utils/perf.js';
 import { map, cloneDeep } from '../../dist/index.js';
+import { performanceTest } from '../../test-utils/perf.js';
+
 
 const num = 5;
 
@@ -17,13 +18,13 @@ function clone4Layers() {
           a: 1,
           b: '2',
           c: {
-          }
+          },
         },
-        d: [0, 1, 2]
+        d: [0, 1, 2],
       },
-      d: [0, 1, 2]
+      d: [0, 1, 2],
     },
-    d: [0, 1, 2]
+    d: [0, 1, 2],
   };
 
   const json = () => {
@@ -39,7 +40,7 @@ function clone4Layers() {
   return performanceTest(
     'Clone - 4 layers',
     [json, builtin, custom],
-    { time: 500 }
+    { time: 500 },
   );
 }
 
@@ -67,7 +68,7 @@ function clone2Layers() {
   return performanceTest(
     'Clone - 2 layers',
     [json, builtin, custom],
-    { time: 500 }
+    { time: 500 },
   );
 }
 
@@ -91,7 +92,7 @@ function mapNumber() {
   return performanceTest(
     'map - number',
     [builtinFor, prototype, customFunction],
-    { time: 200 }
+    { time: 200 },
   );
 }
 
@@ -114,7 +115,7 @@ function mapArray() {
   return performanceTest(
     'map - array',
     [builtinFor, prototype, customFunction],
-    { time: 200 }
+    { time: 200 },
   );
 }
 
@@ -126,12 +127,12 @@ function typeChecking_() {
   };
   const typeof_ = () => {
     const item = getItem();
-    return typeof item === 'string'? item : item[0];
+    return typeof item === 'string' ? item : item[0];
   };
   return performanceTest(
     'Type checking',
     [isArray_, typeof_],
-    { time: 500 }
+    { time: 500 },
   );
 }
 

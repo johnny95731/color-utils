@@ -1,9 +1,12 @@
 import { expect, test } from '@jest/globals';
 import { colord } from 'colord';
 
+import {
+  rgb2hex, hex2rgb, isValidHex, randInt, map,
+} from '../../../dist/index.js';
 import { randRgbGen } from '../../../test-utils/helpers.js';
 import { SampleGenerator } from '../../../test-utils/sample.js';
-import { rgb2hex, hex2rgb, isValidHex, randInt, map } from '../../../dist/index.js';
+
 
 const { length } = SampleGenerator.a();
 
@@ -15,7 +18,7 @@ const rgbs = map(length, () => {
 
 const hexChar = '0123456789ABCDEF';
 const getRandomHexChar = () => hexChar[randInt(15)];
-const hexGenerator = (num) => map(num, getRandomHexChar).join('');
+const hexGenerator = num => map(num, getRandomHexChar).join('');
 
 test('isValidHex', () => {
   const cases = [
@@ -60,13 +63,12 @@ test('Hex 4-digit/8-digit - equivalent', () => {
     }
     const rgb4 = hex2rgb(hex4);
     const rgb8 = hex2rgb(hex8);
-    expect(rgb4.slice(0,3)).toEqual(rgb8.slice(0,3));
+    expect(rgb4.slice(0, 3)).toEqual(rgb8.slice(0, 3));
     expect(rgb4[3]).toBeCloseTo(rgb8[3]);
   }
 });
 
 test('Hex 3-digit/6-digit - equivalent', () => {
-
   for (let i = 0; i < 20; i++) {
     let hex3 = '';
     let hex6 = '';
@@ -84,7 +86,7 @@ test('rgb2hex - comparison', () => {
     const [r, g, b, a] = rgbs[idx];
     return colord({ r, g, b, a }).toHex().toUpperCase();
   };
-  const getCustom = (idx) => rgb2hex(rgbs[idx]);
+  const getCustom = idx => rgb2hex(rgbs[idx]);
 
   for (let i = 0; i < length; i++) {
     const colord_ = getConvert(i);
@@ -99,12 +101,12 @@ test('hex2rgb 8-digit - comparison', () => {
     const { r, g, b, a } = colord(hex8[idx]).toRgb();
     return [r, g, b, a];
   };
-  const getCustom = (idx) => hex2rgb(hex8[idx]);
+  const getCustom = idx => hex2rgb(hex8[idx]);
 
   for (let i = 0; i < length; i++) {
     const colord_ = getColord(i);
     const custom_ = getCustom(i);
-    expect(custom_.slice(0,3)).toEqual(colord_.slice(0,3));
+    expect(custom_.slice(0, 3)).toEqual(colord_.slice(0, 3));
     expect(custom_[3]).toBeCloseTo(colord_[3], 2);
   }
 });
@@ -115,7 +117,7 @@ test('hex2rgb 6-digit - comparison', () => {
     const { r, g, b, a } = colord(hex6[idx]).toRgb();
     return [r, g, b, a];
   };
-  const getCustom = (idx) => hex2rgb(hex6[idx]);
+  const getCustom = idx => hex2rgb(hex6[idx]);
 
   for (let i = 0; i < length; i++) {
     const colord_ = getColord(i);
@@ -130,12 +132,12 @@ test('hex2rgb 4-digit - comparison', () => {
     const { r, g, b, a } = colord(hex6[idx]).toRgb();
     return [r, g, b, a];
   };
-  const getCustom = (idx) => hex2rgb(hex6[idx]);
+  const getCustom = idx => hex2rgb(hex6[idx]);
 
   for (let i = 0; i < length; i++) {
     const colord_ = getColord(i);
     const custom_ = getCustom(i);
-    expect(custom_.slice(0,3)).toEqual(colord_.slice(0,3));
+    expect(custom_.slice(0, 3)).toEqual(colord_.slice(0, 3));
     expect(custom_[3]).toBeCloseTo(colord_[3], 2);
   }
 });
@@ -146,7 +148,7 @@ test('hex2rgb 3-digit - comparison', () => {
     const { r, g, b, a } = colord(hex6[idx]).toRgb();
     return [r, g, b, a];
   };
-  const getCustom = (idx) => hex2rgb(hex6[idx]);
+  const getCustom = idx => hex2rgb(hex6[idx]);
 
   for (let i = 0; i < length; i++) {
     const colord_ = getColord(i);
@@ -168,7 +170,7 @@ test('Invalid hex to rgb', () => {
     },
   ];
   cases.forEach(({ text }) => {
-    expect(hex2rgb(text)).toStrictEqual([0,0,0,1]);
+    expect(hex2rgb(text)).toStrictEqual([0, 0, 0, 1]);
   });
 });
 
@@ -185,7 +187,8 @@ test('HEX - stability', () => {
       for (let i = 0; i < 3; i++) {
         expect(ret[i]).toBeCloseTo(rgb[i]);
       }
-    } catch {
+    }
+    catch {
       throw new Error(`
 ${rgb}
 ${hex}

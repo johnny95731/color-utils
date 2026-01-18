@@ -1,6 +1,8 @@
 import { minify } from 'terser';
-import type {  Plugin } from 'rollup';
+
+import type { Plugin } from 'rollup';
 import type { MinifyOptions } from 'terser';
+
 
 const isObject = (item: unknown) => {
   return (item && typeof item === 'object' && !Array.isArray(item));
@@ -15,7 +17,8 @@ const mergeDeep = (target: any, ...sources: any[]) => {
       if (isObject(source[key])) {
         if (!target[key]) Object.assign(target, { [key]: {} });
         mergeDeep(target[key], source[key]);
-      } else {
+      }
+      else {
         Object.assign(target, { [key]: source[key] });
       }
     }
@@ -31,10 +34,10 @@ const defaultOptions = {
   mangle: {
     toplevel: true,
     properties: {
-      regex: /[^_]_$/
-    }
+      regex: /[^_]_$/,
+    },
   },
-  nameCache: undefined
+  nameCache: undefined,
 } satisfies MinifyOptions;
 
 
@@ -49,9 +52,9 @@ export default (options: MinifyOptions) => {
         const result = await minify(code, mergedOption);
         console.log(result.code!.length + 1);
         return {
-          code: result.code!
+          code: result.code!,
         };
       },
-    }
+    },
   } satisfies Plugin;
 };

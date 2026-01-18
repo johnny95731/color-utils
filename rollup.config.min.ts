@@ -1,5 +1,7 @@
 import typescript from '@rollup/plugin-typescript';
+
 import terser from './terser-plugin.ts';
+
 import type { RollupOptions } from 'rollup';
 
 // Too see minimum size in one-file bundleing
@@ -20,7 +22,7 @@ const terserNoMangleProps = {
   },
   mangle: {
     keep_fnames: false,
-    properties: false
+    properties: false,
   },
   nameCache: undefined,
 };

@@ -16,9 +16,9 @@ const cmykIterator = {
     return {
       /** @return {{value?: number[] , done: boolean}} */
       next() {
-        if (kIdx > lastIdx) return kIdx = 0, yIdx+=2, this.next();
-        if (yIdx > lastIdx) return yIdx = 0, mIdx+=2, this.next();
-        if (mIdx > lastIdx) return mIdx = 0, cIdx+=2, this.next();
+        if (kIdx > lastIdx) return kIdx = 0, yIdx += 2, this.next();
+        if (yIdx > lastIdx) return yIdx = 0, mIdx += 2, this.next();
+        if (mIdx > lastIdx) return mIdx = 0, cIdx += 2, this.next();
         if (cIdx > lastIdx) return { done: true };
         const c = values[cIdx];
         const m = values[mIdx];
@@ -26,10 +26,10 @@ const cmykIterator = {
         const k = values[kIdx];
         kIdx += 2;
         return { value: [c, m, y, k], done: false };
-      }
+      },
 
     };
-  }
+  },
 };
 
 const toRgb1 = (cmyk) => {
@@ -73,16 +73,15 @@ const toRgb3 = (cmyk) => {
 };
 
 
-
 console.log('CMYK equivalence between different formula.');
 equivalenceTest(
   toRgb1,
   toRgb2,
-  cmykIterator
+  cmykIterator,
 );
 
 equivalenceTest(
   toRgb1,
   toRgb3,
-  cmykIterator
+  cmykIterator,
 );

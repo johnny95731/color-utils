@@ -1,5 +1,6 @@
-import type { ColorSpace } from 'src/colors';
 import { cloneDeep, map } from '../helpers';
+
+import type { ColorSpace } from '../colors';
 import type { Mat3x3 } from '../numeric';
 
 /**
@@ -24,7 +25,7 @@ export const rgb2xyzMat = [] as Mat3x3;
 // @ts-expect-error Initialize by `setReferenceWhite`
 export const xyz2rgbMat = [] as Mat3x3;
 /**
- * @ignore 
+ * @ignore
  * Maximums of channels of CIE XYZ.
  */
 // @ts-expect-error Initialize by `setReferenceWhite`
@@ -34,7 +35,7 @@ export const xyzMax = [] as Array3;
 export const xyzSpace = {
   name_: 'XYZ',
   labels_: ['X', 'Y', 'Z'],
-  isSupported_: true
+  isSupported_: true,
   // Init max_ and white_ in setReferenceWhite
 } as ColorSpace;
 
@@ -68,23 +69,25 @@ export const setReferenceWhite = (() => {
     const [
       [a, b, c],
       [d, e, f],
-      [g, h, i]
+      [g, h, i],
     ] = mat;
     const x = e * i - h * f,
       y = f * g - d * i,
       z = d * h - g * e,
       det = a * x + b * y + c * z;
 
-    return det ? [
-      [x / det, (c * h - b * i) / det, (b * f - c * e) / det],
-      [y / det, (a * i - c * g) / det, (d * c - a * f) / det],
-      [z / det, (g * b - a * h) / det, (a * e - d * b) / det]
-    ] : null;
+    return det
+      ? [
+        [x / det, (c * h - b * i) / det, (b * f - c * e) / det],
+        [y / det, (a * i - c * g) / det, (d * c - a * f) / det],
+        [z / det, (g * b - a * h) / det, (a * e - d * b) / det],
+      ]
+      : null;
   };
 
   const setReferenceWhite = (white: 'D65' | 'D50') => {
     const mat = white === 'D50' ? D50 : D65;
-    const rowSum = map(mat, (row) => row[0] + row[1] + row[2]);
+    const rowSum = map(mat, row => row[0] + row[1] + row[2]);
     const invMat = invertMat3x3(mat as Mat3x3);
     if (invMat) {
       rgb2xyzMat.splice(0, 3, ...cloneDeep(mat));
@@ -98,7 +101,6 @@ export const setReferenceWhite = (() => {
   setReferenceWhite('D65'); // Initialize
   return setReferenceWhite;
 })();
-
 
 
 /**
@@ -131,6 +133,6 @@ const cieHelper = (() => {
   return [cieTrans, cieTransInv] as const;
 })();
 /** @function */
-export const cieTrans = cieHelper[0];
+export const cieTrans: cieTrans = cieHelper[0];
 /** @function */
-export const cieTransInv = cieHelper[1]
+export const cieTransInv: cieTransInv = cieHelper[1];

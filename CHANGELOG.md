@@ -12,7 +12,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Support ictcp, jzazbz, and jzczhz color spaces.
 - Plugins for spaces.
 
-## [2.0.0] - 2025-06-
+## [2.1.0]
+
+### Added
+
+- New color space: HSI
+
+## [2.0.0] - 2025-06-29
 
 ### Added
 

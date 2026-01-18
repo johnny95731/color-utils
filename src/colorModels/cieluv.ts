@@ -1,6 +1,6 @@
-import { lcc2lch, lch2lcc } from './lch';
+import { cieTrans, cieTransInv, xyzMax } from './cie-utils';
 import { rgb2xyz, xyz2rgb } from './ciexyz';
-import { cieTrans, cieTransInv, xyzMax, } from './cie-utils';
+import { lcc2lch, lch2lcc } from './lch';
 
 
 interface rgb2luv {

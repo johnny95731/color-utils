@@ -1,17 +1,17 @@
-import { performanceTest } from '../../test-utils/perf.js';
 import { dot3, map } from '../../dist/index.js';
+import { performanceTest } from '../../test-utils/perf.js';
 
 
 function randPositiveInt() {
   const max = 100;
   const trunc = () => {
-    return Math.trunc(Math.random() * (max+1));
+    return Math.trunc(Math.random() * (max + 1));
   };
   const floor = () => {
-    return Math.floor(Math.random() * (max+1));
+    return Math.floor(Math.random() * (max + 1));
   };
   const bitwiseOR = () => {
-    return Math.random() * (max+1) | 0;
+    return Math.random() * (max + 1) | 0;
   };
   const bitwiseNOT = () => {
     return ~~(Math.random() * (max + 1));
@@ -20,7 +20,7 @@ function randPositiveInt() {
 
   return performanceTest(
     'random positive integer',
-    [trunc, floor, bitwiseOR, bitwiseNOT]
+    [trunc, floor, bitwiseOR, bitwiseNOT],
   );
 }
 
@@ -29,32 +29,32 @@ function rounding() {
   const generator = () => Math.round() * 10;
   const math = () => {
     const val = generator();
-    return Math.round(10**place * val) / 10**place;
+    return Math.round(10 ** place * val) / 10 ** place;
   };
   const mathCache = () => {
     const val = generator();
-    const temp = 10**place;
+    const temp = 10 ** place;
     return Math.round(temp * val) / temp;
   };
   const bitwise = () => {
     let val = generator();
-    val *= 10**place;
-    return ((val + 0.5) << 0) / 10**place;
+    val *= 10 ** place;
+    return ((val + 0.5) << 0) / 10 ** place;
   };
 
   return performanceTest(
     'rounding',
     [math, mathCache, bitwise],
-    { time: 500 }
+    { time: 500 },
   );
 }
 
 function clip() {
   const ifelse_ = (num, min, max) => {
     return (
-      num < min ?
-        num = min :
-        num > max && (num = max),
+      num < min
+        ? num = min
+        : num > max && (num = max),
       num);
   };
   const ifelse = () => {
@@ -96,12 +96,12 @@ function rad2deg() {
   return performanceTest(
     'rad2deg',
     [direct, cache],
-    { time: 500 }
+    { time: 500 },
   );
 }
 
 function atan2() {
-  const gen = () => [Math.random()-0.5, Math.random()-0.5];
+  const gen = () => [Math.random() - 0.5, Math.random() - 0.5];
   const cache = 180 / Math.PI;
   const mod = () => {
     const rad = Math.atan2(...gen());
@@ -122,7 +122,7 @@ function atan2() {
 
   return performanceTest(
     'atan2',
-    [mod, ifelse, ifelse2, ifelse3]
+    [mod, ifelse, ifelse2, ifelse3],
   );
 }
 
@@ -158,7 +158,7 @@ function elementwiseMean() {
 
   return performanceTest(
     'elementwise mean',
-    [builtinFor, prototype, customMapDiv, customMapMult]
+    [builtinFor, prototype, customMapDiv, customMapMult],
   );
 }
 
@@ -170,7 +170,7 @@ function power_() {
 
   const star = () => {
     const k = gen();
-    return k[0]**k[1];
+    return k[0] ** k[1];
   };
 
   const math = () => {
@@ -181,7 +181,7 @@ function power_() {
   const m = (x, y) => {
     if (!y) return 1;
     if (!x) return 0;
-    return !y ? 1 : !x ? 0 :Math.exp(y * Math.log(x));
+    return !y ? 1 : !x ? 0 : Math.exp(y * Math.log(x));
   };
   const explog = () => {
     const k = gen();
@@ -191,7 +191,7 @@ function power_() {
   return performanceTest(
     'Power',
     [star, math, explog],
-    { time: 100 }
+    { time: 100 },
   );
 }
 
@@ -206,51 +206,55 @@ function invertMat3x3_() {
     const [
       [a, b, c],
       [d, e, f],
-      [g, h, i]
+      [g, h, i],
     ] = mat;
-    const x = e*i - h*f,
-      y = f*g - d*i,
-      z = d*h - g*e,
-      det = a*x + b*y + c*z;
+    const x = e * i - h * f,
+      y = f * g - d * i,
+      z = d * h - g * e,
+      det = a * x + b * y + c * z;
 
-    return det ? [
-      [x/det, (c*h - b*i)/det, (b*f - c*e)/det],
-      [y/det, (a*i - c*g)/det, (d*c - a*f)/det],
-      [z/det, (g*b - a*h)/det, (a*e - d*b)/det]
-    ] : null;
+    return det
+      ? [
+        [x / det, (c * h - b * i) / det, (b * f - c * e) / det],
+        [y / det, (a * i - c * g) / det, (d * c - a * f) / det],
+        [z / det, (g * b - a * h) / det, (a * e - d * b) / det],
+      ]
+      : null;
   };
   const func2 = () => {
     const [
       [a, b, c],
       [d, e, f],
-      [g, h, i]
+      [g, h, i],
     ] = mat;
 
-    const A =  e*i - f*h;
-    const B = -(d*i - f*g);
-    const C =  d*h - e*g;
-    const D = -(b*i - c*h);
-    const E =  a*i - c*g;
-    const F = -(a*h - b*g);
-    const G =  b*f - c*e;
-    const H = -(a*f - c*d);
-    const I =  a*e - b*d;
+    const A = e * i - f * h;
+    const B = -(d * i - f * g);
+    const C = d * h - e * g;
+    const D = -(b * i - c * h);
+    const E = a * i - c * g;
+    const F = -(a * h - b * g);
+    const G = b * f - c * e;
+    const H = -(a * f - c * d);
+    const I = a * e - b * d;
 
-    const det = a*A + b*B + c*C;
+    const det = a * A + b * B + c * C;
 
     const invDet = det;
 
-    return isFinite(det) ? [
-      [A / invDet, D / invDet, G / invDet],
-      [B / invDet, E / invDet, H / invDet],
-      [C / invDet, F / invDet, I / invDet]
-    ] : null;
+    return isFinite(det)
+      ? [
+        [A / invDet, D / invDet, G / invDet],
+        [B / invDet, E / invDet, H / invDet],
+        [C / invDet, F / invDet, I / invDet],
+      ]
+      : null;
   };
 
   return performanceTest(
     'Calc inverse matrix',
     [func1, func2],
-    { time: 300 }
+    { time: 300 },
   );
 }
 
@@ -291,7 +295,7 @@ const matrixMultiplyVector = () => {
   return performanceTest(
     'Matrix x vector',
     [func1, func2],
-    { time: 500 }
+    { time: 500 },
   );
 };
 

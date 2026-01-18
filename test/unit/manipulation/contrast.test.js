@@ -1,5 +1,10 @@
 import { expect, test } from '@jest/globals';
-import { adjContrast, autoBrightness, autoEnhancement, CONTRAST_METHODS, gammaCorrection, getAdjuster, randInt, randRgbGen, scaling } from '../../../dist/index.js';
+
+import {
+  adjContrast, autoBrightness, autoEnhancement, CONTRAST_METHODS,
+  gammaCorrection, getAdjuster, randInt, randRgbGen, scaling,
+} from '../../../dist/index.js';
+
 
 test('scaling', () => {
   for (let i = 0; i < 20; i++) {
@@ -39,7 +44,7 @@ test('gammaCorrection', () => {
     for (let i = 0; i < 3; i++) {
       expect(resZero[i]).toBeCloseTo(255);
       expect(resOne[i]).toBeCloseTo(rgb[i]);
-      expect(resP5[i]).toBeCloseTo(255 * (rgb[i] / 255)**factor);
+      expect(resP5[i]).toBeCloseTo(255 * (rgb[i] / 255) ** factor);
     }
     for (const res of [resZero, resOne, resP5]) {
       expect(res[3]).toBe(rgb[3]);

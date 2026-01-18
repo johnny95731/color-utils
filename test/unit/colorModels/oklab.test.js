@@ -1,7 +1,10 @@
 import { expect, test } from '@jest/globals';
+
+import {
+  rgb2oklab, oklab2rgb, oklch2rgb, rgb2oklch, setReferenceWhite,
+} from '../../../dist/index.js';
 import { SampleGenerator } from '../../../test-utils/sample.js';
 
-import { rgb2oklab, oklab2rgb, oklch2rgb, rgb2oklch, setReferenceWhite } from '../../../dist/index.js';
 
 const { rgbs } = SampleGenerator.a();
 

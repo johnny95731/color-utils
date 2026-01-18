@@ -16,7 +16,7 @@ export const rgb2hsl = (rgb: readonly number[]): number[] => {
     sat || 0,
     // luminance = (max + min) / (2 * 255) * 100
     sum / 5.1,
-    alpha
+    alpha,
   ];
 };
 

@@ -144,7 +144,7 @@ export const namedColor = new Map(Object.entries({
   darkgray: [169, 169, 169],
   gray: [128, 128, 128],
   dimgray: [105, 105, 105],
-  black: [0, 0, 0]
+  black: [0, 0, 0],
 }));
 
 /**

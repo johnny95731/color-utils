@@ -43,6 +43,7 @@ More infomations abous color spaces: [Color Space Ranges](#color-space-ranges)
 
 - RGB
 - HEX (3/4/6/8 digit)
+- HSI
 - HSL
 - HSB (alias of HSV)
 - HWB
@@ -89,6 +90,10 @@ const ret2 = hex2rgb(hex2);    // [ 124, 191, 136, 0.17647058823529413 ]
 
 ```ts
 const rgb = randRgbGen(); // [215, 117, 43, 1];
+
+// HSI
+const hsi = rgb2hsi(rgb); // [ 25.813953488372093, 65.60000000000001, 49.01960784313726, 1 ]
+const ret = hsi2rgb(hsi); // [ 215.00000000000006, 116.99999999999999, 42.999999999999986, 1 ]
 
 // HSL
 const hsl = rgb2hsl(rgb); // [ 25.813953488372093, 68.25396825396825, 50.58823529411765, 1 ]
@@ -174,6 +179,7 @@ Note: `COLOR_SPACES` does not have HEX and NAMED space. And, both `LCHab` and `L
  space | value
 -------|-----------
 RGB    | `true`
+HSI    | `false`
 HSL    | `true`
 HSB    | `false`
 HWB    | `true`
@@ -311,6 +317,17 @@ channel | description | min | max
 r | Red   | 0 | 255
 g | Green | 0 | 255
 b | Blue  | 0 | 255
+
+</details>
+
+<details>
+<summary>HSI</summary>
+
+channel | description | min | max
+--------|-------------|-----|-----
+h | Hue        | 0 | 360
+s | Saturation | 0 | 100
+l | Intensity  | 0 | 100
 
 </details>
 
@@ -592,7 +609,7 @@ isReadable('987654', '123456', { isLarge: true, levelAAA: true }) // false
 </details>
 
 <h3>Harmony</h3>
-Some function arguments naming hsb, but the method works in HSL or HWB space.
+Some function arguments naming hsb, but the method works in HSI, HSL, or HWB space.
 
 <details>
 <summary><code>shiftHue(primary: readonly number[], degs: number[]): number[][]</code></summary>

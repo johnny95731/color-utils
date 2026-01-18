@@ -1,7 +1,10 @@
 import typescript from '@rollup/plugin-typescript';
 import { dts } from 'rollup-plugin-dts';
+
 import terser from './terser-plugin.ts';
+
 import type { RollupOptions } from 'rollup';
+
 
 export const outDir = 'dist/';
 export const input = './index.ts';
@@ -13,7 +16,7 @@ export const terserOption = {
   },
   mangle: {
     keep_fnames: true,
-    properties: false
+    properties: false,
   },
   nameCache: undefined,
 };
@@ -31,7 +34,7 @@ const config = [
       dir: outDir,
       format: 'es',
       generatedCode: {
-        constBindings: true
+        constBindings: true,
       },
     },
   },
